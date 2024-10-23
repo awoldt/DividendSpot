@@ -1,0 +1,4 @@
+.env
+deno.lock
+/.vscode
+/public/imgs/company-logo

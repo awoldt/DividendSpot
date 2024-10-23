@@ -1,0 +1,14 @@
+{
+  "imports": {
+    "hono": "jsr:@hono/hono@^4.6.5",
+    "axios": "npm:axios",
+    "pg": "npm:pg"
+  },
+  "tasks": {
+    "start": "deno run -A --watch --env-file main.tsx"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  }
+}
