@@ -115,9 +115,9 @@ export default function CompanyView(props: {
                   organizedPayouts.upcoming.length === 0 && (
                     <p>
                       <strong>
-                        {props.company.name} does not pay dividends. They might
-                        in the future, check back soon!
-                      </strong>
+                        {props.company.name} does not pay dividends.
+                      </strong>{" "}
+                      They might in the future, check back soon!
                     </p>
                   )
                 )}
