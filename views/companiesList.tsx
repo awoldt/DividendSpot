@@ -8,7 +8,9 @@ export default function CompaniesList(props: {
       {props.companies.map((c) => {
         return (
           <div>
-            {c.name} ({c.ticker})
+            <a href={`/${c.ticker}`}>
+              {c.name} ({c.ticker})
+            </a>
           </div>
         );
       })}

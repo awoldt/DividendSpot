@@ -5,7 +5,8 @@
     "pg": "npm:pg"
   },
   "tasks": {
-    "start": "deno run -A --watch --env-file main.tsx"
+    "dev": "deno run -A --watch --env-file main.tsx",
+    "start": "deno run -A main.tsx"
   },
   "compilerOptions": {
     "jsx": "precompile",
