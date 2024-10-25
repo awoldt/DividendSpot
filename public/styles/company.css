@@ -235,6 +235,12 @@ h2 {
   margin-top: 15px;
 }
 
+#data_updated_span {
+  display: block;
+  color: gray;
+  margin-top: 30px;
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
   .company-header h1 {

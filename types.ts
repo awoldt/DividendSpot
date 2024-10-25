@@ -22,4 +22,5 @@ export interface CompanyCache {
   d: Dividend[] | null; // dividend data
   rc: Partial<Company>[] | null; // related companies,
   ea: number; // expires at
+  ca: number; // created at
 }

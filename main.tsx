@@ -128,9 +128,8 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
       </head>
       <body>
         ${CompanyView({
-          dividends: cachedData.d,
           company: company.rows[0],
-          relatedCompanies: cachedData.rc,
+          dividendData: cachedData,
         })}
       </body>
     </html>

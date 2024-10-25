@@ -1,6 +1,6 @@
 import Footer from "../components/footer.tsx";
 import Navbar from "../components/navbar.tsx";
-import type { Company, Dividend } from "../types.ts";
+import type { Company, CompanyCache, Dividend } from "../types.ts";
 import {
   FormatDateString,
   GetDividendPayingYears,
@@ -9,12 +9,13 @@ import {
 } from "../utils.ts";
 
 export default function CompanyView(props: {
-  dividends: Dividend[] | null;
+  dividendData: CompanyCache;
   company: Company;
-  relatedCompanies: Partial<Company>[] | null;
 }) {
-  const organizedPayouts = OrganizeDividendPayouts(props.dividends);
-  const dividendPayingYears = GetDividendPayingYears(props.dividends);
+  console.log(props.dividendData);
+
+  const organizedPayouts = OrganizeDividendPayouts(props.dividendData.d);
+  const dividendPayingYears = GetDividendPayingYears(props.dividendData.d);
 
   return (
     <>
@@ -116,7 +117,7 @@ export default function CompanyView(props: {
                 )
               )}
 
-              {props.relatedCompanies !== null && (
+              {props.dividendData.rc !== null && (
                 <div className="related-companies-dropdown">
                   <input
                     type="checkbox"
@@ -141,7 +142,7 @@ export default function CompanyView(props: {
                   </label>
 
                   <div className="related-companies">
-                    {props.relatedCompanies.map((x) => (
+                    {props.dividendData.rc.map((x) => (
                       <a href={`/${x.ticker?.toLowerCase()}`}>
                         <div className="company-item">
                           <img
@@ -193,6 +194,12 @@ export default function CompanyView(props: {
                   </tbody>
                 </table>
               </>
+            )}
+            {props.dividendData.d && props.dividendData.d.length > 0 && (
+              <span id="data_updated_span">
+                Dividend data last updated{" "}
+                {new Date(props.dividendData.ca).toUTCString()} UTC
+              </span>
             )}
           </div>
         )}

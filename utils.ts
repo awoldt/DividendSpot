@@ -178,15 +178,18 @@ export async function SaveCompanyToCache(
       "COMPANY IN CAHCE!\nexpirs at " + new Date(cache[index].ea).toUTCString()
     );
 
+    const currentTime = Date.now();
+
     // if cache is older than 3 hours, refresh
-    if (cache[index].ea < Date.now()) {
+    if (cache[index].ea < currentTime) {
       console.log("NEED TO REFRESH CACHE FOR THIS COMPANY!");
 
       const refreshedData = {
         t: ticker,
         d: await GetCompanyDividends(ticker),
         rc: await GetRelatedCompanies(ticker),
-        ea: Date.now() + 10800000, // 3 hrs
+        ea: currentTime + 10800000, // 3 hrs
+        ca: currentTime,
       };
 
       cache[index] = refreshedData;
@@ -201,14 +204,18 @@ export async function SaveCompanyToCache(
   else {
     console.log("company not in cache :(");
 
-    cache.push({
+    const currentTime = Date.now();
+    const newCache = {
       t: ticker,
       d: await GetCompanyDividends(ticker),
       rc: await GetRelatedCompanies(ticker),
-      ea: Date.now() + 3600000,
-    });
+      ea: currentTime + 10800000, // 3 hrs
+      ca: currentTime,
+    };
+
+    cache.push(newCache);
     console.log("now in cache!");
 
-    return cache[cache.length - 1]; // return the newly inserted record
+    return newCache;
   }
 }
