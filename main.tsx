@@ -1,11 +1,13 @@
 import { Hono, type Context } from "hono";
 import CompanyView from "./views/company.tsx";
-import { GetCompanyDividends, GetRelatedCompanies } from "./utils.ts";
+import { SaveCompanyToCache } from "./utils.ts";
 import { db } from "./db.ts";
 import { serveStatic } from "hono/deno";
 import CompaniesList from "./views/companiesList.tsx";
 import PrivacyPolicy from "./views/privacyPolicy.tsx";
-import type { Company, Dividend } from "./types.ts";
+import type { CompanyCache } from "./types.ts";
+
+const COMPANIES_CACHE: CompanyCache[] = [];
 
 const app = new Hono();
 
@@ -102,12 +104,6 @@ app.get("/companies", async (c: Context) => {
   return c.html(<CompaniesList companies={allCompanies.rows} />);
 });
 
-const COMPANIES_CACHE: {
-  t: string; // ticker
-  d: Dividend[] | null; // dividend data
-  rc: Partial<Company>[] | null; // related companies,
-  ea: number; // expires at
-}[] = [];
 app.get("/:COMPANY_TICKER", async (c: Context) => {
   const ticker = c.req.param("COMPANY_TICKER").toUpperCase(); // all tickers in DB are uppercase
   const company = await db.query("SELECT * FROM companies WHERE ticker = $1;", [
@@ -118,34 +114,7 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
     return c.text("Company does not exist", 404);
   }
 
-  // see if company is stored in cache
-  const cachedCompany = COMPANIES_CACHE.find((x) => x.t === ticker);
-  if (cachedCompany !== undefined) {
-    // company stored in cache!
-    console.log("COMPANY IN CAHCE!");
-
-    // if cache is older than 1 hour, refresh
-    if (cachedCompany.ea < Date.now()) {
-      console.log("NEED TO REFRESH CACHE FOR THIS COMPANY!");
-
-      COMPANIES_CACHE.push({
-        t: ticker,
-        d: await GetCompanyDividends(ticker),
-        rc: await GetRelatedCompanies(ticker),
-        ea: Date.now() + 10800000, // 3 hrs
-      });
-    }
-  } else {
-    console.log("company not in cache :(");
-    // stored dividend data for company in cache
-    COMPANIES_CACHE.push({
-      t: ticker,
-      d: await GetCompanyDividends(ticker),
-      rc: await GetRelatedCompanies(ticker),
-      ea: Date.now() + 3600000,
-    });
-    console.log("now in cache!");
-  }
+  const cachedData = await SaveCompanyToCache(ticker, COMPANIES_CACHE);
 
   return c.html(`
     <!DOCTYPE html>
@@ -153,21 +122,15 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${company.rows[0].name} - Dividend Tracker</title>
+        <title>${company.rows[0].name} - DividendSpot</title>
         <link rel="stylesheet" href="/public/styles/company.css">
         <link rel="stylesheet" href="/public/styles/global.css">
       </head>
       <body>
         ${CompanyView({
-          dividends:
-            cachedCompany !== undefined
-              ? cachedCompany.d
-              : await GetCompanyDividends(ticker),
+          dividends: cachedData.d,
           company: company.rows[0],
-          relatedCompanies:
-            cachedCompany !== undefined
-              ? cachedCompany.rc
-              : await GetRelatedCompanies(ticker),
+          relatedCompanies: cachedData.rc,
         })}
       </body>
     </html>

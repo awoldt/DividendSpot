@@ -1,5 +1,10 @@
 import axios from "axios";
-import type { Company, Dividend, OrganizedDividends } from "./types.ts";
+import type {
+  Company,
+  CompanyCache,
+  Dividend,
+  OrganizedDividends,
+} from "./types.ts";
 import { db } from "./db.ts";
 
 export async function GetCompanyDividends(
@@ -159,4 +164,51 @@ export function FormatDateString(dateString: string) {
     month: "long",
     day: "numeric",
   });
+}
+
+export async function SaveCompanyToCache(
+  ticker: string,
+  cache: CompanyCache[]
+) {
+  const index = cache.findIndex((x) => x.t === ticker);
+
+  // company stored in cache!
+  if (index !== -1) {
+    console.log(
+      "COMPANY IN CAHCE!\nexpirs at " + new Date(cache[index].ea).toUTCString()
+    );
+
+    // if cache is older than 3 hours, refresh
+    if (cache[index].ea < Date.now()) {
+      console.log("NEED TO REFRESH CACHE FOR THIS COMPANY!");
+
+      const refreshedData = {
+        t: ticker,
+        d: await GetCompanyDividends(ticker),
+        rc: await GetRelatedCompanies(ticker),
+        ea: Date.now() + 10800000, // 3 hrs
+      };
+
+      cache[index] = refreshedData;
+
+      return refreshedData;
+    }
+
+    return cache[index];
+  }
+  // copmany not in cache
+  // store data in cache
+  else {
+    console.log("company not in cache :(");
+
+    cache.push({
+      t: ticker,
+      d: await GetCompanyDividends(ticker),
+      rc: await GetRelatedCompanies(ticker),
+      ea: Date.now() + 3600000,
+    });
+    console.log("now in cache!");
+
+    return cache[cache.length - 1]; // return the newly inserted record
+  }
 }

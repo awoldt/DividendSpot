@@ -20,9 +20,6 @@ export default function Footer() {
             <img src="/linkedin-icon.png" alt="LinkedIn" />
           </a>
         </div>
-        <div className="footer-copyright">
-          <p>&copy; 2024 Dividend Tracker. All rights reserved.</p>
-        </div>
       </div>
     </footer>
   );

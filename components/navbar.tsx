@@ -5,8 +5,8 @@ export default function Navbar() {
         <div className="navbar-logo">
           <a href="/">
             {" "}
-            <img src="/logo.png" alt="Dividend Tracker Logo" />
-            <h1>Dividend Tracker</h1>
+            <img src="/logo.png" alt="DividendSpot Logo" />
+            <span>DividendSpot</span>
           </a>
         </div>
         <ul className="navbar-links">

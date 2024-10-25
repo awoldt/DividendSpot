@@ -16,3 +16,10 @@ export interface OrganizedDividends {
   upcoming: Dividend[];
   recent: Dividend[];
 }
+
+export interface CompanyCache {
+  t: string; // ticker
+  d: Dividend[] | null; // dividend data
+  rc: Partial<Company>[] | null; // related companies,
+  ea: number; // expires at
+}

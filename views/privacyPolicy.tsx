@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
           <h1>Privacy Policy</h1>
 
           <p>
-            At Dividend Tracker, we value your privacy and are committed to
+            At DividendSpot, we value your privacy and are committed to
             protecting your personal data. This Privacy Policy explains how we
             collect, use, and protect your information when you visit our
             website.
