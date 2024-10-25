@@ -100,6 +100,23 @@ export async function GetRelatedCompanies(
         "POLYGON_API_KEY"
       )}`
     );
+
+    // company doesnt have any related stocks, return popular stocks
+    if (req.data.results === undefined) {
+      return [
+        { name: "Apple Inc.", ticker: "AAPL" },
+        { name: "Microsoft Corporation", ticker: "MSFT" },
+        { name: "Johnson & Johnson", ticker: "JNJ" },
+        { name: "Procter & Gamble Co.", ticker: "PG" },
+        { name: "Coca-Cola Co.", ticker: "KO" },
+        { name: "PepsiCo, Inc.", ticker: "PEP" },
+        { name: "Exxon Mobil Corporation", ticker: "XOM" },
+        { name: "Verizon Communications Inc.", ticker: "VZ" },
+        { name: "AT&T Inc.", ticker: "T" },
+        { name: "Chevron Corporation", ticker: "CVX" },
+      ];
+    }
+
     const tickers = req.data.results.map((x: any) => x.ticker);
     const companies = await db.query(
       `SELECT name, ticker FROM companies WHERE ticker = ANY($1) ORDER BY name;`,
@@ -118,7 +135,7 @@ export async function GetRelatedCompanies(
       }
     }
 
-    return uniqueCompanies; // max of 10 returned
+    return uniqueCompanies;
   } catch (error) {
     console.log(error);
     return null;

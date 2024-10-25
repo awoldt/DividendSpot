@@ -1,0 +1,130 @@
+/* General Layout */
+body {
+  font-family: "Arial", sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  background-color: #0073e6;
+  padding: 20px;
+  color: white;
+}
+
+.header-content h1 {
+  font-size: 2.8rem;
+  margin-left: 20px;
+}
+
+.header-content img.logo {
+  width: 80px;
+  height: auto;
+  border-radius: 10px;
+}
+
+header p {
+  font-size: 1.2rem;
+  color: #f0f8ff;
+  padding: 20px;
+  background-color: #0056b3;
+  margin: 0;
+}
+
+.main-content {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.main-content h2 {
+  font-size: 2.2rem;
+  color: #0056b3;
+  margin-bottom: 20px;
+}
+
+.main-content p {
+  font-size: 1.2rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.dividends-summary {
+  background-color: #e6f7ff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #0073e6;
+  margin-bottom: 30px;
+}
+
+.related-companies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center; /* Centers all the divs horizontally */
+  align-items: center; /* Ensures vertical centering within the container */
+  text-align: center; /* Centers text inside each div */
+}
+
+.related-companies a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.related-companies div {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers the content inside each div */
+}
+
+.related-companies img {
+  width: 60px;
+  height: auto;
+  margin-bottom: 10px; /* Adds space between logo and company name */
+  border-radius: 4px;
+}
+
+.related-companies a:hover span {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #0073e6;
+  color: white;
+  margin-top: 40px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .header-content h1 {
+    font-size: 2rem;
+  }
+
+  .header-content img {
+    width: 60px;
+  }
+
+  .main-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .related-companies img {
+    width: 50px;
+  }
+}
