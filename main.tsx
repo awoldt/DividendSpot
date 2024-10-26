@@ -6,6 +6,9 @@ import { serveStatic } from "hono/deno";
 import CompaniesList from "./views/companiesList.tsx";
 import PrivacyPolicy from "./views/privacyPolicy.tsx";
 import type { CompanyCache } from "./types.ts";
+import Layout from "./components/layout.tsx";
+import About from "./views/about.tsx";
+import Home from "./views/index.tsx";
 
 const COMPANIES_CACHE: CompanyCache[] = [];
 
@@ -13,87 +16,49 @@ const app = new Hono();
 
 app.use("/public/*", serveStatic({ root: "./" }));
 
-app.get("/", async (c: Context) => {
-  const file = await Deno.readFile(`${Deno.cwd()}/views/index.html`);
+app.get("/robots.txt", (c: Context) => {
+  return c.text(`User-agent: *
+Disallow:
+`);
+});
 
-  return c.html(new TextDecoder().decode(file));
+app.get("/", (c: Context) => {
+  return c.html(
+    <Layout
+      title="DividendSpot - Discover Dividend Data on All your Favorite Companies"
+      body={<Home />}
+      styles={["/public/styles/index.css"]}
+      metaDescription="DividendSpot is the best platform to discover dividend data on all your favorite companies traded on the NYSE and NASDAQ exchanges"
+      canonicalLink="https://dividendspot.com"
+      ogData={null}
+    />
+  );
+});
+
+app.get("/about", (c: Context) => {
+  return c.html(
+    <Layout
+      title="About DividendSpot"
+      body={<About />}
+      styles={["/public/styles/about.css"]}
+      metaDescription="DividendSpot is the best platform to discover dividend data on all your favorite companies traded on the NYSE and NASDAQ exchanges"
+      canonicalLink="https://dividendspot.com/about"
+      ogData={null}
+    />
+  );
 });
 
 app.get("/privacy-policy", (c: Context) => {
-  return c.html(`
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Privacy Policy</title>
-        <link rel="stylesheet" href="/public/styles/global.css">
-          <style>
-            /* Basic styling for the privacy policy page */
-            body {
-              font-family: Arial, sans-serif;
-              line-height: 1.6;
-              background-color: #f9f9f9;
-              color: #333;
-              margin: 0;
-              padding: 0;
-            }
-
-            .container {
-              max-width: 900px;
-              margin: 0 auto;
-              margin-top: 25px;
-              padding: 40px;
-              background-color: #fff;
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-              border-radius: 8px;
-            }
-
-            h1 {
-              font-size: 2.5rem;
-              margin-bottom: 20px;
-              color: #0073e6;
-            }
-
-            h2 {
-              font-size: 1.8rem;
-              margin-top: 30px;
-              color: #0056b3;
-            }
-
-            p {
-              font-size: 1.1rem;
-              margin-bottom: 15px;
-            }
-
-            ul {
-              list-style-type: disc;
-              margin-left: 20px;
-            }
-
-            footer {
-              text-align: center;
-              padding: 20px;
-              background-color: #0073e6;
-              color: #fff;
-              margin-top: 40px;
-            }
-
-            footer a {
-              color: #fff;
-              text-decoration: none;
-            }
-
-            footer a:hover {
-              text-decoration: underline;
-            }
-          </style>
-      </head>
-      <body>
-        ${PrivacyPolicy()}
-      </body>
-    </html>
-  `);
+  return c.html(
+    <Layout
+      title="Privacy Policy - DividendSpot"
+      body={<PrivacyPolicy />}
+      styles={["/public/styles/privacy.css"]}
+      metaDescription="Privacy policy for DividendSpot"
+      canonicalLink="https://dividendspot.com/privacy-policy"
+      ogData={null}
+    />
+  );
 });
 
 app.get("/companies", async (c: Context) => {
@@ -101,7 +66,16 @@ app.get("/companies", async (c: Context) => {
     "SELECT name, ticker FROM companies ORDER BY name;"
   );
 
-  return c.html(<CompaniesList companies={allCompanies.rows} />);
+  return c.html(
+    <Layout
+      title="All companies"
+      body={<CompaniesList companies={allCompanies.rows} />}
+      styles={["/public/styles/company-list.css"]}
+      metaDescription="Discover all companies featured on DividendSpot. We offer companies from the NASDAQ and NYSE exchanges."
+      canonicalLink="https://dividendspot.com/companies"
+      ogData={null}
+    />
+  );
 });
 
 app.get("/:COMPANY_TICKER", async (c: Context) => {
@@ -116,24 +90,21 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
 
   const cachedData = await SaveCompanyToCache(ticker, COMPANIES_CACHE);
 
-  return c.html(`
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${company.rows[0].name} - DividendSpot</title>
-        <link rel="stylesheet" href="/public/styles/company.css">
-        <link rel="stylesheet" href="/public/styles/global.css">
-      </head>
-      <body>
-        ${CompanyView({
-          company: company.rows[0],
-          dividendData: cachedData,
-        })}
-      </body>
-    </html>
-  `);
+  return c.html(
+    <Layout
+      title={`${company.rows[0].name} (${company.rows[0].ticker}) Dividend History - DividendSpot`}
+      body={<CompanyView cachedData={cachedData} company={company.rows[0]} />}
+      styles={["/public/styles/company.css"]}
+      metaDescription={`Discover reliable dividend data for ${company.rows[0].name} ${company.rows[0].ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`}
+      canonicalLink={`https://dividendspot.com/${ticker.toLowerCase()}`}
+      ogData={{
+        title: `${company.rows[0].name} (${company.rows[0].ticker}) Dividend History - DividendSpot`,
+        url: `https://dividendspot.com/${ticker.toLowerCase()}`,
+        image: `https://dividendspot.com/public/imgs/company-logo/${ticker}.png`,
+        description: `Discover reliable dividend data for ${company.rows[0].name} ${company.rows[0].ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`,
+      }}
+    />
+  );
 });
 
 Deno.serve(app.fetch);

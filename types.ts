@@ -9,6 +9,9 @@ export interface Company {
   name: string;
   ticker: string;
   description: string | null;
+  website_url: string | null;
+  address: string | null;
+  phone: string | null;
 }
 
 export interface OrganizedDividends {

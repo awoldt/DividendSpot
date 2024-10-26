@@ -4,8 +4,6 @@ export default function Navbar() {
       <div className="navbar-container">
         <div className="navbar-logo">
           <a href="/">
-            {" "}
-            <img src="/logo.png" alt="DividendSpot Logo" />
             <span>DividendSpot</span>
           </a>
         </div>

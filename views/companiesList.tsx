@@ -4,7 +4,7 @@ export default function CompaniesList(props: {
   companies: Partial<Company>[];
 }) {
   return (
-    <div>
+    <div class="container">
       {props.companies.map((c) => {
         return (
           <div>

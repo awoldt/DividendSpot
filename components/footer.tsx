@@ -10,14 +10,19 @@ export default function Footer() {
           </ul>
         </div>
         <div className="footer-social">
-          <a href="https://www.facebook.com">
-            <img src="/facebook-icon.png" alt="Facebook" />
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u=https://dividendspot.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/public/imgs/facebook-logo.svg" alt="Facebook logo" />
           </a>
-          <a href="https://www.twitter.com">
-            <img src="/twitter-icon.png" alt="Twitter" />
-          </a>
-          <a href="https://www.linkedin.com">
-            <img src="/linkedin-icon.png" alt="LinkedIn" />
+          <a
+            href="https://twitter.com/intent/tweet?text=Check%20out%20this%20site%20for%20dividend%20data!&url=https://dividendspot.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/public/imgs/twitter-x-logo.svg" alt="X logo" />
           </a>
         </div>
       </div>

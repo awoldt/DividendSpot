@@ -7,12 +7,29 @@ body {
   padding: 0;
 }
 
+/* Welcome Message */
+.welcome-message {
+  background-color: #0479f6; /* Match with the dark blue of the navbar */
+  color: #ffffff; /* White text for contrast */
+  padding: 15px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto; /* Center horizontally */
+}
+
+
+/* Header Content */
 .header-content {
   display: flex;
   align-items: center;
-  background-color: #0073e6;
+  background-color: #0073e6; /* Lighter blue for header */
   padding: 20px;
   color: white;
+  justify-content: center;
 }
 
 .header-content h1 {
@@ -29,11 +46,13 @@ body {
 header p {
   font-size: 1.2rem;
   color: #f0f8ff;
-  padding: 20px;
-  background-color: #0056b3;
+  padding: 15px;
+  background-color: #0073e6; /* Match header content to lighter blue */
+  text-align: center;
   margin: 0;
 }
 
+/* Main Content */
 .main-content {
   max-width: 900px;
   margin: 40px auto;
@@ -47,6 +66,7 @@ header p {
   font-size: 2.2rem;
   color: #0056b3;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .main-content p {
@@ -54,8 +74,10 @@ header p {
   color: #555;
   line-height: 1.6;
   margin-bottom: 30px;
+  text-align: center;
 }
 
+/* Dividends Summary Section */
 .dividends-summary {
   background-color: #e6f7ff;
   padding: 25px;
@@ -63,15 +85,16 @@ header p {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.05);
   border-left: 4px solid #0073e6;
   margin-bottom: 30px;
+  text-align: center;
 }
 
+/* Related Companies */
 .related-companies {
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
-  justify-content: center; /* Centers all the divs horizontally */
-  align-items: center; /* Ensures vertical centering within the container */
-  text-align: center; /* Centers text inside each div */
+  justify-content: center;
+  text-align: center;
 }
 
 .related-companies a {
@@ -82,32 +105,19 @@ header p {
 .related-companies div {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers the content inside each div */
+  align-items: center;
 }
 
 .related-companies img {
   width: 60px;
   height: auto;
-  margin-bottom: 10px; /* Adds space between logo and company name */
+  margin-bottom: 10px;
   border-radius: 4px;
 }
 
 .related-companies a:hover span {
   text-decoration: underline;
   color: #0056b3;
-}
-
-.footer {
-  text-align: center;
-  padding: 20px;
-  background-color: #0073e6;
-  color: white;
-  margin-top: 40px;
-}
-
-.footer p {
-  margin: 0;
-  font-size: 1rem;
 }
 
 /* Responsive Design */

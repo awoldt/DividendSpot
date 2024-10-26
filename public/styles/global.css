@@ -1,34 +1,33 @@
+/* Body Layout for Sticky Footer */
 body {
-    margin: 0px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Navbar general styles */
+/* General Navbar Styling */
 .navbar {
-  background-color: #0073e6;
-  padding: 15px;
-  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.1);
-  top: 0;
-  z-index: 999;
+  background-color: #0056b3; /* Dark blue background */
+  padding: 10px 20px;
 }
 
 .navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.navbar-logo img {
-  width: 50px;
-  height: auto;
+.navbar-logo a {
+  text-decoration: none;
 }
 
-.navbar-logo h1 {
-  color: white;
-  margin-left: 15px;
-  display: inline-block;
-  font-size: 1.5rem;
+.navbar-logo span {
+  font-size: 2rem; /* Make the font large */
+  font-weight: bold;
+  color: #ffffff; /* White text for contrast */
+  font-family: "Georgia", serif; /* Add a serif font for a classic look */
+  letter-spacing: 1px;
 }
 
 .navbar-links {
@@ -37,20 +36,17 @@ body {
   gap: 20px;
 }
 
-.navbar-links li {
-  display: inline;
-}
-
 .navbar-links a {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   font-size: 1.1rem;
-  padding: 8px 15px;
+  font-weight: 500;
+  font-family: "Georgia", serif; /* Enforcing the same font family */
+  transition: color 0.3s ease;
 }
 
 .navbar-links a:hover {
-  background-color: #005bb5;
-  border-radius: 8px;
+  color: #f0e68c; /* Light yellow color on hover */
 }
 
 .dropdown:hover .dropdown-menu {
@@ -80,12 +76,12 @@ body {
 }
 
 /* Footer general styles */
+/* Sticky Footer Styling */
 .footer {
-  background-color: #0073e6;
-  color: white;
-  padding: 30px 0;
-  text-align: center;
-  margin-top: 40px;
+  background-color: #003366; /* Dark blue background for footer */
+  padding: 20px 0;
+  color: #ffffff;
+  margin-top: auto; /* Pushes the footer to the bottom */
 }
 
 .footer-container {
@@ -93,38 +89,60 @@ body {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
+  align-items: center;
+  padding: 0 20px;
 }
 
 .footer-links ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .footer-links li {
   display: inline;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 
 .footer-links a {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
+  font-size: 1rem;
+  font-family: "Arial", sans-serif; /* Ensuring font consistency */
 }
 
 .footer-links a:hover {
-  text-decoration: underline;
+  color: #f0e68c; /* Light yellow hover color for links */
 }
 
 .footer-social a {
-  margin-right: 20px;
+  display: inline-block;
+  margin-right: 15px;
+  transition: transform 0.3s ease;
 }
 
 .footer-social img {
-  width: 30px;
-  height: auto;
+  width: 24px; /* Consistent size for icons */
+  height: 24px;
+  filter: brightness(0) invert(1); /* Ensures icons appear white */
 }
 
-.footer-copyright p {
-  margin-top: 20px;
-  font-size: 0.9rem;
+.footer-social a:hover img {
+  transform: scale(1.1); /* Slightly enlarge icon on hover */
+  filter: brightness(0.9) invert(0.9); /* Add a hover effect */
+}
+
+.footer-social a:last-child {
+  margin-right: 0; /* Remove margin on the last icon */
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-social {
+    margin-top: 15px;
+  }
 }

@@ -170,20 +170,16 @@ export async function SaveCompanyToCache(
   ticker: string,
   cache: CompanyCache[]
 ) {
+  // saves data in cache for company... DONT have to hit polygon API for each request
+
   const index = cache.findIndex((x) => x.t === ticker);
 
   // company stored in cache!
   if (index !== -1) {
-    console.log(
-      "COMPANY IN CAHCE!\nexpirs at " + new Date(cache[index].ea).toUTCString()
-    );
-
     const currentTime = Date.now();
 
     // if cache is older than 3 hours, refresh
     if (cache[index].ea < currentTime) {
-      console.log("NEED TO REFRESH CACHE FOR THIS COMPANY!");
-
       const refreshedData = {
         t: ticker,
         d: await GetCompanyDividends(ticker),
@@ -202,8 +198,6 @@ export async function SaveCompanyToCache(
   // copmany not in cache
   // store data in cache
   else {
-    console.log("company not in cache :(");
-
     const currentTime = Date.now();
     const newCache = {
       t: ticker,
@@ -214,7 +208,6 @@ export async function SaveCompanyToCache(
     };
 
     cache.push(newCache);
-    console.log("now in cache!");
 
     return newCache;
   }
