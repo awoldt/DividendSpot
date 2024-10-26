@@ -38,9 +38,12 @@ export function GetDividendPayingYears(dividends: Dividend[] | null) {
     return null;
   }
 
+  // filter out where pay_date could be undefined (rare, will throw 500 error)
+  const validDividends = dividends.filter((x) => x.pay_date !== undefined);
+
   const uniqueYears: number[] = [];
-  for (let i = 0; i < dividends.length; i++) {
-    const year = Number(dividends[i].pay_date.split("-")[0]);
+  for (let i = 0; i < validDividends.length; i++) {
+    const year = Number(validDividends[i].pay_date.split("-")[0]);
     if (!uniqueYears.includes(year)) {
       uniqueYears.push(year);
     }

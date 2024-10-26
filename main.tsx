@@ -95,7 +95,13 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
       title={`${company.rows[0].name} (${company.rows[0].ticker}) Dividend History - DividendSpot`}
       body={<CompanyView cachedData={cachedData} company={company.rows[0]} />}
       styles={["/public/styles/company.css"]}
-      metaDescription={`Discover reliable dividend data for ${company.rows[0].name} ${company.rows[0].ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`}
+      metaDescription={
+        cachedData.d === null
+          ? null
+          : cachedData.d.length > 0
+          ? `Discover reliable dividend data for ${company.rows[0].name} (${company.rows[0].ticker}), including recent and upcoming payouts with detailed amounts`
+          : `Currently ${company.rows[0].name} (${company.rows[0].ticker}) does not pay dividends. They might in the future so be sure to check back!`
+      }
       canonicalLink={`https://dividendspot.com/${ticker.toLowerCase()}`}
       ogData={{
         title: `${company.rows[0].name} (${company.rows[0].ticker}) Dividend History - DividendSpot`,

@@ -6,7 +6,7 @@ export default function Layout(props: {
   body: any;
   title: string;
   styles: string[] | null;
-  metaDescription: string;
+  metaDescription: string | null;
   canonicalLink: string;
   ogData: {
     title: string;
@@ -21,7 +21,10 @@ export default function Layout(props: {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{props.title}</title>
-        <meta name="description" content={props.metaDescription} />
+        {props.metaDescription !== null && (
+          <meta name="description" content={props.metaDescription} />
+        )}
+
         <link rel="canonical" href={props.canonicalLink} />
         <link
           rel="icon"
