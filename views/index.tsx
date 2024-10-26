@@ -9,7 +9,7 @@ export default function Home() {
 
       {/* Main Content Section */}
       <section className="main-content">
-        <h2>Explore Dividend Information for Leading Companies</h2>
+        <h1>Explore Dividend Information for Leading Companies</h1>
         <p>
           Our platform provides comprehensive data on dividend payouts, upcoming
           dividends, and company histories, making it easier for you to track

@@ -1,13 +1,19 @@
 export default function Navbar() {
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-logo">
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-logo">
           <a href="/">
             <span>DividendSpot</span>
           </a>
         </div>
-        <ul className="navbar-links">
+
+        <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+        <label for="menu-toggle" class="hamburger">
+          ☰
+        </label>
+
+        <ul class="navbar-links">
           <li>
             <a href="/about">About</a>
           </li>

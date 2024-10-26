@@ -5,6 +5,9 @@ export default function CompaniesList(props: {
 }) {
   return (
     <div class="container">
+      <p>
+        There are {props.companies.length} companies stored in our database.
+      </p>
       {props.companies.map((c) => {
         return (
           <div>

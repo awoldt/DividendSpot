@@ -8,7 +8,7 @@ body {
 
 /* General Navbar Styling */
 .navbar {
-  background-color: #0056b3; /* Dark blue background */
+  background-color: #0056b3;
   padding: 10px 20px;
 }
 
@@ -23,10 +23,10 @@ body {
 }
 
 .navbar-logo span {
-  font-size: 2rem; /* Make the font large */
+  font-size: 2rem;
   font-weight: bold;
-  color: #ffffff; /* White text for contrast */
-  font-family: "Georgia", serif; /* Add a serif font for a classic look */
+  color: #ffffff;
+  font-family: Verdana, sans-serif;
   letter-spacing: 1px;
 }
 
@@ -41,12 +41,26 @@ body {
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: 500;
-  font-family: "Georgia", serif; /* Enforcing the same font family */
+  font-family: "Roboto", sans-serif; /* Another modern sans-serif font */
   transition: color 0.3s ease;
 }
 
 .navbar-links a:hover {
-  color: #f0e68c; /* Light yellow color on hover */
+  color: #f0e68c;
+}
+
+/* Hamburger menu styling */
+.hamburger {
+  display: none;
+  font-size: 1.5rem;
+  color: #ffffff;
+  cursor: pointer;
+  order: 2;
+}
+
+/* Hidden checkbox styling */
+.menu-toggle {
+  display: none;
 }
 
 .dropdown:hover .dropdown-menu {
@@ -144,5 +158,33 @@ body {
 
   .footer-social {
     margin-top: 15px;
+  }
+
+  .navbar-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Show the hamburger icon */
+  .hamburger {
+    display: block;
+    margin-top: 10px;
+  }
+
+  /* Initially hide the menu links on small screens */
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    background-color: #0056b3;
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  /* Show navbar links when active (dropdown visible) */
+  .menu-toggle:checked + .hamburger + .navbar-links {
+    display: flex;
   }
 }

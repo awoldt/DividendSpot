@@ -248,7 +248,7 @@ h2 {
 /* Responsive Design */
 @media (max-width: 600px) {
   .company-header h1 {
-    font-size: 1.7rem !important;
+    font-size: 1.5rem !important;
   }
 
   .upcoming-dividend-alert span {
@@ -256,11 +256,11 @@ h2 {
   }
 
   h2 {
-    font-size: 1.2rem !important;
+    font-size: 1.7rem !important;
   }
 
   p {
-    font-size: 13px !important;
+    font-size: 16px !important;
   }
 
   .dividends-summary {
