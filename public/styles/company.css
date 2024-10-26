@@ -226,6 +226,7 @@ h2 {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.25s ease;
+  line-height: 1.7rem;
 }
 
 /* When checkbox is checked, show the description content */

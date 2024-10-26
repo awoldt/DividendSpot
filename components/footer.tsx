@@ -5,9 +5,18 @@ export default function Footer() {
         <div className="footer-links">
           <ul>
             <li>
-              <a href="/privacy-policy">Privacy Policy</a>
+              <a href="/privacy-policy"><b>Privacy Policy</b></a>
             </li>
           </ul>
+        </div>
+        <div className="footer-disclaimer">
+          <p>
+            The information provided on this website is for general
+            informational purposes only and should not be construed as financial
+            advice. Users are encouraged to conduct their own independent
+            research and consult with a qualified financial professional before
+            making any investment decisions.
+          </p>
         </div>
         <div className="footer-social">
           <a
