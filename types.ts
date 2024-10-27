@@ -21,7 +21,7 @@ export interface OrganizedDividends {
 }
 
 export interface CompanyCache {
-  t: string; // ticker
+  cd: Company; // company data (stored in supabase)
   d: Dividend[] | null; // dividend data
   rc: Partial<Company>[] | null; // related companies,
   ea: number; // expires at

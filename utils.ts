@@ -7,6 +7,8 @@ import type {
 } from "./types.ts";
 import { db } from "./db.ts";
 
+const cacheTimeoutMS = 10800000; // 3hrs
+
 export async function GetCompanyDividends(
   ticker: string
 ): Promise<Dividend[] | null> {
@@ -173,9 +175,9 @@ export async function SaveCompanyToCache(
   ticker: string,
   cache: CompanyCache[]
 ) {
-  // saves data in cache for company... DONT have to hit polygon API for each request
+  // saves data in cache for company... DONT have to hit polygon OR supabase db for each request
 
-  const index = cache.findIndex((x) => x.t === ticker);
+  const index = cache.findIndex((x) => x.cd.ticker === ticker);
 
   // company stored in cache!
   if (index !== -1) {
@@ -183,11 +185,27 @@ export async function SaveCompanyToCache(
 
     // if cache is older than 3 hours, refresh
     if (cache[index].ea < currentTime) {
-      const refreshedData = {
-        t: ticker,
+      const company = await db.query(
+        "SELECT * FROM companies WHERE ticker = $1;",
+        [ticker]
+      );
+
+      if (company.rowCount === 0) {
+        return "company_doesnt_exist";
+      }
+
+      const refreshedData: CompanyCache = {
+        cd: {
+          name: company.rows[0].name,
+          ticker: company.rows[0].ticker,
+          description: company.rows[0].description,
+          website_url: company.rows[0].website_url,
+          address: company.rows[0].address,
+          phone: company.rows[0].phone,
+        },
         d: await GetCompanyDividends(ticker),
         rc: await GetRelatedCompanies(ticker),
-        ea: currentTime + 10800000, // 3 hrs
+        ea: currentTime + cacheTimeoutMS,
         ca: currentTime,
       };
 
@@ -201,12 +219,29 @@ export async function SaveCompanyToCache(
   // copmany not in cache
   // store data in cache
   else {
+    const company = await db.query(
+      "SELECT * FROM companies WHERE ticker = $1;",
+      [ticker]
+    );
+
+    if (company.rowCount === 0) {
+      return "company_doesnt_exist";
+    }
+
     const currentTime = Date.now();
+
     const newCache = {
-      t: ticker,
+      cd: {
+        name: company.rows[0].name,
+        ticker: company.rows[0].ticker,
+        description: company.rows[0].description,
+        website_url: company.rows[0].website_url,
+        address: company.rows[0].address,
+        phone: company.rows[0].phone,
+      },
       d: await GetCompanyDividends(ticker),
       rc: await GetRelatedCompanies(ticker),
-      ea: currentTime + 10800000, // 3 hrs
+      ea: currentTime + cacheTimeoutMS,
       ca: currentTime,
     };
 

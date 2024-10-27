@@ -13,4 +13,5 @@ export const db = new Pool({
   host: Deno.env.get("DB_HOST"),
   port: Deno.env.get("DB_PORT"),
   database: Deno.env.get("DB_DATABASE"),
+  max: 15,
 });

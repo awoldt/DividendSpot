@@ -80,34 +80,30 @@ app.get("/companies", async (c: Context) => {
 
 app.get("/:COMPANY_TICKER", async (c: Context) => {
   const ticker = c.req.param("COMPANY_TICKER").toUpperCase(); // all tickers in DB are uppercase
-  const company = await db.query("SELECT * FROM companies WHERE ticker = $1;", [
-    ticker,
-  ]);
-
-  if (company.rowCount === 0) {
-    return c.text("Company does not exist", 404);
-  }
 
   const cachedData = await SaveCompanyToCache(ticker, COMPANIES_CACHE);
+  if (cachedData === "company_doesnt_exist") {
+    return c.text("Cannot find company with ticker " + ticker, 404);
+  }
 
   return c.html(
     <Layout
-      title={`${company.rows[0].name} (${company.rows[0].ticker}) Dividend History - DividendSpot`}
-      body={<CompanyView cachedData={cachedData} company={company.rows[0]} />}
+      title={`${cachedData.cd.name} (${cachedData.cd.ticker}) Dividend History - DividendSpot`}
+      body={<CompanyView cachedData={cachedData} company={cachedData.cd} />}
       styles={["/public/styles/company.css"]}
       metaDescription={
         cachedData.d === null
           ? null
           : cachedData.d.length > 0
-          ? `Discover reliable dividend data for ${company.rows[0].name} (${company.rows[0].ticker}), including recent and upcoming payouts with detailed amounts`
-          : `Currently ${company.rows[0].name} (${company.rows[0].ticker}) does not pay dividends. They might in the future so be sure to check back!`
+          ? `Discover reliable dividend data for ${cachedData.cd.name} (${cachedData.cd.ticker}), including recent and upcoming payouts with detailed amounts`
+          : `Currently ${cachedData.cd.name} (${cachedData.cd.ticker}) does not pay dividends. They might in the future so be sure to check back!`
       }
       canonicalLink={`https://dividendspot.com/${ticker.toLowerCase()}`}
       ogData={{
-        title: `${company.rows[0].name} (${company.rows[0].ticker}) Dividend History - DividendSpot`,
+        title: `${cachedData.cd.name} (${cachedData.cd.ticker}) Dividend History - DividendSpot`,
         url: `https://dividendspot.com/${ticker.toLowerCase()}`,
         image: `https://dividendspot.com/public/imgs/company-logo/${ticker}.png`,
-        description: `Discover reliable dividend data for ${company.rows[0].name} ${company.rows[0].ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`,
+        description: `Discover reliable dividend data for ${cachedData.cd.name} ${cachedData.cd.ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`,
       }}
     />
   );
