@@ -61,6 +61,12 @@ export default function Layout(props: {
             })}
           </>
         )}
+
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-ZKGSNKFLSX"
+        ></script>
+        <script src="/public/scripts/ga.js"></script>
       </head>
       <body>
         <header>

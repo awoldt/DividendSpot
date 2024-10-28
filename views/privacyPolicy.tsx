@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
     <>
       <div class="container">
         <h1>Privacy Policy</h1>
-        <span>Last updated October 26th, 2024</span>
+        <span>Last updated October 27th, 2024</span>
         <p>
           At DividendSpot, we value your privacy and are committed to protecting
           your personal data. This Privacy Policy explains how we collect, use,
@@ -14,7 +14,23 @@ export default function PrivacyPolicy() {
         </p>
 
         <h2>Information We Collect</h2>
-        <p>We do not collect any information on our users</p>
+        <p>
+          While we do not collect any personally identifiable information on our
+          users, we use Google Analytics to gather anonymous data about site
+          usage. Google Analytics may collect information such as your IP
+          address, browser type, and pages visited. This data helps us
+          understand how users interact with our site and improve our services.
+          For more information on how Google collects and processes this data,
+          please review the{" "}
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Google Privacy & Terms site
+          </a>
+          .
+        </p>
 
         <h2>Changes to This Privacy Policy</h2>
         <p>
