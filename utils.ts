@@ -3,6 +3,7 @@ import type {
   Company,
   CompanyCache,
   Dividend,
+  News,
   OrganizedDividends,
 } from "./types.ts";
 import { db } from "./db.ts";
@@ -253,10 +254,10 @@ export async function SaveCompanyToCache(
   }
 }
 
-export async function GetCompanyNews(ticker: string) {
+export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
   try {
     const req = await axios.get(
-      `https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=5&apiKey=${Deno.env.get(
+      `https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=3&apiKey=${Deno.env.get(
         "POLYGON_API_KEY"
       )}`
     );
@@ -275,6 +276,7 @@ export async function GetCompanyNews(ticker: string) {
         thumbnail: x.image_url,
         description: x.description,
         keywords: x.keywords,
+        included_tickers: x.tickers,
       };
     });
   } catch (error) {

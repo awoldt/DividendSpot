@@ -15,7 +15,7 @@ export interface Company {
   news: News[] | null;
 }
 
-interface News {
+export interface News {
   publisher_name: string;
   publisher_logo: string;
   title: string;
@@ -24,6 +24,7 @@ interface News {
   thumbnail: string;
   description: string;
   keywords: string[];
+  included_tickers: string[]; // all tickers included in article
 }
 
 export interface OrganizedDividends {

@@ -1,8 +1,8 @@
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg bg-primary">
       <div className="container">
-        <a className="navbar-brand" href="/">
+        <a className="navbar-brand text-light fw-bolder" href="/">
           DividendSpot
         </a>
         <button
@@ -19,13 +19,13 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <a className="nav-link" href="/about">
+              <a className="nav-link text-light" href="/about">
                 About
               </a>
             </li>
             <li className="nav-item">
               <a
-                className="nav-link"
+                className="nav-link text-light"
                 href="/companies"
                 title="View all companies featured on site"
               >
