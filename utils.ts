@@ -3,11 +3,12 @@ import type {
   Company,
   CompanyCache,
   Dividend,
+  News,
   OrganizedDividends,
 } from "./types.ts";
 import { db } from "./db.ts";
 
-const cacheTimeoutMS = 10800000; // 3hrs
+const cacheTimeoutMS = 43200000; // 12hrs
 
 export async function GetCompanyDividends(
   ticker: string
@@ -202,6 +203,7 @@ export async function SaveCompanyToCache(
           website_url: company.rows[0].website_url,
           address: company.rows[0].address,
           phone: company.rows[0].phone,
+          news: await GetCompanyNews(ticker),
         },
         d: await GetCompanyDividends(ticker),
         rc: await GetRelatedCompanies(ticker),
@@ -238,6 +240,7 @@ export async function SaveCompanyToCache(
         website_url: company.rows[0].website_url,
         address: company.rows[0].address,
         phone: company.rows[0].phone,
+        news: await GetCompanyNews(ticker),
       },
       d: await GetCompanyDividends(ticker),
       rc: await GetRelatedCompanies(ticker),
@@ -248,5 +251,36 @@ export async function SaveCompanyToCache(
     cache.push(newCache);
 
     return newCache;
+  }
+}
+
+export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
+  try {
+    const req = await axios.get(
+      `https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=3&apiKey=${Deno.env.get(
+        "POLYGON_API_KEY"
+      )}`
+    );
+
+    if (req.data.results.length === 0) {
+      return null;
+    }
+
+    return req.data.results.map((x: any) => {
+      return {
+        publisher_name: x.publisher.name,
+        publisher_logo: x.publisher.logo_url,
+        title: x.title,
+        published_at_utc: x.published_utc,
+        url: x.article_url,
+        thumbnail: x.image_url,
+        description: x.description,
+        keywords: x.keywords,
+        included_tickers: x.tickers,
+      };
+    });
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 }

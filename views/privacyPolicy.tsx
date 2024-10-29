@@ -4,7 +4,7 @@ import Navbar from "../components/navbar.tsx";
 export default function PrivacyPolicy() {
   return (
     <>
-      <div class="container">
+      <div class="container pt-5">
         <h1>Privacy Policy</h1>
         <span>Last updated October 27th, 2024</span>
         <p>

@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import Footer from "./footer.tsx";
 import Navbar from "./navbar.tsx";
 
@@ -40,7 +39,13 @@ export default function Layout(props: {
           href="/public/apple-touch-icon.png"
         />
 
-        <link rel="stylesheet" href="/public/styles/global.css" />
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossOrigin="anonymous"
+        />
+
         {props.ogData !== null && (
           <>
             <meta property="og:title" content={props.ogData.title} />
@@ -54,25 +59,45 @@ export default function Layout(props: {
             <meta property="og:site_name" content="DividendSpot" />
           </>
         )}
-        {props.styles !== null && (
-          <>
-            {props.styles.map((x) => {
-              return <link rel="stylesheet" href={x} />;
-            })}
-          </>
-        )}
 
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-ZKGSNKFLSX"
         ></script>
         <script src="/public/scripts/ga.js"></script>
+
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"
+        ></script>
+
+        <style>
+          {`
+            body, html {
+              height: 100%;
+              margin: 0;
+              display: flex;
+              flex-direction: column;
+            }
+            #content {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+            }
+            footer {
+              flex-shrink: 0;
+            }
+          `}
+        </style>
       </head>
-      <body>
+      <body className="d-flex flex-column min-vh-100">
         <header>
           <Navbar />
         </header>
-        <main>{props.body}</main>
+        <main id="content" className="flex-grow-1">
+          {props.body}
+        </main>
         <Footer />
       </body>
     </html>
