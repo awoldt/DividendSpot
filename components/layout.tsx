@@ -31,7 +31,7 @@ export default function Layout(props: {
           href="/public/favicon-48x48.png"
           sizes="48x48"
         />
-        <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+
         <link rel="shortcut icon" href="/public/favicon.ico" />
         <link
           rel="apple-touch-icon"
