@@ -266,6 +266,28 @@ export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
       return null;
     }
 
+    // NEED TO MAKE SURE INCLUDED TICKERS ARE ACTUALLY IN DB
+    const tickers: string[] = [];
+    req.data.results.forEach((e: any) => {
+      e.tickers &&
+        e.tickers.length > 0 &&
+        e.tickers.forEach((z: any) => {
+          tickers.push(z);
+        });
+    });
+
+    let a = "";
+    tickers.forEach((e) => {
+      a += "'" + e + "',";
+    });
+    a = a.slice(0, a.length - 1);
+
+    const validTickers = await db.query(
+      `SELECT ticker FROM companies WHERE ticker IN (${a});`
+    );
+
+    const t = validTickers.rows.map((x: any) => x.ticker);
+
     return req.data.results.map((x: any) => {
       return {
         publisher_name: x.publisher.name,
@@ -276,7 +298,9 @@ export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
         thumbnail: x.image_url,
         description: x.description,
         keywords: x.keywords,
-        included_tickers: x.tickers,
+        included_tickers: x.tickers.filter(
+          (y: string) => t.includes(y) && y !== ticker
+        ),
       };
     });
   } catch (error) {

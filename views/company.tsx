@@ -10,6 +10,16 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
   const organizedPayouts = OrganizeDividendPayouts(props.cachedData.d);
   const dividendPayingYears = GetDividendPayingYears(props.cachedData.d);
 
+  const dividendChangePercentage: number | null =
+    organizedPayouts === null
+      ? null
+      : organizedPayouts.recent.length >= 2
+      ? ((organizedPayouts.recent[0].amount -
+          organizedPayouts.recent[organizedPayouts.recent.length - 1].amount) /
+          organizedPayouts.recent[organizedPayouts.recent.length - 1].amount) *
+        100
+      : null;
+
   return (
     <div className="container my-5">
       {organizedPayouts === null ? (
@@ -44,18 +54,22 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 props.cachedData.d.length === 0 && (
                   <div class="alert alert-info text-center">
                     <p className="text-muted">
-                      <strong>
-                        {props.cachedData.cd.name} does not pay dividends
-                        currently
-                      </strong>
-                      😔 They might in the future, check back soon!
+                      <span class="fs-3">
+                        <strong>
+                          {props.cachedData.cd.name} does not pay dividends
+                        </strong>{" "}
+                        <b>currently</b> 😔
+                      </span>
+                      <br />
+                      <br />
+                      They might in the future, check back soon!
                     </p>
                   </div>
                 )}
 
               {/* Upcoming Dividend Payout Alert */}
               {organizedPayouts.upcoming.length > 0 && (
-                <div className="alert alert-info text-center fs-4 rounded">
+                <div className="alert alert-info text-center fs-4 rounded mt-5 mb-3">
                   <div class="fs-2 mb-4 fw-bold">
                     🎉 Upcoming Dividend Payout
                   </div>
@@ -85,11 +99,11 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               <ul>
                 <li>
                   <p className="lead">
-                    {props.cachedData.cd.name} has distributed a total of{" "}
+                    🤑 {props.cachedData.cd.name} has distributed a total of{" "}
                     <b>{organizedPayouts.recent.length} dividends</b>{" "}
                     {dividendPayingYears === 0
                       ? "over the course of a year"
-                      : `over a ${dividendPayingYears} year period, from ${
+                      : `from ${
                           organizedPayouts.recent[
                             organizedPayouts.recent.length - 1
                           ].pay_date.split("-")[0]
@@ -98,27 +112,25 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                         }`}
                   </p>
                 </li>
-                {organizedPayouts.recent.length >= 2 && (
-                  <li>
-                    <p class="lead">
-                      During this time, their dividend has seen a{" "}
-                      <b>
-                        {(
-                          ((organizedPayouts.recent[0].amount -
-                            organizedPayouts.recent[
-                              organizedPayouts.recent.length - 1
-                            ].amount) /
-                            organizedPayouts.recent[
-                              organizedPayouts.recent.length - 1
-                            ].amount) *
-                          100
-                        ).toFixed(2)}
-                        %{" "}
-                      </b>
-                      increase in the payout amount
-                    </p>
-                  </li>
-                )}
+
+                {dividendChangePercentage !== null &&
+                  dividendPayingYears !== null &&
+                  dividendPayingYears >= 1 && (
+                    <li>
+                      <p class="lead">
+                        {dividendChangePercentage > 0 && "📈"}{" "}
+                        {dividendChangePercentage < 0 && "📉"} During this{" "}
+                        {dividendPayingYears} period their dividend has seen a{" "}
+                        <b>{dividendChangePercentage.toFixed(2)}%</b>
+                        {dividendChangePercentage < 0
+                          ? " decrease"
+                          : dividendChangePercentage > 0
+                          ? " increase"
+                          : ""}{" "}
+                        in the payout amount
+                      </p>
+                    </li>
+                  )}
               </ul>
             </div>
           )}
@@ -254,6 +266,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               </div>
             </div>
           )}
+
           {/* Company News */}
           {props.cachedData.cd.news && (
             <div className="accordion mb-4" id="companyNewsAccordion">
@@ -333,19 +346,21 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                             </div>
                           </div>
                         </a>
-                        <span className="small text-secondary me-1">
-                          Companies featured in this article:{" "}
-                          {newsItem.included_tickers
-                            .filter((x) => x !== props.cachedData.cd.ticker)
-                            .map((ticker) => (
-                              <a
-                                href={`/${ticker}`}
-                                className="small text-primary me-2"
-                              >
-                                {ticker}
-                              </a>
-                            ))}
-                        </span>
+                        {newsItem.included_tickers.length > 0 && (
+                          <span className="small text-secondary me-1">
+                            Other companies featured in this article:{" "}
+                            {newsItem.included_tickers
+                              .filter((x) => x !== props.cachedData.cd.ticker)
+                              .map((ticker) => (
+                                <a
+                                  href={`/${ticker}`}
+                                  className="small text-primary me-2"
+                                >
+                                  {ticker}
+                                </a>
+                              ))}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
