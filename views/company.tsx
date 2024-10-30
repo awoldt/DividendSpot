@@ -114,6 +114,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 </li>
 
                 {dividendChangePercentage !== null &&
+                  dividendChangePercentage !== 0 &&
                   dividendPayingYears !== null &&
                   dividendPayingYears >= 1 && (
                     <li>

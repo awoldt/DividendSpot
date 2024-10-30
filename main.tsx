@@ -1,9 +1,7 @@
 import { Hono, type Context } from "hono";
 import CompanyView from "./views/company.tsx";
 import { SaveCompanyToCache } from "./utils.ts";
-import { db } from "./db.ts";
 import { serveStatic } from "hono/deno";
-import CompaniesList from "./views/companiesList.tsx";
 import PrivacyPolicy from "./views/privacyPolicy.tsx";
 import type { CompanyCache } from "./types.ts";
 import Layout from "./components/layout.tsx";
@@ -69,28 +67,6 @@ app.get("/privacy-policy", (c: Context) => {
         styles={["/public/styles/privacy.css"]}
         metaDescription="Privacy policy for DividendSpot"
         canonicalLink="https://dividendspot.com/privacy-policy"
-        ogData={null}
-      />
-    )}
-    `
-  );
-});
-
-app.get("/companies", async (c: Context) => {
-  const allCompanies = await db.query(
-    "SELECT name, ticker FROM companies ORDER BY name;"
-  );
-
-  return c.html(
-    `
-    <!DOCTYPE html>
-    ${(
-      <Layout
-        title="All companies"
-        body={<CompaniesList companies={allCompanies.rows} />}
-        styles={["/public/styles/company-list.css"]}
-        metaDescription="Discover all companies featured on DividendSpot. We offer companies from the NASDAQ and NYSE exchanges."
-        canonicalLink="https://dividendspot.com/companies"
         ogData={null}
       />
     )}
