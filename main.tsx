@@ -20,6 +20,14 @@ Disallow:
 `);
 });
 
+app.get("/sitemap.xml", async (c: Context) => {
+  const file = await Deno.readFile("./views/sitemap.xml");
+
+  return c.body(new TextDecoder().decode(file), 200, {
+    "Content-Type": "application/xml",
+  });
+});
+
 app.get("/", (c: Context) => {
   return c.html(
     `
