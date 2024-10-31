@@ -110,7 +110,7 @@ export function RemainingDays(upcomingDividend: string) {
   const currentDate = new Date().getTime();
 
   const msDiff = upcomingDate - currentDate;
-  return Math.ceil(msDiff / 86400000); // Changed Math.floor to Math.ceil
+  return Math.ceil(msDiff / 86400000); 
 }
 
 export async function GetRelatedCompanies(
