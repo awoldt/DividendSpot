@@ -76,12 +76,23 @@ export function OrganizeDividendPayouts(dividends: Dividend[] | null) {
 
   const d: OrganizedDividends = { today: null, upcoming: [], recent: [] };
   for (let i = 0; i < dividends.length; i++) {
+    // TODAY
+    if (
+      dividends[i].pay_date ===
+      `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}-${String(today.getDate()).padStart(2, "0")}`
+    ) {
+      d.today = dividends[i];
+
+      continue;
+    }
+
     if (new Date(dividends[i].pay_date) > today) {
       d.upcoming.push(dividends[i]);
     } else if (new Date(dividends[i].pay_date) < today) {
       d.recent.push(dividends[i]);
-    } else {
-      d.today = dividends[i];
     }
   }
 

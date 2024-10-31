@@ -71,7 +71,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               {organizedPayouts.upcoming.length > 0 && (
                 <div className="alert alert-info text-center fs-4 rounded mt-5 mb-3">
                   <div class="fs-2 mb-4 fw-bold">
-                    🎉 Upcoming Dividend Payout
+                    🎉 Upcoming Dividend Payout 🎉
                   </div>
                   <p>
                     {props.cachedData.cd.name} will distribute a dividend of{" "}
@@ -88,6 +88,20 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                       days)
                     </span>
                   </p>
+                </div>
+              )}
+              {/* IF COMPANY HAS DIVIDEND TODAY! */}
+              {organizedPayouts.today !== null && (
+                <div className="alert alert-info text-center fs-4 rounded mt-5 mb-3">
+                  <div class="fs-2 mb-4">
+                    <p>
+                      <b>🎉 {props.cachedData.cd.name} Has a Dividend Today 🎉</b>
+                      <br /> 
+                      <br />
+                      They will be paying out a dividend today for{" "}
+                      <b>${organizedPayouts.today.amount}</b> per share!
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
