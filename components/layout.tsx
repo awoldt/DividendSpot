@@ -61,12 +61,6 @@ export default function Layout(props: {
         )}
 
         <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-ZKGSNKFLSX"
-        ></script>
-        <script src="/public/scripts/ga.js"></script>
-
-        <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
           crossorigin="anonymous"
@@ -90,6 +84,7 @@ export default function Layout(props: {
             }
           `}
         </style>
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="5347fe73-1dec-4a53-b351-92f64a7e9510"></script>
       </head>
       <body className="d-flex flex-column min-vh-100">
         <header>

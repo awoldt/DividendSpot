@@ -1,18 +1,26 @@
 export default function About() {
   return (
-    <div className="container pt-5">
+    <div className="container pt-5 text-center" style="max-width: 700px;">
       <h1>About</h1>
-      <p class="w-75">
+      <p>
         Here at DividendSpot, we care about only one thing: <b>dividends</b>
-        <br />
-        <br />
+      </p>
+
+      <p>
         Most stock websites out there feature a ton of unnecessary information,
-        which can be distracting when all you care about is dividends
+        which can be distracting when all you care about is dividends.
+      </p>
+
+      <p>
+        Try visiting Yahoo Finance right now, it's a disaster. At any given
+        moment there could be 100 different irrelevant pieces of information
+        floating around on your screen and the only thing you care about is
+        hidden and difficult to find. DividendSpot attempts to fix that
+        annoyance.
       </p>
 
       <div class="mt-5">
         <a
-          b-dccayrtai0=""
           href="https://awoldt.com"
           style="text-decoration: none; color: rgb(108, 117, 125)"
           target="_blank"

@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
     <>
       <div class="container pt-5">
         <h1>Privacy Policy</h1>
-        <span>Last updated October 27th, 2024</span>
+        <div class="mb-4 text-muted">Last updated November 1st, 2024</div>
         <p>
           At DividendSpot, we value your privacy and are committed to protecting
           your personal data. This Privacy Policy explains how we collect, use,
@@ -16,18 +16,16 @@ export default function PrivacyPolicy() {
         <h2>Information We Collect</h2>
         <p>
           While we do not collect any personally identifiable information on our
-          users, we use Google Analytics to gather anonymous data about site
-          usage. Google Analytics may collect information such as your IP
-          address, browser type, and pages visited. This data helps us
-          understand how users interact with our site and improve our services.
-          For more information on how Google collects and processes this data,
-          please review the{" "}
+          users, we use Umami Analytics to gather anonymous data about site
+          usage. This data helps us understand how users interact with our site
+          and improve our services. For more information on how Umami collects
+          and processes this data, please review the{" "}
           <a
-            href="https://policies.google.com/technologies/partner-sites"
+            href="https://umami.is/privacy"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Google Privacy & Terms site
+            Umami Privacy Policy
           </a>
           .
         </p>
