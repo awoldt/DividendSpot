@@ -110,7 +110,7 @@ export function RemainingDays(upcomingDividend: string) {
   const currentDate = new Date().getTime();
 
   const msDiff = upcomingDate - currentDate;
-  return Math.ceil(msDiff / 86400000); 
+  return Math.ceil(msDiff / 86400000);
 }
 
 export async function GetRelatedCompanies(
@@ -318,4 +318,52 @@ export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
     console.log(error);
     return null;
   }
+}
+
+export function OrganizeCompaniesList(
+  companies: { name: string; ticker: string }[]
+) {
+  // Initialize an empty list to hold sections
+  const list: {
+    section: string;
+    companies: { name: string; ticker: string }[];
+  }[] = [];
+
+  // Helper function to find or create a section
+  const findOrCreateSection = (sectionName: string) => {
+    let section = list.find((sec) => sec.section === sectionName);
+    if (!section) {
+      section = { section: sectionName, companies: [] };
+      list.push(section);
+    }
+    return section;
+  };
+
+  for (let i = 0; i < companies.length; i++) {
+    const firstChar = companies[i].name[0].toUpperCase();
+
+    // Check if the first character is a letter
+    if (isNaN(parseInt(firstChar, 10))) {
+      // Add company to the respective letter section
+      const section = findOrCreateSection(firstChar);
+      section.companies.push(companies[i]);
+    } else {
+      // Add company to the "Other" section if it starts with a number
+      const section = findOrCreateSection("Other");
+      section.companies.push(companies[i]);
+    }
+  }
+
+  // push other to last property in object
+  const otherSection = list.find((x) => x.section === "Other");
+  const otherSectionIndex = list.findIndex((x) => x.section === "Other");
+  if (otherSection !== undefined) {
+    list.push(otherSection); // add to end
+  }
+
+  if (otherSectionIndex !== -1) {
+    list.splice(otherSectionIndex, 1);
+  }
+
+  return list;
 }

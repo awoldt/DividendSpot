@@ -23,6 +23,15 @@ export default function Navbar() {
                 About
               </a>
             </li>
+            <li className="nav-item">
+              <a
+                className="nav-link text-light"
+                href="/companies"
+                title="View all companies featured on DividendSpot"
+              >
+                Companies
+              </a>
+            </li>
           </ul>
         </div>
       </div>

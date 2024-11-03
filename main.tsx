@@ -1,16 +1,30 @@
 import { Hono, type Context } from "hono";
 import CompanyView from "./views/company.tsx";
-import { SaveCompanyToCache } from "./utils.ts";
+import { OrganizeCompaniesList, SaveCompanyToCache } from "./utils.ts";
 import { serveStatic } from "hono/deno";
 import PrivacyPolicy from "./views/privacyPolicy.tsx";
 import type { CompanyCache } from "./types.ts";
 import Layout from "./components/layout.tsx";
 import About from "./views/about.tsx";
 import Home from "./views/index.tsx";
+import { db } from "./db.ts";
+import { cors } from "hono/cors";
+import CompaniesList from "./views/companiesList.tsx";
 
 const COMPANIES_CACHE: CompanyCache[] = [];
 
 const app = new Hono();
+
+app.use(
+  "/search",
+  cors({
+    origin: [
+      "https://dividendspot.com",
+      "https://dividends-vvxwd.ondigitalocean.app",
+      "http://localhost:8000",
+    ],
+  })
+);
 
 app.use("/public/*", serveStatic({ root: "./" }));
 
@@ -26,6 +40,47 @@ app.get("/sitemap.xml", async (c: Context) => {
   return c.body(new TextDecoder().decode(file), 200, {
     "Content-Type": "application/xml",
   });
+});
+
+app.post("/search", async (c: Context) => {
+  const query = c.req.query("q");
+  if (query === undefined) {
+    return c.json({ msg: "Bad request" }, 400);
+  }
+
+  // look for tickers first
+  const q1 = await db.query(
+    ` SELECT name, ticker FROM companies
+      WHERE ticker = UPPER($1);
+    `,
+    [query]
+  );
+
+  // now find companies with similar name
+  const q2 = await db.query(
+    `SELECT name, ticker FROM companies
+   WHERE name ILIKE '%' || $1 || '%' ORDER BY name LIMIT 10;
+    `,
+    [query]
+  );
+
+  const results = [];
+  if (q1.rows[0] !== undefined) {
+    results.push(q1.rows[0]);
+  }
+  if (q2.rows.length > 0) {
+    if (q2.rows.length > 10) {
+      for (let i = 0; i < 10; i++) {
+        results.push(q2.rows[i]);
+      }
+    } else {
+      for (let i = 0; i < q2.rows.length; i++) {
+        results.push(q2.rows[i]);
+      }
+    }
+  }
+
+  return c.json({ data: results });
 });
 
 app.get("/", (c: Context) => {
@@ -75,6 +130,35 @@ app.get("/privacy-policy", (c: Context) => {
         styles={["/public/styles/privacy.css"]}
         metaDescription="Privacy policy for DividendSpot"
         canonicalLink="https://dividendspot.com/privacy-policy"
+        ogData={null}
+      />
+    )}
+    `
+  );
+});
+
+app.get("/companies", async (c: Context) => {
+  const companies = await db.query(
+    "SELECT name, ticker FROM companies ORDER BY name;"
+  );
+
+  OrganizeCompaniesList(companies.rows);
+
+  return c.html(
+    `
+    <!DOCTYPE html>
+    ${(
+      <Layout
+        title="Companies List | DividendSpot"
+        body={
+          <CompaniesList
+            companies={OrganizeCompaniesList(companies.rows)}
+            numOfCompanies={companies.rowCount}
+          />
+        }
+        styles={null}
+        metaDescription="Discover all companies featured on DividendSpot, search through the list and find the company you are looking for."
+        canonicalLink="https://dividendspot.com/companies"
         ogData={null}
       />
     )}
