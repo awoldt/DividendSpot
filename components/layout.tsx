@@ -84,12 +84,6 @@ export default function Layout(props: {
             }
           `}
         </style>
-
-        <script
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id="5347fe73-1dec-4a53-b351-92f64a7e9510"
-        ></script>
       </head>
       <body className="d-flex flex-column min-vh-100">
         <header>

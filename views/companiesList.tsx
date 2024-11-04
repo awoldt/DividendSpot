@@ -32,7 +32,9 @@ export default function CompaniesList({
                   c.companies.map((z) => {
                     return (
                       <div>
-                        <a href={`/${z.ticker.toLowerCase()}`}>{z.name}</a>
+                        <a href={`/${z.ticker.toLowerCase()}`}>
+                          {z.name} ({z.ticker})
+                        </a>
                       </div>
                     );
                   })}

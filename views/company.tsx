@@ -97,8 +97,10 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 <div className="alert alert-info text-center fs-4 rounded mt-5 mb-3">
                   <div class="fs-2 mb-4">
                     <p>
-                      <b>🎉 {props.cachedData.cd.name} Has a Dividend Today 🎉</b>
-                      <br /> 
+                      <b>
+                        🎉 {props.cachedData.cd.name} Has a Dividend Today 🎉
+                      </b>
+                      <br />
                       <br />
                       They will be paying out a dividend today for{" "}
                       <b>${organizedPayouts.today.amount}</b> per share!
@@ -345,9 +347,9 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                           />
                           <div className="d-flex align-items-start">
                             <div className="flex-grow-1">
-                              <h6 className="mb-1 fw-bold" itemProp="name">
+                              <div className="mb-1 fw-bold" itemProp="name">
                                 {newsItem.title}
-                              </h6>
+                              </div>
                               <p className="mb-2 small" itemProp="description">
                                 {newsItem.description}
                               </p>

@@ -307,7 +307,10 @@ export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
         published_at_utc: x.published_utc,
         url: x.article_url,
         thumbnail: x.image_url,
-        description: x.description,
+        description:
+          x.description.length > 500
+            ? x.description.slice(0, 500) + "..."
+            : x.description,
         keywords: x.keywords,
         included_tickers: x.tickers.filter(
           (y: string) => t.includes(y) && y !== ticker
