@@ -31,6 +31,8 @@ app.use("/public/*", serveStatic({ root: "./" }));
 app.get("/robots.txt", (c: Context) => {
   return c.text(`User-agent: *
 Disallow:
+
+Sitemap: https://dividendspot.com/sitemap.xml
 `);
 });
 
@@ -130,35 +132,6 @@ app.get("/privacy-policy", (c: Context) => {
         styles={["/public/styles/privacy.css"]}
         metaDescription="Privacy policy for DividendSpot"
         canonicalLink="https://dividendspot.com/privacy-policy"
-        ogData={null}
-      />
-    )}
-    `
-  );
-});
-
-app.get("/companies", async (c: Context) => {
-  const companies = await db.query(
-    "SELECT name, ticker FROM companies ORDER BY name;"
-  );
-
-  OrganizeCompaniesList(companies.rows);
-
-  return c.html(
-    `
-    <!DOCTYPE html>
-    ${(
-      <Layout
-        title="Companies List | DividendSpot"
-        body={
-          <CompaniesList
-            companies={OrganizeCompaniesList(companies.rows)}
-            numOfCompanies={companies.rowCount}
-          />
-        }
-        styles={null}
-        metaDescription="Discover all companies featured on DividendSpot, search through the list and find the company you are looking for."
-        canonicalLink="https://dividendspot.com/companies"
         ogData={null}
       />
     )}
