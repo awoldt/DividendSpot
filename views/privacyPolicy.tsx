@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
     <>
       <div class="container pt-5">
         <h1>Privacy Policy</h1>
-        <div class="mb-4 text-muted">Last updated November 4th, 2024</div>
+        <div class="mb-4 text-muted">Last updated December 4th, 2024</div>
         <p>
           At DividendSpot, we value your privacy and are committed to protecting
           your personal data. This Privacy Policy explains how we collect, use,
@@ -14,8 +14,25 @@ export default function PrivacyPolicy() {
         </p>
 
         <h2>Information We Collect</h2>
+        <p>We do not collect any information on our users.</p>
+
+        <h2>Third-Party Advertising</h2>
         <p>
-          We do not collect any information on our users
+          We use Google AdSense to serve ads on our website. Google, as a
+          third-party vendor, uses cookies to serve ads based on your prior
+          visits to our website or other websites. These cookies enable Google
+          and its partners to serve ads based on your interests.
+        </p>
+        <p>
+          You can learn more about how Google uses your data and manage your
+          preferences by visiting{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Google's Privacy Policy
+          </a>
         </p>
 
         <h2>Changes to This Privacy Policy</h2>

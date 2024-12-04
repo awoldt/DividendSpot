@@ -36,6 +36,10 @@ Sitemap: https://dividendspot.com/sitemap.xml
 `);
 });
 
+app.get("/ads.txt", (c: Context) => {
+  return c.text("google.com, pub-4106301283765460, DIRECT, f08c47fec0942fa0");
+});
+
 app.get("/sitemap.xml", async (c: Context) => {
   const file = await Deno.readFile("./views/sitemap.xml");
 
