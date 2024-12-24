@@ -1,10 +1,9 @@
 import Footer from "./footer.tsx";
 import Navbar from "./navbar.tsx";
 
-export default function Layout(props: {
+interface LayoutProps {
   body: any;
   title: string;
-  styles: string[] | null;
   metaDescription: string | null;
   canonicalLink: string;
   ogData: {
@@ -13,17 +12,19 @@ export default function Layout(props: {
     image: string;
     description: string;
   } | null;
-}) {
+}
+
+export default function Layout(props: LayoutProps) {
   return (
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{props.title}</title>
-        {props.metaDescription !== null && (
+
+        {props.metaDescription && (
           <meta name="description" content={props.metaDescription} />
         )}
-
         <link rel="canonical" href={props.canonicalLink} />
         <link
           rel="icon"
@@ -31,14 +32,12 @@ export default function Layout(props: {
           href="/public/favicon-48x48.png"
           sizes="48x48"
         />
-
         <link rel="shortcut icon" href="/public/favicon.ico" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/public/apple-touch-icon.png"
         />
-
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -46,7 +45,7 @@ export default function Layout(props: {
           crossOrigin="anonymous"
         />
 
-        {props.ogData !== null && (
+        {props.ogData && (
           <>
             <meta property="og:title" content={props.ogData.title} />
             <meta property="og:type" content="website" />
@@ -60,12 +59,6 @@ export default function Layout(props: {
           </>
         )}
 
-        <script
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-          crossorigin="anonymous"
-        ></script>
-
         <style>
           {`
             body, html {
@@ -74,25 +67,61 @@ export default function Layout(props: {
               display: flex;
               flex-direction: column;
             }
+
             #content {
               flex: 1;
               display: flex;
               flex-direction: column;
             }
+
             footer {
               flex-shrink: 0;
+            }
+
+            .hover-lift {
+              transition: transform 0.2s ease;
+            }
+            
+            .hover-lift:hover {
+              transform: translateY(-5px);
+            }
+
+            /* Gradient Text */
+            .gradient-text {
+              background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            }
+
+            /* Card Hover Effects */
+            .card {
+              transition: all 0.3s ease;
+            }
+            
+            .card:hover {
+              box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+            }
+
+            /* Navbar Styles */
+            .navbar {
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
           `}
         </style>
       </head>
+
       <body className="d-flex flex-column min-vh-100">
-        <header>
-          <Navbar />
-        </header>
+        <Navbar />
         <main id="content" className="flex-grow-1">
           {props.body}
         </main>
         <Footer />
+
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossOrigin="anonymous"
+        ></script>
       </body>
     </html>
   );

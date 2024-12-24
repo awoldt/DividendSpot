@@ -1,152 +1,123 @@
 export default function Home() {
   return (
-    <div>
-      {/* Welcome Message */}
-      <div className="bg-light text-dark text-center py-2">
-        <p className="mb-0 fs-5 p-3">
-          👋 Welcome to DividendSpot! Stay updated with the latest dividend
-          payouts and histories of top companies traded on the NYSE and NASDAQ
-          markets.
-        </p>
-      </div>
-
-      {/* Main Content Section */}
-      <section className="container mt-5">
-        <h1 className="text-center">
-          Explore Dividend Information for Leading Companies
-        </h1>
-        <p className="text-center">
-          Our platform provides comprehensive data on dividend payouts, upcoming
-          dividends, and company histories, making it easier for you to track
-          your investments.
-        </p>
-
-        {/* Why Track Dividends Section */}
-        <div className="bg-light p-4 mt-4 rounded text-center">
-          <h2>Why Track Dividends?</h2>
-          <p>
-            Dividends provide a reliable source of passive income for investors.
-            With our platform, you can monitor the dividend histories and
-            upcoming payouts of the companies you care about, ensuring you make
-            informed investment decisions.
-          </p>
-        </div>
-
-        {/* Popular Companies Section */}
-        <h2 className="text-center mt-5">Popular Companies</h2>
-        <div className="container mt-4 mb-4">
-          <p class="text-center">
-            Explore some of the biggest companies paying dividends out to their
-            investors. Titans of various sectors that can be a good starting
-            point in your dividend journey.
-          </p>
-          <div className="row g-4 justify-content-center">
-            {[
-              {
-                name: "3M Company",
-                img: "/public/imgs/company-logo/MMM.png",
-                href: "/mmm",
-              },
-              {
-                name: "Altria Group",
-                img: "/public/imgs/company-logo/MO.png",
-                href: "/mo",
-              },
-              {
-                name: "AT&T Inc.",
-                img: "/public/imgs/company-logo/T.png",
-                href: "/t",
-              },
-              {
-                name: "Chevron Corporation",
-                img: "/public/imgs/company-logo/CVX.png",
-                href: "/cvx",
-              },
-              {
-                name: "Coca-Cola Co.",
-                img: "/public/imgs/company-logo/KO.png",
-                href: "/ko",
-              },
-              {
-                name: "Exxon Mobil Corporation",
-                img: "/public/imgs/company-logo/XOM.png",
-                href: "/xom",
-              },
-              {
-                name: "Ford",
-                img: "/public/imgs/company-logo/F.png",
-                href: "/f",
-              },
-              {
-                name: "Johnson & Johnson",
-                img: "/public/imgs/company-logo/JNJ.png",
-                href: "/jnj",
-              },
-              {
-                name: "McDonald's Corporation",
-                img: "/public/imgs/company-logo/MCD.png",
-                href: "/mcd",
-              },
-              {
-                name: "Microsoft Corporation",
-                img: "/public/imgs/company-logo/MSFT.png",
-                href: "/msft",
-              },
-
-              {
-                name: "PepsiCo, Inc.",
-                img: "/public/imgs/company-logo/PEP.png",
-                href: "/pep",
-              },
-              {
-                name: "Pfizer",
-                img: "/public/imgs/company-logo/PFE.png",
-                href: "/pfe",
-              },
-              {
-                name: "Procter & Gamble Co.",
-                img: "/public/imgs/company-logo/PG.png",
-                href: "/pg",
-              },
-              {
-                name: "The Home Depot, Inc.",
-                img: "/public/imgs/company-logo/HD.png",
-                href: "/hd",
-              },
-
-              {
-                name: "Verizon Communications Inc.",
-                img: "/public/imgs/company-logo/VZ.png",
-                href: "/vz",
-              },
-              {
-                name: "Walmart Inc.",
-                img: "/public/imgs/company-logo/WMT.png",
-                href: "/wmt",
-              },
-            ].map((company, index) => (
-              <div className="col-6 col-md-3" key={index}>
-                <a
-                  href={company.href}
-                  className="text-decoration-none text-dark"
-                >
-                  <div className="card text-center h-100 shadow-sm">
-                    <div className="card-body d-flex flex-column align-items-center">
-                      <img
-                        src={company.img}
-                        alt={company.name}
-                        className="img-fluid mb-3"
-                        style={{ width: "50px", height: "50px" }}
-                      />
-                      <h6 className="card-title">{company.name}</h6>
-                    </div>
+    <div className="min-vh-100 d-flex flex-column">
+      <div
+        className="py-5"
+        style={{
+          background: "linear-gradient(135deg, #4158D0 0%, #C850C0 100%)",
+          minHeight: "500px",
+        }}
+      >
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-lg-6 text-white">
+              <h1 className="display-4 fw-bold mb-4">
+                Easily Track Dividend Stocks and Their Payout Histories
+              </h1>
+              <p className="lead mb-4">
+                Stay updated with simple dividend tracking and helpful insights
+                to support your investment journey.
+              </p>
+            </div>
+            <div className="col-lg-6">
+              <div className="p-4 bg-white rounded-4 shadow-lg">
+                <div className="d-flex align-items-center mb-4">
+                  <div className="display-6 fw-bold me-3">
+                    Top Dividend-Paying Companies
                   </div>
-                </a>
+                </div>
+                <div className="row row-cols-2 row-cols-md-3 g-3">
+                  {[
+                    { ticker: "CL", name: "Colgate-Palmolive" },
+                    { ticker: "CVX", name: "Chevron Corporation" },
+                    { ticker: "JNJ", name: "Johnson & Johnson" },
+                    { ticker: "KO", name: "The Coca-Cola Company" },
+                    { ticker: "MMM", name: "3M Company" },
+                    { ticker: "MO", name: "Altria Group" },
+                    { ticker: "MRK", name: "Merck & Co., Inc." },
+                    { ticker: "PEP", name: "PepsiCo, Inc." },
+                    { ticker: "PFE", name: "Pfizer Inc." },
+                    { ticker: "PG", name: "Procter & Gamble" },
+                    { ticker: "SO", name: "Southern Company" },
+                    { ticker: "T", name: "AT&T Inc." },
+                    { ticker: "VZ", name: "Verizon Communications" },
+                    { ticker: "WMT", name: "Walmart Inc." },
+                    { ticker: "XOM", name: "ExxonMobil Corporation" },
+                  ].map((company) => (
+                    <div className="col">
+                      <a
+                        href={`/${company.ticker}`}
+                        className="text-decoration-none"
+                      >
+                        <div className="card h-100 border-0 shadow-sm hover-lift">
+                          <div className="card-body text-center p-2">
+                            <img
+                              src={`/public/imgs/company-logo/${company.ticker}.png`}
+                              alt={company.name + " logo"}
+                              className="img-fluid mb-2"
+                              style={{ width: "40px", height: "40px" }}
+                            />
+                            <span
+                              className="card-title text-dark mb-0 small"
+                              style={{ display: "block" }}
+                            >
+                              <b>{company.name}</b>
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Features Grid */}
+      <div className="col-12 container my-4">
+        <div className="row g-4">
+          {[
+            {
+              icon: "📊",
+              title: "Comprehensive Data",
+              description:
+                "Access detailed dividend histories, payment schedules, and yield information for hundreds of companies.",
+            },
+            {
+              icon: "😎",
+              title: "Basic Data",
+              description:
+                "Dividend payouts along with other basic info on companies. Don't worry about any clutter on your screen.",
+            },
+            {
+              icon: "🔍",
+              title: "Easy Research",
+              description:
+                "Efficiently research and compare dividend-paying stocks across different sectors and industries.",
+            },
+            {
+              icon: "📱",
+              title: "Mobile Friendly",
+              description:
+                "Access dividend information on any device with our responsive platform.",
+            },
+          ].map((feature, index) => (
+            <div key={index} className="col-md-6">
+              <div className="card h-100 border-0 shadow-sm rounded-4">
+                <div className="card-body p-4">
+                  <div className="d-flex align-items-center mb-4">
+                    <div className="display-5 me-3">{feature.icon}</div>
+                    <h3 className="h4 mb-0">{feature.title}</h3>
+                  </div>
+                  <p className="text-muted mb-0">{feature.description}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

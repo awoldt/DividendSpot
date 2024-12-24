@@ -1,6 +1,6 @@
 import { Hono, type Context } from "hono";
 import CompanyView from "./views/company.tsx";
-import { OrganizeCompaniesList, SaveCompanyToCache } from "./utils.ts";
+import { SaveCompanyToCache } from "./utils.ts";
 import { serveStatic } from "hono/deno";
 import PrivacyPolicy from "./views/privacyPolicy.tsx";
 import type { CompanyCache } from "./types.ts";
@@ -9,7 +9,7 @@ import About from "./views/about.tsx";
 import Home from "./views/index.tsx";
 import { db } from "./db.ts";
 import { cors } from "hono/cors";
-import CompaniesList from "./views/companiesList.tsx";
+import DiscoverPage from "./views/discover.tsx";
 
 const COMPANIES_CACHE: CompanyCache[] = [];
 
@@ -97,9 +97,25 @@ app.get("/", (c: Context) => {
       <Layout
         title="DividendSpot - Discover Dividend Data on All your Favorite Companies"
         body={<Home />}
-        styles={["/public/styles/index.css"]}
         metaDescription="DividendSpot is the best platform to discover dividend data on all your favorite companies traded on the NYSE and NASDAQ exchanges"
         canonicalLink="https://dividendspot.com"
+        ogData={null}
+      />
+    )}
+    `
+  );
+});
+
+app.get("/discover", (c: Context) => {
+  return c.html(
+    `
+    <!DOCTYPE html>
+    ${(
+      <Layout
+        title="Popular Companies Paying Dividends"
+        body={<DiscoverPage />}
+        metaDescription="Discover some of your favorite companies that pay dividends, across all major industries of the economy."
+        canonicalLink="https://dividendspot.com/discover"
         ogData={null}
       />
     )}
@@ -115,7 +131,6 @@ app.get("/about", (c: Context) => {
       <Layout
         title="About DividendSpot"
         body={<About />}
-        styles={["/public/styles/about.css"]}
         metaDescription="DividendSpot is the best platform to discover dividend data on all your favorite companies traded on the NYSE and NASDAQ exchanges"
         canonicalLink="https://dividendspot.com/about"
         ogData={null}
@@ -133,7 +148,6 @@ app.get("/privacy-policy", (c: Context) => {
       <Layout
         title="Privacy Policy - DividendSpot"
         body={<PrivacyPolicy />}
-        styles={["/public/styles/privacy.css"]}
         metaDescription="Privacy policy for DividendSpot"
         canonicalLink="https://dividendspot.com/privacy-policy"
         ogData={null}
@@ -157,7 +171,6 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
       <Layout
         title={`${cachedData.cd.name} (${cachedData.cd.ticker}) Dividend History - DividendSpot`}
         body={<CompanyView cachedData={cachedData} />}
-        styles={["/public/styles/company.css"]}
         metaDescription={
           cachedData.d === null
             ? null
