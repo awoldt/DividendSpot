@@ -1,7 +1,7 @@
-FROM denoland/deno:latest
+FROM oven/bun:latest
 WORKDIR /app
-COPY deno.json .
-RUN deno install
+COPY package.json ./
+RUN bun install
 COPY . .
-EXPOSE 8000 
-CMD ["deno", "task", "start"]
+EXPOSE 8080
+CMD ["bun", "run", "index.tsx"]

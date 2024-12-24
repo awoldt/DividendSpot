@@ -1,4 +1,3 @@
 .env
-deno.lock
-/.vscode
+node_modules
 /public/imgs/company-logo

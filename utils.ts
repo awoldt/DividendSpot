@@ -15,9 +15,7 @@ export async function GetCompanyDividends(
 ): Promise<Dividend[] | null> {
   try {
     const req = await axios.get(
-      `https://api.polygon.io/v3/reference/dividends?ticker=${ticker}&limit=1000&sort=pay_date&apiKey=${Deno.env.get(
-        "POLYGON_API_KEY"
-      )}`
+      `https://api.polygon.io/v3/reference/dividends?ticker=${ticker}&limit=1000&sort=pay_date&apiKey=${process.env.POLYGON_API_KEY}`
     );
 
     return req.data.results.map((x: any) => {
@@ -35,13 +33,10 @@ export async function GetCompanyDividends(
 }
 
 export function GetDividendPayingYears(dividends: Dividend[] | null) {
-  // gets the number of years a company has been paying dividends
-
   if (dividends === null) {
     return null;
   }
 
-  // filter out where pay_date could be undefined (rare, will throw 500 error)
   const validDividends = dividends.filter((x) => x.pay_date !== undefined);
 
   const uniqueYears: number[] = [];
@@ -56,14 +51,6 @@ export function GetDividendPayingYears(dividends: Dividend[] | null) {
 }
 
 export function OrganizeDividendPayouts(dividends: Dividend[] | null) {
-  /*
-  Split dividend payouts into 3 categories:
-
-  1. Today's payout
-  2. Upcoming payouts
-  3. Recent payouts
-*/
-
   if (dividends === null) {
     return null;
   }
@@ -76,7 +63,6 @@ export function OrganizeDividendPayouts(dividends: Dividend[] | null) {
 
   const d: OrganizedDividends = { today: null, upcoming: [], recent: [] };
   for (let i = 0; i < dividends.length; i++) {
-    // TODAY
     if (
       dividends[i].pay_date ===
       `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(
@@ -85,7 +71,6 @@ export function OrganizeDividendPayouts(dividends: Dividend[] | null) {
       )}-${String(today.getDate()).padStart(2, "0")}`
     ) {
       d.today = dividends[i];
-
       continue;
     }
 
@@ -100,12 +85,6 @@ export function OrganizeDividendPayouts(dividends: Dividend[] | null) {
 }
 
 export function RemainingDays(upcomingDividend: string) {
-  /*
-    Gets the number of days remaining for a date in the future
-
-    So if today is jan 1st, jan 3rd would be 2 days away
-  */
-
   const upcomingDate = new Date(upcomingDividend).getTime();
   const currentDate = new Date().getTime();
 
@@ -118,12 +97,11 @@ export async function GetRelatedCompanies(
 ): Promise<Partial<Company>[] | null> {
   try {
     const req = await axios.get(
-      `https://api.polygon.io/v1/related-companies/${ticker.toUpperCase()}?apiKey=${Deno.env.get(
-        "POLYGON_API_KEY"
-      )}`
+      `https://api.polygon.io/v1/related-companies/${ticker.toUpperCase()}?apiKey=${
+        process.env.POLYGON_API_KEY
+      }`
     );
 
-    // company doesnt have any related stocks, return popular stocks
     if (req.data.results === undefined) {
       return [
         { name: "Apple Inc.", ticker: "AAPL" },
@@ -145,8 +123,6 @@ export async function GetRelatedCompanies(
       [tickers]
     );
 
-    // now remove duplicate companies
-    // for ex: googl and goog can both be returned, they look the same on user end even though different stocks
     const uniqueCompanies: Partial<Company>[] = [];
     for (let i = 0; i < companies.rows.length; i++) {
       if (
@@ -165,14 +141,6 @@ export async function GetRelatedCompanies(
 }
 
 export function FormatDateString(dateString: string) {
-  /*
-  this function will prevent js stupid ass auto time zone convert of times with date object
-
-  before, new Date(2024-05-23) would be "may 22nd, 2024" as it will apply my local time zone shift, which is 5 hours behind
-
-  manually plugging in the values like new Date(2024, 05, 23) prevents this stupid shit from happening 
-  */
-
   const [year, month, day] = dateString.split("-");
 
   const date = new Date(Number(year), Number(month) - 1, Number(day));
@@ -187,15 +155,11 @@ export async function SaveCompanyToCache(
   ticker: string,
   cache: CompanyCache[]
 ) {
-  // saves data in cache for company... DONT have to hit polygon OR supabase db for each request
-
   const index = cache.findIndex((x) => x.cd.ticker === ticker);
 
-  // company stored in cache!
   if (index !== -1) {
     const currentTime = Date.now();
 
-    // if cache is older than 3 hours, refresh
     if (cache[index].ea < currentTime) {
       const company = await db.query(
         "SELECT * FROM companies WHERE ticker = $1;",
@@ -228,10 +192,7 @@ export async function SaveCompanyToCache(
     }
 
     return cache[index];
-  }
-  // copmany not in cache
-  // store data in cache
-  else {
+  } else {
     const company = await db.query(
       "SELECT * FROM companies WHERE ticker = $1;",
       [ticker]
@@ -268,16 +229,13 @@ export async function SaveCompanyToCache(
 export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
   try {
     const req = await axios.get(
-      `https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=3&apiKey=${Deno.env.get(
-        "POLYGON_API_KEY"
-      )}`
+      `https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=3&apiKey=${process.env.POLYGON_API_KEY}`
     );
 
     if (req.data.results.length === 0) {
       return null;
     }
 
-    // NEED TO MAKE SURE INCLUDED TICKERS ARE ACTUALLY IN DB
     const tickers: string[] = [];
     req.data.results.forEach((e: any) => {
       e.tickers &&
@@ -326,13 +284,11 @@ export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
 export function OrganizeCompaniesList(
   companies: { name: string; ticker: string }[]
 ) {
-  // Initialize an empty list to hold sections
   const list: {
     section: string;
     companies: { name: string; ticker: string }[];
   }[] = [];
 
-  // Helper function to find or create a section
   const findOrCreateSection = (sectionName: string) => {
     let section = list.find((sec) => sec.section === sectionName);
     if (!section) {
@@ -345,23 +301,19 @@ export function OrganizeCompaniesList(
   for (let i = 0; i < companies.length; i++) {
     const firstChar = companies[i].name[0].toUpperCase();
 
-    // Check if the first character is a letter
     if (isNaN(parseInt(firstChar, 10))) {
-      // Add company to the respective letter section
       const section = findOrCreateSection(firstChar);
       section.companies.push(companies[i]);
     } else {
-      // Add company to the "Other" section if it starts with a number
       const section = findOrCreateSection("Other");
       section.companies.push(companies[i]);
     }
   }
 
-  // push other to last property in object
   const otherSection = list.find((x) => x.section === "Other");
   const otherSectionIndex = list.findIndex((x) => x.section === "Other");
   if (otherSection !== undefined) {
-    list.push(otherSection); // add to end
+    list.push(otherSection);
   }
 
   if (otherSectionIndex !== -1) {

@@ -1,30 +1,20 @@
 import { Hono, type Context } from "hono";
 import CompanyView from "./views/company.tsx";
 import { SaveCompanyToCache } from "./utils.ts";
-import { serveStatic } from "hono/deno";
+import { serveStatic } from "hono/bun";
 import PrivacyPolicy from "./views/privacyPolicy.tsx";
 import type { CompanyCache } from "./types.ts";
 import Layout from "./components/layout.tsx";
 import About from "./views/about.tsx";
 import Home from "./views/index.tsx";
 import { db } from "./db.ts";
-import { cors } from "hono/cors";
 import DiscoverPage from "./views/discover.tsx";
+import { readFileSync } from "fs";
+
 
 const COMPANIES_CACHE: CompanyCache[] = [];
 
 const app = new Hono();
-
-app.use(
-  "/search",
-  cors({
-    origin: [
-      "https://dividendspot.com",
-      "https://dividends-vvxwd.ondigitalocean.app",
-      "http://localhost:8000",
-    ],
-  })
-);
 
 app.use("/public/*", serveStatic({ root: "./" }));
 
@@ -41,12 +31,16 @@ app.get("/ads.txt", (c: Context) => {
 });
 
 app.get("/sitemap.xml", async (c: Context) => {
-  const file = await Deno.readFile("./views/sitemap.xml");
-
-  return c.body(new TextDecoder().decode(file), 200, {
-    "Content-Type": "application/xml",
+    try {
+      const file = readFileSync("./views/sitemap.xml", "utf8");
+      return c.body(file, 200, {
+        "Content-Type": "application/xml",
+      });
+    } catch (error) {
+      console.error("Error reading sitemap.xml:", error);
+      return c.text("Error loading sitemap.xml", 500);
+    }
   });
-});
 
 app.post("/search", async (c: Context) => {
   const query = c.req.query("q");
@@ -191,4 +185,7 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
   );
 });
 
-Deno.serve(app.fetch);
+Bun.serve({
+  fetch: app.fetch,
+  port: 8080,
+});
