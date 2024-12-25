@@ -1,5 +1,5 @@
 import Search from "../components/search.tsx";
-import { CompanyCache } from "../types.ts";
+import type { CompanyCache } from "../types.ts";
 import {
   FormatDateString,
   GetDividendPayingYears,
@@ -24,6 +24,11 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
   return (
     <div>
       <div className="container my-5">
+        <div class="mb-4">
+          {" "}
+          <Search />
+        </div>
+
         {organizedPayouts === null ? (
           <div className="alert alert-danger">
             <p className="mb-0">

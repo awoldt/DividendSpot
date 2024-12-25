@@ -11,7 +11,6 @@ import { db } from "./db.ts";
 import DiscoverPage from "./views/discover.tsx";
 import { readFileSync } from "fs";
 
-
 const COMPANIES_CACHE: CompanyCache[] = [];
 
 const app = new Hono();

@@ -15,6 +15,6 @@ export const db = new Pool({
   database: process.env.DB_DATABASE,
   max: 22,
   ssl: {
-    rejectUnauthorized: false, // Optional: Disable strict validation (not recommended for production)
+    rejectUnauthorized: false,
   },
 });

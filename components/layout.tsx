@@ -58,56 +58,6 @@ export default function Layout(props: LayoutProps) {
             <meta property="og:site_name" content="DividendSpot" />
           </>
         )}
-
-        <style>
-          {`
-            body, html {
-              height: 100%;
-              margin: 0;
-              display: flex;
-              flex-direction: column;
-            }
-
-            #content {
-              flex: 1;
-              display: flex;
-              flex-direction: column;
-            }
-
-            footer {
-              flex-shrink: 0;
-            }
-
-            .hover-lift {
-              transition: transform 0.2s ease;
-            }
-            
-            .hover-lift:hover {
-              transform: translateY(-5px);
-            }
-
-            /* Gradient Text */
-            .gradient-text {
-              background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-            }
-
-            /* Card Hover Effects */
-            .card {
-              transition: all 0.3s ease;
-            }
-            
-            .card:hover {
-              box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-            }
-
-            /* Navbar Styles */
-            .navbar {
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-          `}
-        </style>
       </head>
 
       <body className="d-flex flex-column min-vh-100">
