@@ -58,7 +58,7 @@ export default function Home() {
                         <div className="card h-100 border-0 shadow-sm hover-lift">
                           <div className="card-body text-center p-2">
                             <img
-                              src={`/public/imgs/company-logo/${symbol.ticker}.png`}
+                              src={`/public/imgs/company-logo/${symbol.ticker.toUpperCase()}.png`}
                               alt={symbol.name + " company logo"}
                               className="img-fluid mb-2"
                               style={{ width: "40px", height: "40px" }}
