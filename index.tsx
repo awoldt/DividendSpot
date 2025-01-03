@@ -30,16 +30,16 @@ app.get("/ads.txt", (c: Context) => {
 });
 
 app.get("/sitemap.xml", async (c: Context) => {
-    try {
-      const file = readFileSync("./views/sitemap.xml", "utf8");
-      return c.body(file, 200, {
-        "Content-Type": "application/xml",
-      });
-    } catch (error) {
-      console.error("Error reading sitemap.xml:", error);
-      return c.text("Error loading sitemap.xml", 500);
-    }
-  });
+  try {
+    const file = readFileSync("./views/sitemap.xml", "utf8");
+    return c.body(file, 200, {
+      "Content-Type": "application/xml",
+    });
+  } catch (error) {
+    console.error("Error reading sitemap.xml:", error);
+    return c.text("Error loading sitemap.xml", 500);
+  }
+});
 
 app.post("/search", async (c: Context) => {
   const query = c.req.query("q");
@@ -93,6 +93,7 @@ app.get("/", (c: Context) => {
         metaDescription="DividendSpot is the best platform to discover dividend data on all your favorite companies traded on the NYSE and NASDAQ exchanges"
         canonicalLink="https://dividendspot.com"
         ogData={null}
+        includeAds={true}
       />
     )}
     `
@@ -110,6 +111,7 @@ app.get("/discover", (c: Context) => {
         metaDescription="Discover some of your favorite companies that pay dividends, across all major industries of the economy."
         canonicalLink="https://dividendspot.com/discover"
         ogData={null}
+        includeAds={true}
       />
     )}
     `
@@ -127,6 +129,7 @@ app.get("/about", (c: Context) => {
         metaDescription="DividendSpot is the best platform to discover dividend data on all your favorite companies traded on the NYSE and NASDAQ exchanges"
         canonicalLink="https://dividendspot.com/about"
         ogData={null}
+        includeAds={false}
       />
     )}
     `
@@ -144,6 +147,7 @@ app.get("/privacy-policy", (c: Context) => {
         metaDescription="Privacy policy for DividendSpot"
         canonicalLink="https://dividendspot.com/privacy-policy"
         ogData={null}
+        includeAds={false}
       />
     )}
     `
@@ -178,6 +182,7 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
           image: `https://dividendspot.com/public/imgs/company-logo/${ticker}.png`,
           description: `Discover reliable dividend data for ${cachedData.cd.name} ${cachedData.cd.ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`,
         }}
+        includeAds={true}
       />
     )}
    `

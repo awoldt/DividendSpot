@@ -12,6 +12,7 @@ interface LayoutProps {
     image: string;
     description: string;
   } | null;
+  includeAds: boolean;
 }
 
 export default function Layout(props: LayoutProps) {
@@ -57,6 +58,13 @@ export default function Layout(props: LayoutProps) {
             />
             <meta property="og:site_name" content="DividendSpot" />
           </>
+        )}
+        {props.includeAds && (
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4106301283765460"
+            crossorigin="anonymous"
+          ></script>
         )}
       </head>
 
