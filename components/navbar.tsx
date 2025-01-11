@@ -30,7 +30,7 @@ export default function Navbar() {
               <a
                 className="nav-link"
                 href="/discover"
-                target="Discover stocks paying dividends"
+                title="Discover stocks paying dividends"
               >
                 Stocks
               </a>
