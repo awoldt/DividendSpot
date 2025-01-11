@@ -34,9 +34,10 @@ export interface OrganizedDividends {
 }
 
 export interface CompanyCache {
-  cd: Company; // company data (stored in supabase)
-  d: Dividend[] | null; // dividend data
-  rc: Partial<Company>[] | null; // related companies,
-  ea: number; // expires at
-  ca: number; // created at
+  company_data: Company;
+  dividend_data: Dividend[] | null;
+  related_companies: Partial<Company>[] | null;
+  cache_expires_at: number;
+  cache_created_at: number;
+  upcominng_dividend_message: string | null;
 }

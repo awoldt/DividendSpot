@@ -1,6 +1,7 @@
 import Search from "../components/search.tsx";
 import type { CompanyCache } from "../types.ts";
 import {
+  DividendStatement,
   FormatDateString,
   GetDividendPayingYears,
   OrganizeDividendPayouts,
@@ -8,8 +9,12 @@ import {
 } from "../utils.ts";
 
 export default function CompanyView(props: { cachedData: CompanyCache }) {
-  const organizedPayouts = OrganizeDividendPayouts(props.cachedData.d);
-  const dividendPayingYears = GetDividendPayingYears(props.cachedData.d);
+  const organizedPayouts = OrganizeDividendPayouts(
+    props.cachedData.dividend_data
+  );
+  const dividendPayingYears = GetDividendPayingYears(
+    props.cachedData.dividend_data
+  );
 
   const dividendChangePercentage: number | null =
     organizedPayouts === null
@@ -45,26 +50,29 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
             <div className="card border-0 shadow-sm rounded-4 mb-4">
               <div className="card-body text-center p-5">
                 <img
-                  src={`/public/imgs/company-logo/${props.cachedData.cd.ticker}.png`}
-                  alt={`${props.cachedData.cd.name} logo`}
+                  src={`/public/imgs/company-logo/${props.cachedData.company_data.ticker}.png`}
+                  alt={`${props.cachedData.company_data.name} logo`}
                   className="mb-4"
                   style={{ width: "120px", height: "120px" }}
                   itemProp="logo"
                 />
                 <h1 className="display-5 fw-bold mb-4">
-                  <span itemProp="legalName">{props.cachedData.cd.name}</span>{" "}
+                  <span itemProp="legalName">
+                    {props.cachedData.company_data.name}
+                  </span>{" "}
                   <span className="text-muted">
-                    ({props.cachedData.cd.ticker})
+                    ({props.cachedData.company_data.ticker})
                   </span>
                 </h1>
 
                 {/* Company Doesn't Pay Dividends Alert*/}
-                {props.cachedData.d !== null &&
-                  props.cachedData.d.length === 0 && (
+                {props.cachedData.dividend_data !== null &&
+                  props.cachedData.dividend_data.length === 0 && (
                     <div className="alert alert-light border shadow-sm rounded-4 p-4">
                       <p className="lead mb-0">
                         <span className="fw-bold">
-                          {props.cachedData.cd.name} does not pay dividends
+                          {props.cachedData.company_data.name} does not pay
+                          dividends
                         </span>{" "}
                         <b>currently</b> 😔
                         <br />
@@ -79,25 +87,21 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 {organizedPayouts.upcoming.length > 0 && (
                   <div className="alert alert-primary bg-gradient shadow-sm rounded-4 text-center p-4 mt-4">
                     <div className="display-6 fw-bold mb-3">
-                      🎉 Upcoming Dividend Payout
+                      <div className="mb-2">🎉</div>{" "}
+                      <div>
+                        <span class="mb-1">Upcoming Dividend Payout</span>
+                      </div>
+                      <div>
+                        <span class="display-6">
+                          ${organizedPayouts.upcoming[0].amount} per Share
+                        </span>
+                      </div>
                     </div>
-                    <p className="lead mb-0">
-                      {props.cachedData.cd.name} will distribute a dividend of{" "}
-                      <span className="fw-bold">
-                        ${organizedPayouts.upcoming[0].amount}
-                      </span>{" "}
-                      per share on{" "}
-                      <span className="fw-bold">
-                        {FormatDateString(
-                          organizedPayouts.upcoming[0].pay_date
-                        )}{" "}
-                        (
-                        {Math.abs(
-                          RemainingDays(organizedPayouts.upcoming[0].pay_date)
-                        )}{" "}
-                        days)
-                      </span>
-                    </p>
+                    {props.cachedData.upcominng_dividend_message !== null && (
+                      <p className="lead mb-0">
+                        {props.cachedData.upcominng_dividend_message}
+                      </p>
+                    )}
                   </div>
                 )}
 
@@ -108,7 +112,8 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                       🎉 Dividend Payout Today!
                     </div>
                     <p className="lead mb-0">
-                      {props.cachedData.cd.name} is paying out a dividend of{" "}
+                      {props.cachedData.company_data.name} is paying out a
+                      dividend of{" "}
                       <span className="fw-bold">
                         ${organizedPayouts.today.amount}
                       </span>{" "}
@@ -185,7 +190,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
             {/* Accordions */}
             <div className="row g-4 mb-4">
               {/* Company Description */}
-              {props.cachedData.cd.description && (
+              {props.cachedData.company_data.description && (
                 <div className="col-lg-4">
                   <div className="card border-0 shadow-sm rounded-4 h-100">
                     <div className="card-body p-4">
@@ -194,12 +199,12 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                         <h3 className="h4 mb-0">About</h3>
                       </div>
                       <p className="text-muted mb-4" itemProp="description">
-                        {props.cachedData.cd.description}
+                        {props.cachedData.company_data.description}
                       </p>
                       <div className="d-flex flex-column gap-2">
-                        {props.cachedData.cd.website_url && (
+                        {props.cachedData.company_data.website_url && (
                           <a
-                            href={props.cachedData.cd.website_url}
+                            href={props.cachedData.company_data.website_url}
                             className="text-decoration-none"
                             itemProp="sameAs"
                             target="_blank"
@@ -208,19 +213,19 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                             🌐 Website
                           </a>
                         )}
-                        {props.cachedData.cd.address && (
+                        {props.cachedData.company_data.address && (
                           <p className="mb-0 text-muted small">
                             📍{" "}
                             <span itemProp="address">
-                              {props.cachedData.cd.address}
+                              {props.cachedData.company_data.address}
                             </span>
                           </p>
                         )}
-                        {props.cachedData.cd.phone && (
+                        {props.cachedData.company_data.phone && (
                           <p className="mb-0 text-muted small">
                             📞{" "}
                             <span itemProp="telephone">
-                              {props.cachedData.cd.phone}
+                              {props.cachedData.company_data.phone}
                             </span>
                           </p>
                         )}
@@ -231,7 +236,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               )}
 
               {/* Related Companies */}
-              {props.cachedData.rc && (
+              {props.cachedData.related_companies && (
                 <div className="col-lg-4">
                   <div className="card border-0 shadow-sm rounded-4 h-100">
                     <div className="card-body p-4">
@@ -240,7 +245,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                         <h3 className="h4 mb-0">Related Companies</h3>
                       </div>
                       <div className="d-flex flex-wrap gap-2">
-                        {props.cachedData.rc.map((company) => (
+                        {props.cachedData.related_companies.map((company) => (
                           <a
                             href={`/${company.ticker?.toLowerCase()}`}
                             className="btn btn-light btn-sm rounded-pill"
@@ -261,7 +266,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               )}
 
               {/* Company News */}
-              {props.cachedData.cd.news && (
+              {props.cachedData.company_data.news && (
                 <div className="col-lg-4">
                   <div className="card border-0 shadow-sm rounded-4 h-100">
                     <div className="card-body p-4">
@@ -270,7 +275,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                         <h3 className="h4 mb-0">Latest News</h3>
                       </div>
                       <div className="d-flex flex-column gap-4">
-                        {props.cachedData.cd.news.map((newsItem) => (
+                        {props.cachedData.company_data.news.map((newsItem) => (
                           <div
                             className="news-item"
                             itemScope
@@ -310,7 +315,8 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                                       {newsItem.included_tickers
                                         .filter(
                                           (x) =>
-                                            x !== props.cachedData.cd.ticker
+                                            x !==
+                                            props.cachedData.company_data.ticker
                                         )
                                         .map((ticker) => (
                                           <a
@@ -379,14 +385,15 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
             )}
 
             {/* Last Updated Info */}
-            {props.cachedData.d && props.cachedData.d.length > 0 && (
-              <p className="text-muted text-center mt-4 mb-0">
-                <small>
-                  Data last updated:{" "}
-                  {new Date(props.cachedData.ca).toUTCString()}
-                </small>
-              </p>
-            )}
+            {props.cachedData.dividend_data &&
+              props.cachedData.dividend_data.length > 0 && (
+                <p className="text-muted text-center mt-4 mb-0">
+                  <small>
+                    Data last updated:{" "}
+                    {new Date(props.cachedData.cache_created_at).toUTCString()}
+                  </small>
+                </p>
+              )}
           </div>
         )}
       </div>

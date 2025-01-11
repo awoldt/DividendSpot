@@ -166,21 +166,21 @@ app.get("/:COMPANY_TICKER", async (c: Context) => {
     `<!DOCTYPE html>
     ${(
       <Layout
-        title={`${cachedData.cd.name} (${cachedData.cd.ticker}) Dividend History - DividendSpot`}
+        title={`${cachedData.company_data.name} (${cachedData.company_data.ticker}) Dividend History - DividendSpot`}
         body={<CompanyView cachedData={cachedData} />}
         metaDescription={
-          cachedData.d === null
+          cachedData.dividend_data === null
             ? null
-            : cachedData.d.length > 0
-            ? `Discover reliable dividend data for ${cachedData.cd.name} (${cachedData.cd.ticker}), including recent and upcoming payouts with detailed amounts`
-            : `Currently ${cachedData.cd.name} (${cachedData.cd.ticker}) does not pay dividends. They might in the future so be sure to check back!`
+            : cachedData.dividend_data.length > 0
+            ? `Discover reliable dividend data for ${cachedData.company_data.name} (${cachedData.company_data.ticker}), including recent and upcoming payouts with detailed amounts`
+            : `Currently ${cachedData.company_data.name} (${cachedData.company_data.ticker}) does not pay dividends. They might in the future so be sure to check back!`
         }
         canonicalLink={`https://dividendspot.com/${ticker.toLowerCase()}`}
         ogData={{
-          title: `${cachedData.cd.name} (${cachedData.cd.ticker}) Dividend History - DividendSpot`,
+          title: `${cachedData.company_data.name} (${cachedData.company_data.ticker}) Dividend History - DividendSpot`,
           url: `https://dividendspot.com/${ticker.toLowerCase()}`,
           image: `https://dividendspot.com/public/imgs/company-logo/${ticker}.png`,
-          description: `Discover reliable dividend data for ${cachedData.cd.name} ${cachedData.cd.ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`,
+          description: `Discover reliable dividend data for ${cachedData.company_data.name} ${cachedData.company_data.ticker}, including recent and upcoming payouts with detailed amounts. Stay informed on dividend trends to make smart investment decisions.`,
         }}
         includeAds={true}
       />

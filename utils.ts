@@ -7,6 +7,7 @@ import type {
   OrganizedDividends,
 } from "./types.ts";
 import { db } from "./db.ts";
+import { DateTime } from "luxon";
 
 const cacheTimeoutMS = 43200000; // 12hrs
 
@@ -155,12 +156,13 @@ export async function SaveCompanyToCache(
   ticker: string,
   cache: CompanyCache[]
 ) {
-  const index = cache.findIndex((x) => x.cd.ticker === ticker);
+  const index = cache.findIndex((x) => x.company_data.ticker === ticker);
 
+  // company is already in cache
   if (index !== -1) {
     const currentTime = Date.now();
 
-    if (cache[index].ea < currentTime) {
+    if (cache[index].cache_expires_at < currentTime) {
       const company = await db.query(
         "SELECT * FROM companies WHERE ticker = $1;",
         [ticker]
@@ -170,8 +172,16 @@ export async function SaveCompanyToCache(
         return "company_doesnt_exist";
       }
 
+      const dividendData = await GetCompanyDividends(ticker);
+      const organizedPayments = OrganizeDividendPayouts(dividendData);
+
+      const hasUpcomingDividend =
+        organizedPayments?.upcoming.some(
+          (x) => new Date(x.pay_date).getTime() > new Date().getTime()
+        ) ?? false;
+
       const refreshedData: CompanyCache = {
-        cd: {
+        company_data: {
           name: company.rows[0].name,
           ticker: company.rows[0].ticker,
           description: company.rows[0].description,
@@ -180,10 +190,18 @@ export async function SaveCompanyToCache(
           phone: company.rows[0].phone,
           news: await GetCompanyNews(ticker),
         },
-        d: await GetCompanyDividends(ticker),
-        rc: await GetRelatedCompanies(ticker),
-        ea: currentTime + cacheTimeoutMS,
-        ca: currentTime,
+        dividend_data: dividendData,
+        related_companies: await GetRelatedCompanies(ticker),
+        cache_expires_at: currentTime + cacheTimeoutMS,
+        cache_created_at: currentTime,
+        upcominng_dividend_message: !hasUpcomingDividend
+          ? null
+          : DividendStatement(
+              company.rows[0].name,
+              company.rows[0].ticker,
+              organizedPayments!.upcoming[0].amount,
+              organizedPayments!.upcoming[0].pay_date
+            ),
       };
 
       cache[index] = refreshedData;
@@ -192,7 +210,10 @@ export async function SaveCompanyToCache(
     }
 
     return cache[index];
-  } else {
+  }
+  // company not already stored in cache
+  // save company to cache for the first time
+  else {
     const company = await db.query(
       "SELECT * FROM companies WHERE ticker = $1;",
       [ticker]
@@ -203,9 +224,15 @@ export async function SaveCompanyToCache(
     }
 
     const currentTime = Date.now();
+    const dividendData = await GetCompanyDividends(ticker);
+    const organizedPayments = OrganizeDividendPayouts(dividendData);
+    const hasUpcomingDividend =
+      organizedPayments?.upcoming.some(
+        (x) => new Date(x.pay_date).getTime() > new Date().getTime()
+      ) ?? false;
 
-    const newCache = {
-      cd: {
+    const newCache: CompanyCache = {
+      company_data: {
         name: company.rows[0].name,
         ticker: company.rows[0].ticker,
         description: company.rows[0].description,
@@ -214,13 +241,21 @@ export async function SaveCompanyToCache(
         phone: company.rows[0].phone,
         news: await GetCompanyNews(ticker),
       },
-      d: await GetCompanyDividends(ticker),
-      rc: await GetRelatedCompanies(ticker),
-      ea: currentTime + cacheTimeoutMS,
-      ca: currentTime,
+      dividend_data: dividendData,
+      related_companies: await GetRelatedCompanies(ticker),
+      cache_expires_at: currentTime + cacheTimeoutMS,
+      cache_created_at: currentTime,
+      upcominng_dividend_message: !hasUpcomingDividend
+        ? null
+        : DividendStatement(
+            company.rows[0].name,
+            company.rows[0].ticker,
+            organizedPayments!.upcoming[0].amount,
+            organizedPayments!.upcoming[0].pay_date
+          ),
     };
 
-    cache.push(newCache);
+    cache.push(newCache); // SAVE COMPANY TO CACHE!!!!
 
     return newCache;
   }
@@ -270,9 +305,9 @@ export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
             ? x.description.slice(0, 500) + "..."
             : x.description,
         keywords: x.keywords,
-        included_tickers: x.tickers.filter(
-          (y: string) => t.includes(y) && y !== ticker
-        ),
+        included_tickers: x.tickers
+          .filter((y: string) => t.includes(y) && y !== ticker)
+          .slice(0, 5),
       };
     });
   } catch (error) {
@@ -321,4 +356,76 @@ export function OrganizeCompaniesList(
   }
 
   return list;
+}
+
+export function DividendStatement(
+  company_name: string,
+  symbol: string,
+  dividend_amount: number,
+  payment_date_string: string
+) {
+  // Parses the date string and dynamically generates dividend statements.
+  // payment_date_string should be in 'YYYY-MM-DD' format (e.g., '2025-03-04').
+
+  const paymentDate = DateTime.fromISO(payment_date_string);
+
+  if (!paymentDate.isValid) {
+    console.error("Invalid date format. Please use YYYY-MM-DD.");
+    return null; // Or throw an error if you prefer
+  }
+
+  const daysUntilPayment = paymentDate.diffNow("days").toObject().days || 0;
+  const formattedDate = paymentDate.toFormat("MMMM d, yyyy"); // March 4, 2025
+  const dayNumber = paymentDate.toFormat("d");
+
+  const statements = [
+    // More Detailed
+    `${company_name} is scheduled to distribute a dividend of $${dividend_amount} per share on ${formattedDate}.`,
+    `Investors of ${company_name} will receive a dividend payment of $${dividend_amount} per share on the ${dayNumber} of ${paymentDate.toFormat(
+      "MMMM, yyyy"
+    )}.`,
+    `The upcoming dividend payout for ${company_name} is $${dividend_amount} per share, payable on ${formattedDate}.`,
+    `A dividend of $${dividend_amount} per share will be disbursed to ${company_name} shareholders on ${formattedDate}.`,
+    `${company_name} has announced a dividend distribution of $${dividend_amount} per share, with a payment date of ${formattedDate}.`,
+
+    // Emphasis on Timing
+    `In ${Math.round(
+      daysUntilPayment
+    )} days, ${company_name} will pay a dividend of $${dividend_amount} per share.`, // Round to avoid decimals
+    `The next ${company_name} dividend is coming up on ${formattedDate} ($${dividend_amount}/share).`,
+    `${company_name}'s dividend of $${dividend_amount} is payable in approximately ${Math.round(
+      daysUntilPayment
+    )} days, on ${formattedDate}.`,
+    `Mark your calendars: ${company_name}'s $${dividend_amount} dividend is scheduled for ${formattedDate}.`,
+
+    // More Formal
+    `${company_name} hereby announces a forthcoming dividend of $${dividend_amount} per share, to be paid on ${formattedDate}.`,
+    `Notice is hereby given that ${company_name} will distribute a dividend of $${dividend_amount} per share on the aforementioned date of ${formattedDate}.`,
+
+    // ... (rest of the statements with date replacements)
+    `${company_name} is preparing to distribute a dividend of $${dividend_amount} for each share held by investors, with the distribution date set for ${formattedDate}.`,
+    `A dividend payment amounting to $${dividend_amount} per share will be distributed by ${company_name} to its shareholders on ${formattedDate}.`,
+    `${company_name} will be allocating a dividend of $${dividend_amount} per share to its investors on the specified date of ${formattedDate}.`,
+    `The company ${company_name} has scheduled the distribution of a dividend, valued at $${dividend_amount} per share, to occur on ${formattedDate}.`,
+
+    `For shareholders of ${company_name}, an upcoming dividend of $${dividend_amount} per share is scheduled to be paid on ${formattedDate}.`,
+    `${company_name} has announced that it will provide a dividend of $${dividend_amount} per share to its eligible shareholders on ${formattedDate}.`,
+    `Investors holding shares of ${company_name} can anticipate receiving a dividend of $${dividend_amount} per share on ${formattedDate}.`,
+
+    `${company_name} has declared a dividend of $${dividend_amount} per share, which will be payable to shareholders of record on ${formattedDate}.`,
+    `The corporation ${company_name} has established ${formattedDate}, as the payment date for a dividend of $${dividend_amount} per outstanding share.`,
+    `Pursuant to company policy, ${company_name} will remit a dividend of $${dividend_amount} for each share of common stock on ${formattedDate}.`,
+
+    `In the near future, ${company_name} will distribute a dividend of $${dividend_amount} per share to its stockholders, with the payment occurring on ${formattedDate}.`,
+    `An upcoming dividend payment of $${dividend_amount} per share has been announced by ${company_name}, with the distribution date set for ${formattedDate}.`,
+
+    `${company_name} will distribute a dividend of $${dividend_amount} per share on ${formattedDate}, which is approximately ${Math.round(
+      daysUntilPayment
+    )} days from the present date.`,
+    `With approximately ${Math.round(
+      daysUntilPayment
+    )} days remaining, ${company_name} is set to distribute a dividend of $${dividend_amount} per share on ${formattedDate}.`,
+  ];
+
+  return statements[Math.floor(Math.random() * statements.length)];
 }

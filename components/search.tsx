@@ -5,7 +5,7 @@ export default function Search() {
         <input
           id="search_input"
           type="search"
-          className="form-control form-control-lg rounded-pill ps-4 pe-5"
+          className="form-control form-control-lg rounded-pill ps-4 pe-5 mb-4"
           placeholder="Search for a company..."
           style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
         />
