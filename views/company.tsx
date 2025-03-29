@@ -187,158 +187,93 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               </div>
             )}
 
-            {/* Accordions */}
-            <div className="row g-4 mb-4">
-              {/* Company Description */}
-              {props.cachedData.company_data.description && (
-                <div className="col-lg-4">
-                  <div className="card border-0 shadow-sm rounded-4 h-100">
-                    <div className="card-body p-4">
-                      <div className="d-flex align-items-center mb-4">
-                        <div className="display-6 me-3">ℹ️</div>
-                        <h3 className="h4 mb-0">About</h3>
-                      </div>
-                      <p className="text-muted mb-4" itemProp="description">
-                        {props.cachedData.company_data.description}
-                      </p>
-                      <div className="d-flex flex-column gap-2">
-                        {props.cachedData.company_data.website_url && (
-                          <a
-                            href={props.cachedData.company_data.website_url}
-                            className="text-decoration-none"
-                            itemProp="sameAs"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            🌐 Website
-                          </a>
-                        )}
-                        {props.cachedData.company_data.address && (
-                          <p className="mb-0 text-muted small">
-                            📍{" "}
-                            <span itemProp="address">
-                              {props.cachedData.company_data.address}
-                            </span>
-                          </p>
-                        )}
-                        {props.cachedData.company_data.phone && (
-                          <p className="mb-0 text-muted small">
-                            📞{" "}
-                            <span itemProp="telephone">
-                              {props.cachedData.company_data.phone}
-                            </span>
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Related Companies */}
-              {props.cachedData.related_companies && (
-                <div className="col-lg-4">
-                  <div className="card border-0 shadow-sm rounded-4 h-100">
-                    <div className="card-body p-4">
-                      <div className="d-flex align-items-center mb-4">
-                        <div className="display-6 me-3">🏢</div>
-                        <h3 className="h4 mb-0">Related Companies</h3>
-                      </div>
-                      <div className="d-flex flex-wrap gap-2">
-                        {props.cachedData.related_companies.map((company) => (
-                          <a
-                            href={`/${company.ticker?.toLowerCase()}`}
-                            className="btn btn-light btn-sm rounded-pill"
-                          >
-                            <img
-                              src={`/public/imgs/company-logo/${company.ticker}.png`}
-                              alt={`${company.name} logo`}
-                              className="me-2"
-                              style={{ width: "20px", height: "20px" }}
-                            />
-                            {company.name}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Company News */}
-              {props.cachedData.company_data.news && (
-                <div className="col-lg-4">
-                  <div className="card border-0 shadow-sm rounded-4 h-100">
-                    <div className="card-body p-4">
-                      <div className="d-flex align-items-center mb-4">
-                        <div className="display-6 me-3">📰</div>
-                        <h3 className="h4 mb-0">Latest News</h3>
-                      </div>
-                      <div className="d-flex flex-column gap-4">
-                        {props.cachedData.company_data.news.map((newsItem) => (
-                          <div
-                            className="news-item"
-                            itemScope
-                            itemType="https://schema.org/NewsArticle"
-                          >
+            {/* Combined About and Related Companies Section */}
+            {(props.cachedData.company_data.description ||
+              props.cachedData.related_companies) && (
+              <div className="card border-0 shadow-sm rounded-4 mb-4">
+                <div className="card-body p-4">
+                  <div className="row g-4">
+                    {/* Company Description (About) */}
+                    {props.cachedData.company_data.description && (
+                      <div className="col-lg-8">
+                        {" "}
+                        {/* Adjusted column width */}
+                        <div className="d-flex align-items-center mb-4">
+                          <div className="display-6 me-3">ℹ️</div>
+                          <h3 className="h4 mb-0">About</h3>
+                        </div>
+                        <p className="text-muted mb-4" itemProp="description">
+                          {props.cachedData.company_data.description}
+                        </p>
+                        <div className="d-flex flex-column gap-2">
+                          {props.cachedData.company_data.website_url && (
                             <a
-                              href={newsItem.url}
+                              href={props.cachedData.company_data.website_url}
+                              className="text-decoration-none"
+                              itemProp="sameAs"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-decoration-none text-dark"
-                              itemProp="url"
                             >
-                              <div className="d-flex gap-3">
-                                <img
-                                  itemProp="thumbnail"
-                                  src={newsItem.thumbnail}
-                                  alt={`${newsItem.title} thumbnail`}
-                                  className="rounded-3"
-                                  style={{
-                                    width: "80px",
-                                    height: "80px",
-                                    objectFit: "cover",
-                                  }}
-                                />
-                                <div>
-                                  <h4 className="h6 mb-2" itemProp="name">
-                                    {newsItem.title}
-                                  </h4>
-                                  <p className="small text-muted mb-1">
-                                    {newsItem.publisher_name} •{" "}
-                                    {new Date(
-                                      newsItem.published_at_utc
-                                    ).toLocaleDateString()}
-                                  </p>
-                                  {newsItem.included_tickers.length > 0 && (
-                                    <div className="d-flex gap-1">
-                                      {newsItem.included_tickers
-                                        .filter(
-                                          (x) =>
-                                            x !==
-                                            props.cachedData.company_data.ticker
-                                        )
-                                        .map((ticker) => (
-                                          <a
-                                            href={`/${ticker}`}
-                                            className="badge bg-light text-dark text-decoration-none"
-                                          >
-                                            {ticker}
-                                          </a>
-                                        ))}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
+                              🌐 Website
                             </a>
-                          </div>
-                        ))}
+                          )}
+                          {props.cachedData.company_data.address && (
+                            <p className="mb-0 text-muted small">
+                              📍{" "}
+                              <span itemProp="address">
+                                {props.cachedData.company_data.address}
+                              </span>
+                            </p>
+                          )}
+                          {props.cachedData.company_data.phone && (
+                            <p className="mb-0 text-muted small">
+                              📞{" "}
+                              <span itemProp="telephone">
+                                {props.cachedData.company_data.phone}
+                              </span>
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Related Companies */}
+                    {props.cachedData.related_companies && (
+                      // Determine the column width based on whether the description exists
+                      <div
+                        className={
+                          props.cachedData.company_data.description
+                            ? "col-lg-4"
+                            : "col-12"
+                        }
+                      >
+                        <div className="d-flex align-items-center mb-4">
+                          <div className="display-6 me-3">🏢</div>
+                          <h3 className="h4 mb-0">Related Companies</h3>
+                        </div>
+                        <div className="d-flex flex-wrap gap-2">
+                          {props.cachedData.related_companies.map((company) => (
+                            <a
+                              href={`/${company.ticker?.toLowerCase()}`}
+                              className="btn btn-light btn-sm rounded-pill"
+                              key={company.ticker} // Added key for list rendering
+                            >
+                              <img
+                                src={`/public/imgs/company-logo/${company.ticker}.png`}
+                                alt={`${company.name} logo`}
+                                className="me-2"
+                                style={{ width: "20px", height: "20px" }}
+                              />
+                              {company.name}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Recent Payouts Table */}
             {organizedPayouts.recent.length > 0 && (

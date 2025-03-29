@@ -3,7 +3,6 @@ import type {
   Company,
   CompanyCache,
   Dividend,
-  News,
   OrganizedDividends,
 } from "./types.ts";
 import { db } from "./db.ts";
@@ -188,7 +187,6 @@ export async function SaveCompanyToCache(
           website_url: company.rows[0].website_url,
           address: company.rows[0].address,
           phone: company.rows[0].phone,
-          news: await GetCompanyNews(ticker),
         },
         dividend_data: dividendData,
         related_companies: await GetRelatedCompanies(ticker),
@@ -239,7 +237,6 @@ export async function SaveCompanyToCache(
         website_url: company.rows[0].website_url,
         address: company.rows[0].address,
         phone: company.rows[0].phone,
-        news: await GetCompanyNews(ticker),
       },
       dividend_data: dividendData,
       related_companies: await GetRelatedCompanies(ticker),
@@ -258,61 +255,6 @@ export async function SaveCompanyToCache(
     cache.push(newCache); // SAVE COMPANY TO CACHE!!!!
 
     return newCache;
-  }
-}
-
-export async function GetCompanyNews(ticker: string): Promise<News[] | null> {
-  try {
-    const req = await axios.get(
-      `https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=3&apiKey=${process.env.POLYGON_API_KEY}`
-    );
-
-    if (req.data.results.length === 0) {
-      return null;
-    }
-
-    const tickers: string[] = [];
-    req.data.results.forEach((e: any) => {
-      e.tickers &&
-        e.tickers.length > 0 &&
-        e.tickers.forEach((z: any) => {
-          tickers.push(z);
-        });
-    });
-
-    let a = "";
-    tickers.forEach((e) => {
-      a += "'" + e + "',";
-    });
-    a = a.slice(0, a.length - 1);
-
-    const validTickers = await db.query(
-      `SELECT ticker FROM companies WHERE ticker IN (${a});`
-    );
-
-    const t = validTickers.rows.map((x: any) => x.ticker);
-
-    return req.data.results.map((x: any) => {
-      return {
-        publisher_name: x.publisher.name,
-        publisher_logo: x.publisher.logo_url,
-        title: x.title,
-        published_at_utc: x.published_utc,
-        url: x.article_url,
-        thumbnail: x.image_url,
-        description:
-          x.description.length > 500
-            ? x.description.slice(0, 500) + "..."
-            : x.description,
-        keywords: x.keywords,
-        included_tickers: x.tickers
-          .filter((y: string) => t.includes(y) && y !== ticker)
-          .slice(0, 5),
-      };
-    });
-  } catch (error) {
-    console.log(error);
-    return null;
   }
 }
 

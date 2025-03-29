@@ -17,4 +17,4 @@ COPY --from=builder /app/public ./public
 RUN bun install --production
 
 EXPOSE 8080
-CMD ["bun", "run", "dist/index.js"]
+CMD ["bun", "run", "start"]

@@ -1,15 +1,14 @@
 {
   "name": "bun_dividendspot",
   "module": "index.ts",
+  "type": "module",
   "scripts": {
     "dev": "bun run --watch index.tsx",
-    "build": "bun build index.tsx --outdir ./dist --target node",
-    "start": "bun run dist/index.js"
+    "build": "bun build ./index.tsx --outdir ./dist --target=bun --minify", 
+    "start": "bun run ./dist/index.js" 
   },
-  "type": "module",
   "devDependencies": {
     "@types/bun": "^1.1.14",
-    "@types/luxon": "^3.4.2",
     "@types/pg": "^8.11.10"
   },
   "peerDependencies": {
@@ -18,7 +17,6 @@
   "dependencies": {
     "axios": "^1.7.9",
     "hono": "^4.6.14",
-    "luxon": "^3.5.0",
     "pg": "^8.13.1",
     "zod": "^3.24.1"
   }
