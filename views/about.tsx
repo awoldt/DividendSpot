@@ -9,9 +9,9 @@ export default function About() {
         }}
       >
         <div className="container text-center text-white">
-          <h1 className="display-4 fw-bold mb-4">About DividendSpot</h1>
+          <h1 className="display-4 fw-bold mb-4">About</h1>
           <p className="lead mb-0">
-            Your trusted source for dividend investment data and insights
+            We're pretty obsessed with just one thing: Stock Dividends.
           </p>
         </div>
       </div>
@@ -23,12 +23,13 @@ export default function About() {
           <div className="col-12 mb-4">
             <div className="card border-0 shadow-sm rounded-4">
               <div className="card-body p-4 p-md-5">
-                <h2 className="h3 mb-4">Our Mission</h2>
+                <h2 className="h3 mb-4">Our Focused Mission</h2>
                 <p className="lead mb-0">
-                  DividendSpot aims to empower investors with comprehensive,
-                  accurate, and timely dividend data for companies traded on the
-                  NYSE and NASDAQ exchanges. We believe that informed investment
-                  decisions lead to better financial outcomes.
+                  DividendSpot exists to provide you with exactly what you came
+                  for: pure, unadulterated dividend data for NYSE and NASDAQ
+                  stocks. No fluff, no distractions, no confusing charts about
+                  things that aren't dividends. Just the payout history, plain
+                  and simple, delivered with delightful speed.
                 </p>
               </div>
             </div>
@@ -38,34 +39,41 @@ export default function About() {
           <div className="col-12 mt-4">
             <div className="card border-0 shadow-sm rounded-4">
               <div className="card-body p-4 p-md-5">
-                <h2 className="h3 mb-4">Why Choose DividendSpot?</h2>
                 <div className="row g-4">
                   <div className="col-md-4">
                     <div className="d-flex align-items-center mb-3">
-                      <div className="h5 mb-0">✓</div>
-                      <h4 className="h6 ms-2 mb-0">Accurate Data</h4>
+                      <div className="h5 mb-0">✅</div>
+                      <h4 className="h6 ms-2 mb-0">Just the Dividend Facts</h4>
                     </div>
                     <p className="text-muted">
-                      Our information is regularly updated.
+                      We stick to what matters most here: the cold, hard
+                      dividend numbers. Updated regularly, because stale data is
+                      just... sad.
                     </p>
                   </div>
                   <div className="col-md-4">
                     <div className="d-flex align-items-center mb-3">
-                      <div className="h5 mb-0">✓</div>
-                      <h4 className="h6 ms-2 mb-0">User-Friendly</h4>
+                      <div className="h5 mb-0">🚀</div>
+                      <h4 className="h6 ms-2 mb-0">
+                        Faster Than a Speeding Bullet (Almost)
+                      </h4>
                     </div>
                     <p className="text-muted">
-                      Clean interface designed for efficient research and
-                      analysis.
+                      Built for speed on Bun.js, because nobody has time for a
+                      slow-loading site when there are dividends to spot!
                     </p>
                   </div>
                   <div className="col-md-4">
                     <div className="d-flex align-items-center mb-3">
-                      <div className="h5 mb-0">✓</div>
-                      <h4 className="h6 ms-2 mb-0">Free Access</h4>
+                      <div className="h5 mb-0">🆓</div>
+                      <h4 className="h6 ms-2 mb-0">
+                        Free, As In "No Annoying Ads"
+                      </h4>
                     </div>
                     <p className="text-muted">
-                      Essential dividend data available at no cost to users.
+                      Access essential dividend data without playing "Where's
+                      the Close Button?" on pop-up ads. Enjoy the peace and
+                      quiet.
                     </p>
                   </div>
                 </div>

@@ -70,8 +70,6 @@ export default function Search() {
   }
           `}
       </style>
-
-      <script src="/public/scripts/search.js"></script>
     </>
   );
 }

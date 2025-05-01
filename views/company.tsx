@@ -170,7 +170,8 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
             itemScope
             itemType="https://schema.org/Corporation"
           >
-            <div className="card border-0 shadow-sm rounded-4 mb-4">
+            {/* Company Header Card */}
+            <div className="card shadow-sm rounded-4 mb-4">
               <div className="card-body bg-body-tertiary p-4 p-md-5 rounded-4">
                 <div className="row align-items-center g-4">
                   <div className="col-auto text-center text-md-start">
@@ -253,9 +254,10 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               </div>
             </div>
 
+            {/* Dividend Highlights Card */}
             {hasRecentPayouts && (
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
-                <div className="card-header bg-light border-0 rounded-top-4 p-3">
+              <div className="card shadow-sm rounded-4 mb-4">
+                <div className="card-header bg-light border-bottom rounded-top-4 p-3">
                   <h2 className="h5 mb-0">📊 Dividend Highlights</h2>
                 </div>
                 <div className="card-body p-4">
@@ -293,11 +295,12 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               </div>
             )}
 
+            {/* Previous Payout History Card */}
             {hasRecentPayouts &&
               organizedPayouts &&
               organizedPayouts.recent && (
-                <div className="card border-0 shadow-sm rounded-4 mb-4">
-                  <div className="card-header bg-light border-0 rounded-top-4 p-3 d-flex justify-content-between align-items-center">
+                <div className="card shadow-sm rounded-4 mb-4">
+                  <div className="card-header bg-light border-bottom rounded-top-4 p-3 d-flex justify-content-between align-items-center">
                     <h3 className="h5 mb-0">Previous Payout History</h3>
                     <span className="badge bg-secondary fw-normal">
                       {organizedPayouts.recent.length} payouts shown
@@ -410,10 +413,11 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 </div>
               )}
 
+            {/* Overall Dividend Trend Card */}
             {dividendChangePercentage !== null &&
               dividendPayingYears !== null &&
               dividendPayingYears >= 1 && (
-                <div className="card border-0 shadow-sm rounded-4 mb-4">
+                <div className="card shadow-sm rounded-4 mb-4">
                   <div className="card-body p-4">
                     <div className="d-flex align-items-center">
                       <div className="display-6 me-3">
@@ -443,9 +447,10 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 </div>
               )}
 
+            {/* About and Related Companies Card */}
             {(props.cachedData.company_data.description ||
               props.cachedData.related_companies) && (
-              <div className="card border-0 shadow-sm rounded-4 mb-4">
+              <div className="card shadow-sm rounded-4 mb-4">
                 <div className="card-body p-4">
                   <div className="row g-4">
                     {props.cachedData.company_data.description && (
@@ -547,6 +552,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
               </div>
             )}
 
+            {/* Data last updated footer */}
             {hasRecentPayouts && (
               <p className="text-muted text-center mt-4 mb-0">
                 <small>

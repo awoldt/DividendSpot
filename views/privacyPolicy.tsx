@@ -1,21 +1,29 @@
-import Footer from "../components/footer.tsx";
-import Navbar from "../components/navbar.tsx";
-
 export default function PrivacyPolicy() {
   return (
     <>
       <div class="container pt-5">
         <h1>Privacy Policy</h1>
-        <div class="mb-4 text-muted">Last updated December 4th, 2024</div>
+        <div class="mb-4 text-muted">Last updated April 30th, 2025</div>{" "}
+        {/* Keep the date as is */}
         <p>
           At DividendSpot, we value your privacy and are committed to protecting
           your personal data. This Privacy Policy explains how we collect, use,
           and protect your information when you visit our website.
         </p>
-
         <h2>Information We Collect</h2>
-        <p>We do not collect any information on our users.</p>
-
+        <p>
+          We do not collect any personally identifiable information on our
+          users.
+        </p>
+        <h2>Analytics Tracking</h2>
+        <p>
+          We use a privacy-focused third-party analytics software to understand
+          how our website is used. This helps us improve the site and identify
+          popular sections. This software collects only aggregated, anonymized
+          data that does not personally identify you. We do not track your
+          individual activity across the web or link it to any personal
+          information.
+        </p>
         <h2>Third-Party Advertising</h2>
         <p>
           We use Google AdSense to serve ads on our website. Google, as a
@@ -34,7 +42,6 @@ export default function PrivacyPolicy() {
             Google's Privacy Policy
           </a>
         </p>
-
         <h2>Changes to This Privacy Policy</h2>
         <p>
           We may update this Privacy Policy from time to time. Any changes will
