@@ -108,8 +108,6 @@ function inferPaymentFrequency(
 }
 
 // --- Component ---
-// (The rest of the CompanyView component remains the same as the previous version)
-// ... (rest of the component code from the previous response)
 
 export default function CompanyView(props: { cachedData: CompanyCache }) {
   const organizedPayouts: OrganizedDividends | null = props.cachedData
@@ -152,14 +150,18 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
       : null;
 
   return (
-    <div>
+    <div role="main">
+      {" "}
+      {/* Added role="main" for main content area */}
       <div className="container my-5">
         <div className="mb-4">
           <Search />
         </div>
 
         {!organizedPayouts && props.cachedData.dividend_data !== null ? (
-          <div className="alert alert-danger">
+          <div className="alert alert-danger" role="alert">
+            {" "}
+            {/* Added role="alert" for error message */}
             <p className="mb-0">
               There was an error processing dividend data for this company :(
             </p>
@@ -197,7 +199,12 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
 
                 {props.cachedData.dividend_data !== null &&
                   props.cachedData.dividend_data.length === 0 && (
-                    <div className="alert alert-warning border shadow-sm rounded-4 p-4 mt-4 text-center">
+                    <div
+                      className="alert alert-warning border shadow-sm rounded-4 p-4 mt-4 text-center"
+                      role="status"
+                    >
+                      {" "}
+                      {/* Added role="status" for informational message */}
                       <p className="lead mb-0">
                         <span className="fw-bold">
                           {props.cachedData.company_data.name} does not pay
@@ -214,7 +221,12 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
 
                 {upcomingDividend &&
                   typeof upcomingDividend.amount === "number" && (
-                    <div className="alert alert-primary bg-gradient shadow-sm rounded-4 text-center p-4 mt-4">
+                    <div
+                      className="alert alert-primary bg-gradient shadow-sm rounded-4 text-center p-4 mt-4"
+                      role="status"
+                    >
+                      {" "}
+                      {/* Added role="status" */}
                       <h2 className="h4 fw-bold mb-2">
                         📅 Upcoming Dividend Payout
                       </h2>
@@ -237,7 +249,12 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                   )}
 
                 {todayDividend && typeof todayDividend.amount === "number" && (
-                  <div className="alert alert-success bg-gradient shadow-sm rounded-4 text-center p-4 mt-4">
+                  <div
+                    className="alert alert-success bg-gradient shadow-sm rounded-4 text-center p-4 mt-4"
+                    role="status"
+                  >
+                    {" "}
+                    {/* Added role="status" */}
                     <h2 className="h4 fw-bold mb-2">
                       🎉 Dividend Payout Today!
                     </h2>
@@ -308,7 +325,11 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                   </div>
                   <div className="card-body p-4">
                     <div className="table-responsive">
-                      <table className="table table-hover table-striped">
+                      {/* Added aria-label to table for better context */}
+                      <table
+                        className="table table-hover table-striped"
+                        aria-label="Previous dividend payout history"
+                      >
                         <thead>
                           <tr>
                             <th scope="col">Pay Date</th>
@@ -319,6 +340,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                                 <th
                                   scope="col"
                                   className="text-end d-none d-md-table-cell"
+                                  aria-label="Change percentage compared to previous payout" // Added aria-label
                                 >
                                   Change vs Previous
                                 </th>
@@ -386,6 +408,9 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                                                   ? "text-success"
                                                   : "text-danger"
                                               }
+                                              aria-label={`Change of ${changePercent.toFixed(
+                                                2
+                                              )} percent`} // Added aria-label
                                             >
                                               {changePercent > 0 ? "▲" : "▼"}
                                               {changePercent.toFixed(2)}%
@@ -420,7 +445,9 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                 <div className="card shadow-sm rounded-4 mb-4">
                   <div className="card-body p-4">
                     <div className="d-flex align-items-center">
-                      <div className="display-6 me-3">
+                      <div className="display-6 me-3" aria-hidden="true">
+                        {" "}
+                        {/* Added aria-hidden as emoji is decorative */}
                         {dividendChangePercentage > 0 ? "📈" : "📉"}
                       </div>
                       <div>
@@ -433,6 +460,9 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                                 ? "text-success"
                                 : "text-danger"
                             }`}
+                            aria-label={`Change of ${dividendChangePercentage.toFixed(
+                              2
+                            )} percent`} // Added aria-label
                           >
                             {dividendChangePercentage > 0 ? "+" : ""}
                             {dividendChangePercentage.toFixed(2)}%
@@ -462,7 +492,10 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                         }
                       >
                         <div className="d-flex align-items-center mb-3">
-                          <div className="display-6 me-3">ℹ️</div>
+                          <div className="display-6 me-3" aria-hidden="true">
+                            ℹ️
+                          </div>{" "}
+                          {/* Added aria-hidden */}
                           <h3 className="h5 mb-0">
                             About {props.cachedData.company_data.name}
                           </h3>
@@ -478,6 +511,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                               itemProp="url"
                               target="_blank"
                               rel="noopener noreferrer"
+                              aria-label={`Visit website for ${props.cachedData.company_data.name}`} // Added aria-label
                             >
                               🌐 Visit Website
                             </a>
@@ -485,6 +519,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                           {props.cachedData.company_data.address && (
                             <p className="mb-0 text-muted small">
                               📍{" "}
+                              {/* Consider adding aria-hidden="true" to decorative emojis */}
                               <span itemProp="address">
                                 {props.cachedData.company_data.address}
                               </span>
@@ -493,6 +528,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                           {props.cachedData.company_data.phone && (
                             <p className="mb-0 text-muted small">
                               📞{" "}
+                              {/* Consider adding aria-hidden="true" to decorative emojis */}
                               <span itemProp="telephone">
                                 {props.cachedData.company_data.phone}
                               </span>
@@ -511,7 +547,10 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                         }
                       >
                         <div className="d-flex align-items-center mb-3">
-                          <div className="display-6 me-3">🏢</div>
+                          <div className="display-6 me-3" aria-hidden="true">
+                            🏢
+                          </div>{" "}
+                          {/* Added aria-hidden */}
                           <h3 className="h5 mb-0">Related Companies</h3>
                         </div>
                         <div className="d-flex flex-wrap gap-2">
@@ -529,6 +568,9 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                                 }
                                 className="btn btn-outline-secondary btn-sm rounded-pill d-inline-flex align-items-center"
                                 key={company.ticker}
+                                aria-label={`View dividend data for ${
+                                  company.name || "a related company"
+                                } (${company.ticker || "N/A"})`} // Added aria-label
                               >
                                 <img
                                   src={
@@ -539,6 +581,7 @@ export default function CompanyView(props: { cachedData: CompanyCache }) {
                                   alt={`${company.name || "Company"} logo`}
                                   className="me-2"
                                   style={{ width: "20px", height: "20px" }}
+                                  aria-hidden="true" // Logo is decorative within the link
                                 />
                                 {company.name || "N/A"}{" "}
                                 {company.ticker ? `(${company.ticker})` : ""}
