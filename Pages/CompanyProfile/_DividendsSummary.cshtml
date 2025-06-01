@@ -1,0 +1,52 @@
+@model Company
+
+@{
+  var companyName = Model.Name;
+  var dividends = Model.Dividends;
+
+  string? yearsDividendPayedStatement = null;
+  if (dividends != null && dividends.Length == 1)
+  {
+    yearsDividendPayedStatement = $"{companyName} paid a single dividend of ${dividends[0].Amount.ToString("F2")} per share on {dividends[0].DividendPayDate.ToString("MMMM dd, yyyy")}";
+  }
+
+  if (dividends != null && dividends.Length > 1)
+  {
+    var yearDiff = dividends[0].DividendPayDate.Year - dividends[dividends.Length-1].DividendPayDate.Year;
+    if(yearDiff == 0) yearsDividendPayedStatement = $"{companyName} paid {dividends.Length} dividends to date";
+    if(yearDiff == 1) yearsDividendPayedStatement = $"{companyName} has issued {dividends.Length} dividends over a period of about a year";
+    if(yearDiff > 1) yearsDividendPayedStatement = $"{companyName} has issued {dividends.Length} dividend payments over the past {dividends[0].DividendPayDate.Year - dividends[dividends.Length-1].DividendPayDate.Year} years";
+
+  <h3>Dividends Summary</h3>
+  <ul>
+    @{
+      var mostRecentPayout = dividends.FirstOrDefault(x => x.DividendPayDate < DateTime.UtcNow);
+      TimeSpan? mostRecentPayoutInDays = mostRecentPayout != null ? mostRecentPayout.DividendPayDate - DateTime.UtcNow : null;
+      var largestDividendPayout = dividends.OrderByDescending(x => x.Amount).ToArray()[0];
+      var avgPayoutAmount = dividends.Average(x => x.Amount);
+
+      @if(yearsDividendPayedStatement != null) {
+        <li>@yearsDividendPayedStatement</li>
+      }
+      @if(mostRecentPayoutInDays != null && mostRecentPayout != null) {
+        <li>The most recent dividend was paid @Math.Abs(mostRecentPayoutInDays.Value.Days) days ago, on @mostRecentPayout.DividendPayDate.ToString("MMMM d, yyyy")</li>
+      }
+      @if(dividends.Length > 1) {
+        var percentageChange = ((dividends[0].Amount - dividends[dividends.Length-1].Amount) / dividends[dividends.Length-1].Amount) * 100;
+
+        <li>The first recorded dividend was paid on @dividends[dividends.Length -1].DividendPayDate.ToString("MMMM d, yyyy")</li>
+        <li>The highest dividend payout was $@largestDividendPayout.Amount.ToString("F2") per share</li>
+        <li>The average dividend over this @yearDiff year span is $@avgPayoutAmount.ToString("F2") per share</li>
+        if(percentageChange != 0) {
+          if(percentageChange > 0) {
+            <li>@companyName has increased its dividend payments by @percentageChange.ToString("F2")% since @dividends[dividends.Length-1].DividendPayDate.Year</li>
+          }
+          else {
+             <li>@companyName has decreased its dividend payments by @Math.Abs(percentageChange).ToString("F2")% since @dividends[dividends.Length-1].DividendPayDate.Year</li>
+          }
+        }
+      }
+    }
+  </ul>
+}
+}

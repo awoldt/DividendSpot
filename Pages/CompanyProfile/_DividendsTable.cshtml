@@ -4,27 +4,12 @@
   var companyDividends = Model.Dividends;
   var companyName = Model.Name;
 
-  string? yearsDividendPayedStatement = null;
-  if (companyDividends != null && companyDividends.Length == 1)
-  {
-    yearsDividendPayedStatement = $"{companyName} paid a single dividend of ${companyDividends[0].Amount.ToString("F2")} per share on {companyDividends[0].DividendPayDate.ToString("MMMM dd, yyyy")}";
-  }
-  if (companyDividends != null && companyDividends.Length > 1)
-  {
-    var yearDiff = companyDividends[0].DividendPayDate.Year - companyDividends[companyDividends.Length-1].DividendPayDate.Year;
-    if(yearDiff == 0) yearsDividendPayedStatement = $"{companyName} paid {companyDividends.Length} dividends to date";
-    if(yearDiff == 1) yearsDividendPayedStatement = $"{companyName} has payed out {companyDividends.Length} dividends over a period of about a year";
-    if(yearDiff > 1) yearsDividendPayedStatement = $"{companyName} has payed out {companyDividends.Length} dividends over a period of {companyDividends[0].DividendPayDate.Year - companyDividends[companyDividends.Length-1].DividendPayDate.Year} years";
-  }
-
-
   if (companyDividends != null)
   {
     <div class="dividends-table-section">
       <h2>Dividend History</h2>
-      @if (yearsDividendPayedStatement != null)
+      @if (companyDividends.Length > 0)
       {
-        <p>@yearsDividendPayedStatement</p>
         <table class="dividends-table">
           <thead class="dividends-table-header">
             <tr>
@@ -39,7 +24,7 @@
             @for (int i = 0; i < companyDividends.Length; i++)
             {
               var x = companyDividends[i];
-              if (i > 5)
+              if (i > 4)
               {
                 <tr class="dividends-table-row hidden-div" style="display: none;">
                   <td>@x.DividendPayDate.ToString("MMMM dd, yyyy")</td>
