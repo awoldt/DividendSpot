@@ -1,0 +1,52 @@
+<div class="search-container">
+  <div class="search-input-wrapper">
+    <input type="search" placeholder="Search ticker..." id="search" class="custom-search-input" autocomplete="off" />
+  </div>
+  @Html.AntiForgeryToken()
+
+  <div class="search-results-popup">
+    <ul id="search-results">
+    </ul>
+  </div>
+</div>
+
+<script>
+  const searchInput = document.getElementById("search");
+  const token = document.getElementsByTagName("input");
+  const searchResults = document.getElementById("search-results");
+
+  searchInput.addEventListener("keyup", async (e) => {
+    // clear search results when attempting to type
+    while (searchResults.firstChild) {
+      searchResults.removeChild(searchResults.firstChild)
+    }
+    const q = e.target.value;
+    const key = e.key;
+    if (key === "Enter") {
+      const req = await fetch(`/search?q=${q}`, {
+        method: "POST",
+        headers: {
+          "RequestVerificationToken": token[1].value,
+          "content-type": "application/json"
+        }
+      });
+      if (req.ok) {
+        const res = await req.json();
+        const data = res.data;
+        if (data === null) return;
+
+        for (i = 0; i < data.length; i++) {
+          const ticker = data[i].ticker.toLowerCase();
+          const companyName = data[i].name;
+          const resultItem = document.createElement("li");
+          const resultLink = document.createElement("a");
+          resultLink.href = `/${ticker}`
+          resultLink.innerText = companyName;
+          resultItem.appendChild(resultLink);
+
+          searchResults.appendChild(resultItem);
+        }
+      }
+    }
+  })
+</script>

@@ -1,0 +1,23 @@
+@model RelatedCompany[]
+
+@{
+  RelatedCompany[]? relatedCompanies = Model != null ? Model.OrderBy(x => x.Name).ToArray() : null;
+
+  if (relatedCompanies != null && relatedCompanies.Length > 0)
+  {
+    <div class="related-companies-section">
+      <h2>Related Companies</h2>
+      <ul class="related-companies-list">
+        @foreach (var x in relatedCompanies)
+        {
+          <li class="related-company-item">
+            <a href="/@x.Ticker.ToLower()" class="related-company-link">
+              <img src="/imgs/company-logo/@(x.Ticker.ToLower()).png" alt="@x.Name logo" />
+              @x.Name
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+}

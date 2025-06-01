@@ -1,0 +1,55 @@
+@page "/{ticker}"
+@model CompanyProfileModel
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/companypage.css" asp-append-version="true" />
+}
+
+@{
+  var company = Model.Company;
+}
+
+@if (company != null)
+{
+  @section Meta {
+    <title>@company.Name (@company.Ticker) Dividend History</title>
+    <meta name="description"
+      content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+    <meta name="keywords"
+      content="@company.Name, @company.Ticker, @company.Ticker dividend, @company.Ticker dividend history, @company.Name news" />
+
+    <meta property="og:title" content="@company.Name (@company.Ticker) Dividend History" />
+    <meta property="og:description"
+      content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+    <meta property="og:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
+    <meta property="og:url" content="https://dividendspot.com" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@company.Name (@company.Ticker) Dividend History" />
+    <meta name="twitter:description" content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+    <meta name="twitter:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
+  }
+}
+
+
+@if (company == null)
+{
+  <p class="error-message">There was an error while getting company profile data</p>
+}
+else
+{
+  var companyNews = company.CompanyNews;
+  var relatedCompanies = company.RelatedCompanies;
+  var companyDividends = company.Dividends;
+
+  <partial name="_Search" model="@company" />
+  <div class="company-profile-container" itemscope itemType="https://schema.org/Corporation">
+    <partial name="_CompanyHeader" model="@company" />
+    <partial name="_DividendsTable" model="@company" />
+    <partial name="_CompanyNews" model="@companyNews" />
+    <partial name="_RelatedCompanies" model="@relatedCompanies" />
+
+    <span style="color: grey">Dividend data last updated @company.PageLastUpdated UTC</span>
+  </div>
+}

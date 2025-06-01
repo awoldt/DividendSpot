@@ -1,0 +1,40 @@
+@model Company
+
+@{
+  var companyName = Model.Name;
+  var companyDescription = Model.Description;
+  var companyTicker = Model.Ticker;
+  var companyLogoSrc = $"/imgs/company-logo/{companyTicker}.png";
+  string? companyAddress = Model.Address;
+  string? companyPhone = Model.Phone;
+  string? companyWebsite = Model.WebsiteUrl;
+
+  <div class="company-header-section">
+    <img src="@companyLogoSrc" alt="@companyName Logo" class="company-logo" itemprop="logo" />
+    <h1 class="company-name"><span itemprop="name">@companyName</span> (<span
+        class="company-ticker">@companyTicker</span>) Dividend History</h1>
+    <p class="company-description" itemprop="description">@companyDescription</p>
+
+    @if (companyAddress != null || companyPhone != null || companyWebsite != null)
+    {
+      <div class="company-contact-info-simple">
+        @if (companyAddress != null)
+        {
+          <span itemprop="address">@companyAddress</span>
+          <br />
+        }
+        @if (companyPhone != null)
+        {
+          <span>Phone: <span itemprop="telephone">@companyPhone</span></span>
+
+          <br />
+        }
+        @if (companyWebsite != null)
+        {
+          <span>Website: <a href="@companyWebsite" target="_blank" rel="noopener noreferrer"
+              itemprop="sameAs">@companyWebsite</a></span>
+        }
+      </div>
+    }
+  </div>
+}

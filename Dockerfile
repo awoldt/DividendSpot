@@ -1,20 +1,22 @@
-# Build stage
-FROM oven/bun:latest AS builder
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-COPY package.json .env ./
-RUN bun install
+EXPOSE 80
+EXPOSE 443
+ENV ASPNETCORE_URLS=http://*:8080
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY ["dividendspot.csproj", "."]
+RUN dotnet restore "./dividendspot.csproj"
 COPY . .
-RUN bun run build
+WORKDIR "/src/."
+RUN dotnet build "dividendspot.csproj" -c Release -o /app/build
 
-# Production stage
-FROM oven/bun:latest
+FROM build AS publish
+RUN dotnet publish "dividendspot.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
 WORKDIR /app
-COPY --from=builder /app/dist ./dist 
-COPY --from=builder /app/package.json ./ 
-COPY --from=builder /app/.env ./ 
-COPY --from=builder /app/public ./public
-
-RUN bun install --production
-
-EXPOSE 8080
-CMD ["bun", "run", "start"]
+COPY --from=publish /app/publish .
+ENV DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP3SUPPORT=false
+ENTRYPOINT ["dotnet", "dividendspot.dll"]
