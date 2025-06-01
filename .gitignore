@@ -1,6 +1,7 @@
 /wwwroot/imgs/company-logo
 
 appsettings.json
+appsettings.Development.json
 
 # dotenv files
 .env
