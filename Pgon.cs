@@ -1,20 +1,22 @@
 public class PgonUtils
 {
-  public PgonUtils(IHttpClientFactory httpclient, Db db)
+  public PgonUtils(IHttpClientFactory httpclient, Db db, IConfiguration config)
   {
     _httpclient = httpclient;
     _db = db;
+    _config = config;
   }
 
-  public IHttpClientFactory _httpclient { get; set; }
-  public Db _db { get; set; }
+  private IHttpClientFactory _httpclient { get; set; }
+  private Db _db { get; set; }
+  private IConfiguration _config { get; set; }
 
   public async Task<CompanyDividends[]?> GetCompanyDividendData(string ticker)
   {
     try
     {
       HttpClient client = _httpclient.CreateClient();
-      var res = await client.GetFromJsonAsync<PgonDividendResponse?>($"https://api.polygon.io/v3/reference/dividends?ticker={ticker}&order=desc&limit=1000&sort=pay_date&apiKey=PIS0uzmN4JwRwBzj7HrhbPtWw0Oq2JS6");
+      var res = await client.GetFromJsonAsync<PgonDividendResponse?>($"https://api.polygon.io/v3/reference/dividends?ticker={ticker}&order=desc&limit=1000&sort=pay_date&apiKey={_config["pgonApiKey"]}");
       if (res == null) return null;
       List<CompanyDividends> dividendData = new List<CompanyDividends>();
       foreach (var x in res.Results)
@@ -34,7 +36,7 @@ public class PgonUtils
     try
     {
       HttpClient client = _httpclient.CreateClient();
-      var res = await client.GetFromJsonAsync<PgonNewsResponse?>($"https://api.polygon.io/v2/reference/news?ticker={ticker}&order=desc&limit=5&sort=published_utc&apiKey=PIS0uzmN4JwRwBzj7HrhbPtWw0Oq2JS6");
+      var res = await client.GetFromJsonAsync<PgonNewsResponse?>($"https://api.polygon.io/v2/reference/news?ticker={ticker}&order=desc&limit=5&sort=published_utc&apiKey={_config["pgonApiKey"]}");
       if (res == null) return null;
       List<CompanyNews> news = new List<CompanyNews>();
       foreach (var x in res.Results)
@@ -73,7 +75,7 @@ public class PgonUtils
     try
     {
       var client = _httpclient.CreateClient();
-      var res = await client.GetFromJsonAsync<PgonRelatedCompaniesResult?>($"https://api.polygon.io/v1/related-companies/{ticker}?apiKey=PIS0uzmN4JwRwBzj7HrhbPtWw0Oq2JS6");
+      var res = await client.GetFromJsonAsync<PgonRelatedCompaniesResult?>($"https://api.polygon.io/v1/related-companies/{ticker}?apiKey={_config["pgonApiKey"]}");
       if (res == null) return null;
       var tickers = new string[res.Results.Length];
       for (int i = 0; i < res.Results.Length; i++)

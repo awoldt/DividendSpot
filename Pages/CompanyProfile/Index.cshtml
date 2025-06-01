@@ -27,7 +27,8 @@
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="@company.Name (@company.Ticker) Dividend History" />
-    <meta name="twitter:description" content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+    <meta name="twitter:description"
+      content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
     <meta name="twitter:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
   }
 }
@@ -46,9 +47,20 @@ else
   <partial name="_Search" model="@company" />
   <div class="company-profile-container" itemscope itemType="https://schema.org/Corporation">
     <partial name="_CompanyHeader" model="@company" />
+
+    <partial name="_Ad" />
+
     <partial name="_DividendsTable" model="@company" />
+
+    <partial name="_Ad" />
+
     <partial name="_CompanyNews" model="@companyNews" />
+
+    <partial name="_Ad" />
+
     <partial name="_RelatedCompanies" model="@relatedCompanies" />
+
+    <partial name="_Ad" />
 
     <span style="color: grey">Dividend data last updated @company.PageLastUpdated UTC</span>
   </div>
