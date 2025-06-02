@@ -15,18 +15,23 @@
         var featuredCompanies = x.FeaturedTickers.OrderBy(x => x).ToArray();
 
         <li class="news-item">
-          <div class="news-title"> <a href="@x.Url" title="@x.Description" target="_blank"
-              rel="noopener noreferrer">@x.Title</a></div>
-          @if (featuredCompanies.Length > 0)
-          {
-            <div class="news-meta">
-              <span>Featured Companies:</span>
-              @foreach (var z in featuredCompanies)
-              {
-                <a href="/@z.ToLower()" class="featured-ticker">@z</a>
-              }
-            </div>
-          }
+          <div itemscope itemType="https://schema.org/NewsArticle">
+            <div class="news-title"> <a href="@x.Url" target="_blank" rel="noopener noreferrer" itemscope="url"><span
+                  itemscope="headline">@x.Title</span></a></div>
+            <p style="display: none" itemprop="about">@x.Description</p>
+            <div style="@(featuredCompanies.Length == 0 ? "" : "margin-bottom: 10px")">@x.Publisher</div>
+            @if (featuredCompanies.Length > 0)
+            {
+              <div class="news-meta">
+                <span>Featured Companies:</span>
+                @foreach (var z in featuredCompanies)
+                {
+                  <a href="/@z.ToLower()" class="featured-ticker">@z</a>
+                }
+              </div>
+            }
+          </div>
+
         </li>
       }
     </ul>
