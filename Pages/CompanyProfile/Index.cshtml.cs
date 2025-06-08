@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -34,11 +36,23 @@ public class CompanyProfileModel : PageModel
     {
       return NotFound();
     }
+    var companyNews = await _utils.GetCompanyNews(ticker.ToUpper());
+
     company.Dividends = await _utils.GetCompanyDividendData(ticker.ToUpper());
-    company.CompanyNews = await _utils.GetCompanyNews(ticker.ToUpper());
+    company.CompanyNews = companyNews;
     var relatedTickers = await _utils.GetRelatedCompanies(ticker.ToUpper());
     company.RelatedCompanies = await _db.GetRelatedCompanies(relatedTickers);
     company.PageLastUpdated = DateTime.UtcNow;
+
+    if (companyNews != null)
+    {
+      List<string> newsJSONStructure = new List<string>();
+      foreach (var newsArticle in companyNews)
+      {
+        newsJSONStructure.Add(JsonSerializer.Serialize(new NewsArticleJSONLD(newsArticle.Title, newsArticle.PublishedAt, newsArticle.Url, newsArticle.Description, newsArticle.Publisher), new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }));
+      }
+      company.CompanyNewsJSONLD = newsJSONStructure.ToArray();
+    }
 
     // now add this company to the cache for all future requests
     _cache.AddCompanyToCache(company);

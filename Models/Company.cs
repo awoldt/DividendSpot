@@ -1,6 +1,9 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 public class Company
 {
-  public Company(int id, string name, string ticker, string? description, string? websiteUrl, string? address, string? phone, DateTime? pageLastUpdated)
+  public Company(int id, string name, string ticker, string? description, string? websiteUrl, string? address, string? phone, DateTime? pageLastUpdated, int assetType)
   {
     Id = id;
     Name = name;
@@ -10,6 +13,11 @@ public class Company
     Address = address;
     Phone = phone;
     PageLastUpdated = pageLastUpdated;
+
+    if (assetType == 1)
+    {
+      CorporationJSONLD = JsonSerializer.Serialize(new CorporationJSONLD(name, description, websiteUrl, $"https://dividendspot.com/imgs/company-logo/{ticker}.png", phone, ticker), new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+    }
   }
 
   public int Id { get; set; }
@@ -24,6 +32,8 @@ public class Company
   public CompanyDividends[]? Dividends { get; set; }
   public CompanyNews[]? CompanyNews { get; set; }
   public RelatedCompany[]? RelatedCompanies { get; set; }
+  public string? CorporationJSONLD { get; set; }
+  public string[]? CompanyNewsJSONLD { get; set; }
 }
 
 public class CompanyDividends
@@ -85,4 +95,102 @@ public class CompanySearchResults
 
   public string Name { get; set; }
   public string Ticker { get; set; }
+}
+
+public class CorporationJSONLD
+{
+  public CorporationJSONLD(string name, string? description, string? url, string logo, string? telephone, string ticker)
+  {
+    Name = name;
+    Description = description;
+    Url = url;
+    Logo = logo;
+    Telephone = telephone;
+    TickerSymbol = ticker;
+  }
+
+  [JsonPropertyName("@context")]
+  public string Context { get; set; } = "https://schema.org";
+
+  [JsonPropertyName("@type")]
+  public string Type { get; set; } = "Corporation";
+
+  [JsonPropertyName("name")]
+  public string Name { get; set; }
+
+  [JsonPropertyName("description")]
+  public string? Description { get; set; }
+
+  [JsonPropertyName("url")]
+  public string? Url { get; set; }
+
+  [JsonPropertyName("logo")]
+  public string Logo { get; set; }
+
+  [JsonPropertyName("telephone")]
+  public string? Telephone { get; set; }
+
+  [JsonPropertyName("tickerSymbol")]
+  public string TickerSymbol { get; set; }
+}
+
+public class NewsArticleJSONLD
+{
+  public NewsArticleJSONLD(string headline, string datePublished, string url, string description, string publisherName)
+  {
+    Headline = headline;
+    DatePublished = datePublished;
+    Url = url;
+    Description = description;
+    Publisher = new Organization
+    {
+      Name = publisherName
+    };
+    Author = new Organization
+    {
+      Name = publisherName
+    };
+  }
+
+  [JsonPropertyName("@context")]
+  public string Context { get; set; } = "https://schema.org";
+
+  [JsonPropertyName("@type")]
+  public string Type { get; set; } = "NewsArticle";
+
+  [JsonPropertyName("headline")]
+  public string Headline { get; set; }
+
+  [JsonPropertyName("datePublished")]
+  public string DatePublished { get; set; }
+
+  [JsonPropertyName("url")]
+  public string Url { get; set; }
+
+  [JsonPropertyName("description")]
+  public string Description { get; set; }
+
+  [JsonPropertyName("author")]
+  public Organization Author { get; set; }
+
+  [JsonPropertyName("publisher")]
+  public Organization Publisher { get; set; }
+}
+
+public class Organization
+{
+  [JsonPropertyName("@type")]
+  public string Type { get; set; } = "Organization";
+
+  [JsonPropertyName("name")]
+  public string Name { get; set; }
+}
+
+public class ImageObject
+{
+  [JsonPropertyName("@type")]
+  public string Type { get; set; } = "ImageObject";
+
+  [JsonPropertyName("url")]
+  public string Url { get; set; }
 }

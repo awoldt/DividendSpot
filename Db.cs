@@ -31,8 +31,10 @@ public class Db
         string? address = reader.IsDBNull(reader.GetOrdinal("asset_address")) ? null : reader.GetString(reader.GetOrdinal("asset_address"));
         string? phone = reader.IsDBNull(reader.GetOrdinal("asset_phone_number")) ? null : reader.GetString(reader.GetOrdinal("asset_phone_number"));
 
+        int assetType = reader.GetInt32(reader.GetOrdinal("fk_asset_type"));
 
-        return new Company(id, name, ticker, description, websiteUrl, address, phone, null);
+
+        return new Company(id, name, ticker, description, websiteUrl, address, phone, null, assetType);
       }
       return null;
     }

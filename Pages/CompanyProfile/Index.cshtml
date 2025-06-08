@@ -5,6 +5,21 @@
   <link rel="stylesheet" href="~/css/companypage.css" asp-append-version="true" />
 }
 
+@section JSONLD {
+  @if (Model.Company != null && Model.Company.CorporationJSONLD != null)
+  {
+    <script type="application/ld+json">@Html.Raw(@Model.Company.CorporationJSONLD)</script>
+  }
+  @if (Model.Company != null && Model.Company.CompanyNewsJSONLD != null && Model.Company.CompanyNewsJSONLD.Length > 0)
+  {
+    foreach (var x in Model.Company.CompanyNewsJSONLD)
+    {
+      <script type="application/ld+json">@Html.Raw(x)</script>
+    }
+
+  }
+}
+
 @{
   var company = Model.Company;
 }
@@ -45,7 +60,7 @@ else
   var companyDividends = company.Dividends;
 
   <partial name="_Search" model="@company" />
-  <div class="company-profile-container" itemscope itemType="https://schema.org/Corporation">
+  <div class="company-profile-container">
     <partial name="_CompanyHeader" model="@company" />
 
     <partial name="_Ad" />

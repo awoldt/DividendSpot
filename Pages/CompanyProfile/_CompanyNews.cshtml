@@ -15,10 +15,10 @@
         var featuredCompanies = x.FeaturedTickers.OrderBy(x => x).ToArray();
 
         <li class="news-item">
-          <div itemscope itemType="https://schema.org/NewsArticle">
-            <div class="news-title"> <a href="@x.Url" target="_blank" rel="noopener noreferrer" itemscope="url"><span
-                  itemscope="headline">@x.Title</span></a></div>
-            <p style="display: none" itemprop="about">@x.Description</p>
+          <div>
+            <div class="news-title"> <a href="@x.Url" target="_blank" rel="noopener noreferrer"><span>@x.Title</span></a>
+            </div>
+            <p style="display: none">@x.Description</p>
             <div style="@(featuredCompanies.Length == 0 ? "" : "margin-bottom: 10px")">@x.Publisher</div>
             @if (featuredCompanies.Length > 0)
             {
