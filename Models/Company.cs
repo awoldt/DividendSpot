@@ -13,11 +13,7 @@ public class Company
     Address = address;
     Phone = phone;
     PageLastUpdated = pageLastUpdated;
-
-    if (assetType == 1)
-    {
-      CorporationJSONLD = JsonSerializer.Serialize(new CorporationJSONLD(name, description, websiteUrl, $"https://dividendspot.com/imgs/company-logo/{ticker}.png", phone, ticker), new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
-    }
+    AssetType = assetType;
   }
 
   public int Id { get; set; }
@@ -28,12 +24,65 @@ public class Company
   public string? Address { get; set; }
   public string? Phone { get; set; }
   public DateTime? PageLastUpdated { get; set; }
+  private int AssetType { get; set; }
 
   public CompanyDividends[]? Dividends { get; set; }
   public CompanyNews[]? CompanyNews { get; set; }
   public RelatedCompany[]? RelatedCompanies { get; set; }
-  public string? CorporationJSONLD { get; set; }
-  public string[]? CompanyNewsJSONLD { get; set; }
+  public string? CorporationJSONLD => AssetType == 1 ? JsonSerializer.Serialize(new CorporationJSONLD(Name,
+             Description,
+             WebsiteUrl,
+             $"https://dividendspot.com//imgs/company-logo/{Ticker}.png",
+             Phone,
+             Ticker), new JsonSerializerOptions
+             {
+               DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+             }) : null;
+  public string[]? CompanyNewsJSONLD
+  => CompanyNews
+     ?.Select(n => JsonSerializer.Serialize(
+          new NewsArticleJSONLD(
+            n.Title,
+            n.PublishedAt,
+            n.Url,
+            n.Description,
+            n.Publisher
+          ),
+          new JsonSerializerOptions
+          {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+          }
+        ))
+     .ToArray();
+
+  public static async Task<Company> CreateAsync(string ticker,
+    Db db,
+    CustomCache cache,
+    PgonUtils utils)
+  {
+    // try cache first
+    var fromCache = cache.GetCompanyFromCache(ticker.ToUpper());
+    if (fromCache != null) return fromCache;
+
+    // the base company data (name, description, etccc...)
+    var baseData = await db.GetCompanyDetails(ticker.ToUpper())
+               ?? throw new KeyNotFoundException($"no asset “{ticker}”");
+
+    // other things related to company to fetch
+    var dividendsT = utils.GetCompanyDividendData(ticker.ToUpper());
+    var newsT = utils.GetCompanyNews(ticker.ToUpper());
+    var relTickers = utils.GetRelatedCompanies(ticker.ToUpper());
+
+    await Task.WhenAll(dividendsT, newsT, relTickers);
+
+    baseData.Dividends = dividendsT.Result;
+    baseData.CompanyNews = newsT.Result;
+    baseData.RelatedCompanies = await db.GetRelatedCompanies(relTickers.Result);
+    baseData.PageLastUpdated = DateTime.UtcNow;
+
+    cache.AddCompanyToCache(baseData);
+    return baseData;
+  }
 }
 
 public class CompanyDividends
