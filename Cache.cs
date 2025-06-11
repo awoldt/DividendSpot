@@ -7,7 +7,7 @@ public class CustomCache
     _cache = cache;
   }
 
-  public IMemoryCache _cache { get; set; }
+  private readonly IMemoryCache _cache;
 
   public Company? GetCompanyFromCache(string ticker)
   {

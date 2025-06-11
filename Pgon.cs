@@ -7,9 +7,9 @@ public class PgonUtils
     _config = config;
   }
 
-  private IHttpClientFactory _httpclient { get; set; }
-  private Db _db { get; set; }
-  private IConfiguration _config { get; set; }
+  private readonly IHttpClientFactory _httpclient;
+  private readonly Db _db;
+  private readonly IConfiguration _config;
 
   public async Task<CompanyDividends[]?> GetCompanyDividendData(string ticker)
   {
