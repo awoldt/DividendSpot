@@ -69,15 +69,15 @@ public class Company
                ?? throw new KeyNotFoundException($"no asset “{ticker}”");
 
     // other things related to company to fetch
-    var dividendsT = utils.GetCompanyDividendData(ticker.ToUpper());
-    var newsT = utils.GetCompanyNews(ticker.ToUpper());
-    var relTickers = utils.GetRelatedCompanies(ticker.ToUpper());
+    var dividends = utils.GetCompanyDividendData(ticker.ToUpper());
+    var news = utils.GetCompanyNews(ticker.ToUpper());
+    var relatedTickers = utils.GetRelatedCompanies(ticker.ToUpper());
 
-    await Task.WhenAll(dividendsT, newsT, relTickers);
+    await Task.WhenAll(dividends, news, relatedTickers);
 
-    baseData.Dividends = dividendsT.Result;
-    baseData.CompanyNews = newsT.Result;
-    baseData.RelatedCompanies = await db.GetRelatedCompanies(relTickers.Result);
+    baseData.Dividends = dividends.Result;
+    baseData.CompanyNews = news.Result;
+    baseData.RelatedCompanies = await db.GetRelatedCompanies(relatedTickers.Result);
     baseData.PageLastUpdated = DateTime.UtcNow;
 
     cache.AddCompanyToCache(baseData);

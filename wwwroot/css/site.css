@@ -43,7 +43,7 @@ body {
 .main-header .subtitle {
   font-size: 1.1rem;
   color: var(--text-secondary);
-  max-width: 600px;
+  max-width: 750px;
   margin: 0 auto 30px auto;
 }
 

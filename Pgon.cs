@@ -36,7 +36,7 @@ public class PgonUtils
     try
     {
       HttpClient client = _httpclient.CreateClient();
-      var res = await client.GetFromJsonAsync<PgonNewsResponse?>($"https://api.polygon.io/v2/reference/news?ticker={ticker}&order=desc&limit=5&sort=published_utc&apiKey={_config["pgonApiKey"]}");
+      var res = await client.GetFromJsonAsync<PgonNewsResponse?>($"https://api.polygon.io/v2/reference/news?ticker={ticker}&order=desc&limit=100&sort=published_utc&apiKey={_config["pgonApiKey"]}");
       if (res == null) return null;
       List<CompanyNews> news = new List<CompanyNews>();
       foreach (var x in res.Results)
@@ -48,19 +48,35 @@ public class PgonUtils
         }
       }
 
-      // finally, ensure that only tickers supported in dividendspots db are included in the final output
-      var validRelatedTickers = await _db.GetRelatedCompanies(news.SelectMany(x => x.FeaturedTickers).ToArray());
-      if (validRelatedTickers != null)
+      // allow each news org to have only 1 article shown in feed (motleyfool spammy as fuck DAMN)
+      List<CompanyNews> nonSpammyNews = new List<CompanyNews>();
+      for (int i = 0; i < news.Count; i++)
       {
-        string[] validTickers = validRelatedTickers.Select(x => x.Ticker).ToArray();
-        for (int i = 0; i < news.Count; i++)
+        if (!nonSpammyNews.Any(x => x.Publisher == news[i].Publisher))
         {
-          // for each news article, filter out related tickers that are not valid AND the current ticker being viewed
-          news[i].FeaturedTickers = news[i].FeaturedTickers.Where(x => Array.Exists(validTickers, z => z == x) && x != ticker).ToArray();
+          nonSpammyNews.Add(news[i]);
+        }
+
+        // only allow up to 5 articles 
+        if (nonSpammyNews.Count == 5)
+        {
+          break;
         }
       }
 
-      return news.ToArray();
+      // finally, ensure that only tickers supported in dividendspots db are included in the final output
+      var validRelatedTickers = await _db.GetRelatedCompanies(nonSpammyNews.SelectMany(x => x.FeaturedTickers).ToArray());
+      if (validRelatedTickers != null)
+      {
+        string[] validTickers = validRelatedTickers.Select(x => x.Ticker).ToArray();
+        for (int i = 0; i < nonSpammyNews.Count; i++)
+        {
+          // for each news article, filter out related tickers that are not valid AND the current ticker being viewed
+          nonSpammyNews[i].FeaturedTickers = nonSpammyNews[i].FeaturedTickers.Where(x => Array.Exists(validTickers, z => z == x) && x != ticker).ToArray();
+        }
+      }
+
+      return nonSpammyNews.ToArray();
     }
     catch (System.Exception)
     {
