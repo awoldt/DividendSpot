@@ -1,9 +1,9 @@
+
 using Npgsql;
 
 public class Db
 {
-  public NpgsqlDataSource _db { get; set; }
-
+  private readonly NpgsqlDataSource _db;
   public Db(NpgsqlDataSource db)
   {
     _db = db;
@@ -109,6 +109,38 @@ public class Db
     catch (System.Exception err)
     {
       Console.WriteLine(err);
+      return null;
+    }
+  }
+
+  public async Task<string?> GenerateSitemap()
+  {
+    try
+    {
+      await using var command = _db.CreateCommand("SELECT * FROM assets ORDER BY asset_ticker;");
+      await using var reader = await command.ExecuteReaderAsync();
+      if (!reader.HasRows) return null;
+
+      List<string> urlLocs = new List<string>();
+      while (await reader.ReadAsync())
+      {
+        var ticker = reader.GetString(reader.GetOrdinal("asset_ticker")).ToLower();
+        urlLocs.Add(@$"
+        <url>
+          <loc>https://dividendspot.com/{ticker}</loc>
+        </url>
+        ");
+      }
+
+      return @$"
+        <?xml version=""1.0"" encoding=""UTF-8""?>
+        <urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"">
+          {string.Join("\n", urlLocs)}
+        </urlset>
+      ";
+    }
+    catch (System.Exception)
+    {
       return null;
     }
   }
