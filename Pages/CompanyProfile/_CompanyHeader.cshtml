@@ -8,6 +8,7 @@
   string? companyAddress = Model.Address;
   string? companyPhone = Model.Phone;
   string? companyWebsite = Model.WebsiteUrl;
+  DivYield? divyield = Model.DivYield;
 
   <div class="company-header-section">
     <img src="@companyLogoSrc" alt="@companyName Logo" class="company-logo" />
@@ -36,5 +37,16 @@
         }
       </div>
     }
+
+@if(divyield != null) {
+  <div class="company-dividend-highlight">
+  <div class="highlight-item"><span class="highlight-label">Dividend Yield:</span> @divyield.Yield.ToString("F2")%</div>
+  @if(divyield.Frequency != null) {
+    <div class="highlight-item"><span class="highlight-label">Dividend Frequency:</span> @divyield.Frequency</div>
+  }
+</div>
+}
+
+
   </div>
 }

@@ -18,6 +18,8 @@ public class DividendResults
   public string PayDate { get; set; }
   [JsonPropertyName("record_date")]
   public string RecordDate { get; set; }
+  [JsonPropertyName("frequency")]
+  public int Frequency { get; set; }
 }
 
 public class PgonNewsResponse
@@ -58,4 +60,29 @@ public class RelatedCompanyArray
 {
   [JsonPropertyName("ticker")]
   public string Ticker { get; set; }
+}
+
+public class PgonTickerSnapshot
+{
+  public TickerSnapshot Ticker { get; set; }
+}
+
+public class TickerSnapshot
+{
+  [JsonPropertyName("day")]
+  public DaySnapshot Day { get; set; }
+  [JsonPropertyName("prevDay")]
+  public PrevDay PrevDay { get; set; }
+}
+
+public class DaySnapshot
+{
+  [JsonPropertyName("c")]
+  public double? Close { get; set; }
+}
+
+public class PrevDay
+{
+  [JsonPropertyName("c")]
+  public double Close { get; set; }
 }

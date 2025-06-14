@@ -29,6 +29,8 @@ public class Company
   public CompanyDividends[]? Dividends { get; set; }
   public CompanyNews[]? CompanyNews { get; set; }
   public RelatedCompany[]? RelatedCompanies { get; set; }
+  public DivYield? DivYield { get; set; }
+
   public string? CorporationJSONLD => AssetType == 1 ? JsonSerializer.Serialize(new CorporationJSONLD(Name,
              Description,
              WebsiteUrl,
@@ -79,6 +81,7 @@ public class Company
     baseData.CompanyNews = news.Result;
     baseData.RelatedCompanies = await db.GetRelatedCompanies(relatedTickers.Result);
     baseData.PageLastUpdated = DateTime.UtcNow;
+    baseData.DivYield = await utils.GetCompanyDivYield(dividends.Result, ticker);
 
     cache.AddCompanyToCache(baseData);
     return baseData;
@@ -87,18 +90,20 @@ public class Company
 
 public class CompanyDividends
 {
-  public CompanyDividends(double amount, string exDate, string payDay, string recordDate)
+  public CompanyDividends(double amount, string exDate, string payDay, string recordDate, int frequency)
   {
     Amount = amount;
     ExDividendDate = DateTime.Parse(exDate);
     DividendPayDate = DateTime.Parse(payDay);
     DividendRecordDate = DateTime.Parse(recordDate);
+    Frequency = frequency;
   }
 
   public double Amount { get; set; }
   public DateTime ExDividendDate { get; set; }
   public DateTime DividendPayDate { get; set; }
   public DateTime DividendRecordDate { get; set; }
+  public int Frequency { get; set; }
 }
 
 public class CompanyNews
@@ -242,4 +247,23 @@ public class ImageObject
 
   [JsonPropertyName("url")]
   public string Url { get; set; }
+}
+
+public class DivYield
+{
+
+  public DivYield(double yield, int frequency)
+  {
+    Yield = yield;
+    Frequency = frequency switch
+    {
+      1 => "Annually",
+      4 => "Quarterly",
+      12 => "Monthly",
+      _ => null
+    };
+  }
+
+  public double Yield { get; set; }
+  public string? Frequency { get; set; }
 }

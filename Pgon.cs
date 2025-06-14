@@ -21,7 +21,7 @@ public class PgonUtils
       List<CompanyDividends> dividendData = new List<CompanyDividends>();
       foreach (var x in res.Results)
       {
-        dividendData.Add(new CompanyDividends(x.CashAmount, x.ExDividendDate, x.PayDate, x.RecordDate));
+        dividendData.Add(new CompanyDividends(x.CashAmount, x.ExDividendDate, x.PayDate, x.RecordDate, x.Frequency));
       }
       return dividendData.ToArray();
     }
@@ -103,6 +103,35 @@ public class PgonUtils
     catch (System.Exception)
     {
 
+      return null;
+    }
+  }
+
+  public async Task<DivYield?> GetCompanyDivYield(CompanyDividends[]? dividends, string ticker)
+  {
+    /*
+      dividend yield = annual dividends per share / stock price per share
+    */
+    try
+    {
+      if (dividends == null || dividends.Length == 0) return null;
+
+      HttpClient client = _httpclient.CreateClient();
+      var res = await client.GetFromJsonAsync<PgonTickerSnapshot?>($"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{ticker.ToUpper()}?apiKey={_config["pgonApiKey"]}");
+      if (res == null) return null;
+
+      // ensure dividends are sorted from newest to oldest
+      var divs = dividends.Where(x => x.DividendPayDate < DateTime.UtcNow).OrderByDescending(x => x.DividendPayDate).ToArray();
+      var frequency = dividends.FirstOrDefault(x => x.Frequency != 0);
+      if (frequency == null) return null;
+      double lastPrice = res.Ticker.Day.Close ?? res.Ticker.PrevDay.Close;
+      double yield = divs.Take(frequency.Frequency).Select(x => x.Amount).Sum() / lastPrice * 100;
+      int f = frequency.Frequency;
+
+      return new DivYield(yield, f);
+    }
+    catch (System.Exception)
+    {
       return null;
     }
   }

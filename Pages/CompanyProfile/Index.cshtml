@@ -71,6 +71,13 @@ else
     <partial name="_DividendsSummary" model="@company" />
     <partial name="_CompanyNews" model="@companyNews" />
     <partial name="_RelatedCompanies" model="@relatedCompanies" />
-    <span style="color: grey">Page data last updated @company.PageLastUpdated UTC</span>
+    <div style="margin-top: 75px;">
+      <span style="color: grey; display: block">Page data last updated @company.PageLastUpdated UTC</span>
+      @if (company.DivYield != null)
+      {
+        <span style="color: grey; display: block">Dividend yield is calculated using only dividends that have already been
+          paid. Future or declared dividends are not included</span>
+      }
+    </div>
   </div>
 }
