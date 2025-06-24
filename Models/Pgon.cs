@@ -70,15 +70,15 @@ public class PgonTickerSnapshot
 public class TickerSnapshot
 {
   [JsonPropertyName("day")]
-  public DaySnapshot Day { get; set; }
+  public DaySnapshot? Day { get; set; }
   [JsonPropertyName("prevDay")]
-  public PrevDay PrevDay { get; set; }
+  public PrevDay? PrevDay { get; set; }
 }
 
 public class DaySnapshot
 {
   [JsonPropertyName("c")]
-  public double? Close { get; set; }
+  public double Close { get; set; }
 }
 
 public class PrevDay

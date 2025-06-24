@@ -1,3 +1,6 @@
+
+using System.Text.Json;
+
 public class PgonUtils
 {
   public PgonUtils(IHttpClientFactory httpclient, Db db, IConfiguration config)
@@ -119,12 +122,27 @@ public class PgonUtils
       HttpClient client = _httpclient.CreateClient();
       var res = await client.GetFromJsonAsync<PgonTickerSnapshot?>($"https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{ticker.ToUpper()}?apiKey={_config["pgonApiKey"]}");
       if (res == null) return null;
+      if (res.Ticker.Day == null && res.Ticker.PrevDay == null) return null;
 
       // ensure dividends are sorted from newest to oldest
       var divs = dividends.Where(x => x.DividendPayDate < DateTime.UtcNow).OrderByDescending(x => x.DividendPayDate).ToArray();
       var frequency = dividends.FirstOrDefault(x => x.Frequency != 0);
       if (frequency == null) return null;
-      double lastPrice = res.Ticker.Day.Close ?? res.Ticker.PrevDay.Close;
+
+      double lastPrice = 0;
+      if (res.Ticker.Day != null && res.Ticker.Day.Close != 0)
+      {
+        lastPrice = res.Ticker.Day.Close;
+      }
+      else if (res.Ticker.PrevDay != null && res.Ticker.PrevDay.Close != 0)
+      {
+        lastPrice = res.Ticker.PrevDay.Close;
+      }
+      else
+      {
+        return null; // sometimes polygon will have 0 for day close and prev day close... so dont display div yield on client
+      }
+
       double yield = divs.Take(frequency.Frequency).Select(x => x.Amount).Sum() / lastPrice * 100;
       int f = frequency.Frequency;
 
