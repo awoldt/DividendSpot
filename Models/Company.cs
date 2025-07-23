@@ -34,7 +34,7 @@ public class Company
   public string? CorporationJSONLD => AssetType == 1 ? JsonSerializer.Serialize(new CorporationJSONLD(Name,
              Description,
              WebsiteUrl,
-             $"https://dividendspot.com//imgs/company-logo/{Ticker}.png",
+             $"https://dividendspot.com/imgs/company-logo/{Ticker}.png",
              Phone,
              Ticker), new JsonSerializerOptions
              {

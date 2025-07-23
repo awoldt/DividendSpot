@@ -55,14 +55,11 @@
       content="@company.Name, @company.Ticker, @company.Ticker dividend, @company.Ticker dividend history, @company.Name news" />
 
 
-    <meta property="og:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
+    <meta property="og:image" content="https://dividendspot.com/imgs/company-logo/@(company.Ticker).png" />
     <meta property="og:url" content="https://dividendspot.com/@company.Ticker.ToLower()" />
     <meta property="og:type" content="website" />
-
     <meta name="twitter:card" content="summary_large_image" />
-
-
-    <meta name="twitter:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
+    <meta name="twitter:image" content="https://dividendspot.com/imgs/company-logo/@(company.Ticker).png" />
     <link rel="canonical" href="https://dividendspot.com/@company.Ticker.ToLower()" />
   }
 }
