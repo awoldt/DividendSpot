@@ -26,23 +26,42 @@
 @if (company != null)
 {
   @section Meta {
-    <title>@company.Name (@company.Ticker) Dividend History</title>
-    <meta name="description"
-      content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+    @if (company.Name.Length < 60)
+    {
+      <title>@company.Name (@company.Ticker) Dividend History</title>
+      <meta name="description"
+        content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+      <meta property="og:title" content="@company.Name (@company.Ticker) Dividend History" />
+      <meta property="og:description"
+        content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+      <meta name="twitter:title" content="@company.Name (@company.Ticker) Dividend History" />
+      <meta name="twitter:description"
+        content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+    }
+    else
+    {
+      <title>@company.Ticker Dividend History</title>
+      <meta name="description"
+        content="View the complete dividend history, payout dates, and recent news for @company.Ticker." />
+      <meta property="og:title" content="@company.Ticker Dividend History" />
+      <meta property="og:description"
+        content="View the complete dividend history, payout dates, and recent news for @company.Ticker." />
+      <meta name="twitter:title" content="@company.Ticker Dividend History" />
+      <meta name="twitter:description"
+        content="View the complete dividend history, payout dates, and recent news for @company.Ticker." />
+    }
+
     <meta name="keywords"
       content="@company.Name, @company.Ticker, @company.Ticker dividend, @company.Ticker dividend history, @company.Name news" />
 
-    <meta property="og:title" content="@company.Name (@company.Ticker) Dividend History" />
-    <meta property="og:description"
-      content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+
     <meta property="og:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
     <meta property="og:url" content="https://dividendspot.com/@company.Ticker.ToLower()" />
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@company.Name (@company.Ticker) Dividend History" />
-    <meta name="twitter:description"
-      content="View the complete dividend history, payout dates, and recent news for @company.Name (@company.Ticker)." />
+
+
     <meta name="twitter:image" content="https://dividendspot.com/imgs/company-logo/(@company.Ticker).png" />
     <link rel="canonical" href="https://dividendspot.com/@company.Ticker.ToLower()" />
   }
