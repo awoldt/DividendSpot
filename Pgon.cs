@@ -110,7 +110,7 @@ public class PgonUtils
     }
   }
 
-  public async Task<DivYield?> GetCompanyDivYield(CompanyDividends[]? dividends, string ticker)
+  public async Task<CompanyDividendYield?> GetCompanyDivYield(CompanyDividends[]? dividends, string ticker)
   {
     /*
       dividend yield = annual dividends per share / stock price per share
@@ -146,7 +146,7 @@ public class PgonUtils
       double yield = divs.Take(frequency.Frequency).Select(x => x.Amount).Sum() / lastPrice * 100;
       int f = frequency.Frequency;
 
-      return new DivYield(yield, f);
+      return new CompanyDividendYield(yield, f);
     }
     catch (System.Exception)
     {

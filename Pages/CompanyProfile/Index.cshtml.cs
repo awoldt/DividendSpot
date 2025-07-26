@@ -19,7 +19,7 @@ public class CompanyProfileModel : PageModel
 
   public async Task<IActionResult> OnGetAsync(string ticker)
   {
-    Company = await Company.CreateAsync(ticker, _db, _cache, _utils);
+    Company = await CompanyService.CreateAsync(ticker, _db, _cache, _utils);
     return Company == null ? NotFound() : Page();
   }
 }
