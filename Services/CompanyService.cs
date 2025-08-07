@@ -1,6 +1,13 @@
 ﻿public class CompanyService
 {
-    public static async Task<Company> CreateAsync(string ticker,
+    private readonly string _webhostpath;
+
+    public CompanyService(IWebHostEnvironment env)
+    {
+        _webhostpath = env.WebRootPath;
+    }
+    
+    public async Task<Company> CreateAsync(string ticker,
         Db db,
         CustomCache cache,
         PgonUtils utils)
@@ -25,8 +32,16 @@
         baseData.RelatedCompanies = await db.GetRelatedCompanies(relatedTickers.Result);
         baseData.PageLastUpdated = DateTime.UtcNow;
         baseData.DivYield = await utils.GetCompanyDivYield(dividends.Result, ticker);
+        baseData.HasCompanyImage = CompanyHasImg(ticker.ToUpper());
 
         cache.AddCompanyToCache(baseData);
         return baseData;
+    }
+
+    public bool CompanyHasImg(string ticker)
+    {
+        var file = Path.Combine(_webhostpath,  "imgs", "company-logo", $"{ticker.ToUpper()}.png");
+        Console.WriteLine(file);
+        return File.Exists(file);
     }
 }

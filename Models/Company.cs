@@ -24,6 +24,7 @@ public class Company
   public string? Address { get; set; }
   public string? Phone { get; set; }
   public DateTime? PageLastUpdated { get; set; }
+  public bool HasCompanyImage { get; set; }
   private int AssetType { get; set; }
 
   public CompanyDividends[]? Dividends { get; set; }

@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 var databaseConnectionString = builder.Configuration.GetConnectionString("postgres");
 if (databaseConnectionString == null) return;
 var databaseSource = NpgsqlDataSource.Create(databaseConnectionString);
+builder.Services.AddScoped<CompanyService>();
 builder.Services.AddSingleton(databaseSource);
 builder.Services.AddSingleton<Db>();
 builder.Services.AddMemoryCache();
