@@ -38,9 +38,5 @@ func TickerHandler(w http.ResponseWriter, r *http.Request) {
 		constants.ErrorResponse(w)
 	}
 
-	tmpl.Execute(w, PageData{
-		Title:   "home page",
-		Heading: "welcome!",
-		Message: "this html was rendered with go templates",
-	})
+	tmpl.Execute(w, tickerDetails)
 }
