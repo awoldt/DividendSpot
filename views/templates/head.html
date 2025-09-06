@@ -1,0 +1,24 @@
+{{define "head"}}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/public/css/global.css">
+    {{if .Styles}}
+      {{range .Styles}}
+        <link rel="stylesheet" href={{.Link}}>
+      {{end}}
+    {{end}}
+
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="6c725d77-ef0a-4eb6-a302-9659249e8278"></script>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+</head>
+
+{{end}}

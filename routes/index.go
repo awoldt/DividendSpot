@@ -6,21 +6,23 @@ import (
 	"net/http"
 )
 
-type PageData struct {
-	Title   string
-	Heading string
-	Message string
+type indexPageData struct {
+	Head constants.Head
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("./views/index.html")
+	tmpl, err := template.ParseFiles(
+		"./views/index.html",
+		"./views/templates/head.html",
+	)
 	if err != nil {
 		constants.ErrorResponse(w)
 	}
 
-	tmpl.Execute(w, PageData{
-		Title:   "home page",
-		Heading: "welcome!",
-		Message: "this html was rendered with go templates",
+	tmpl.Execute(w, indexPageData{
+		Head: constants.Head{
+			Title:  "DividendSpot – Public Companies, ETFs & Funds Dividends",
+			Styles: []constants.Styles{{Link: "/public/css/index.css"}},
+		},
 	})
 }

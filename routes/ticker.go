@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+type companyPageData struct {
+	Head          constants.Head
+	TickerDetails services.TickerDetails
+}
+
 func TickerHandler(w http.ResponseWriter, r *http.Request) {
 
 	polygonApiKey := os.Getenv("POLYGON_API_KEY")
@@ -33,10 +38,13 @@ func TickerHandler(w http.ResponseWriter, r *http.Request) {
 	// get the tickers dividends
 	services.GetTickerDividends(&tickerDetails, polygonApiKey)
 
-	tmpl, err := template.ParseFiles("./views/company.html")
+	tmpl, err := template.ParseFiles("./views/company.html", "./views/templates/head.html")
 	if err != nil {
 		constants.ErrorResponse(w)
 	}
 
-	tmpl.Execute(w, tickerDetails)
+	tmpl.Execute(w, companyPageData{
+		Head:          constants.Head{Title: tickerDetails.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
+		TickerDetails: tickerDetails,
+	})
 }

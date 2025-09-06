@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{.Name}} ({{.Ticker}}) – DividendsSpot</title>
+  {{template "head" .Head}}
 
-    <link rel="stylesheet" href="/public/css/global.css" />
-    <link rel="stylesheet" href="/public/css/company.css" />
-  </head>
   <body>
     <header>
       <div class="container">
@@ -28,7 +22,7 @@
       <section class="company-hero">
         <div class="company-logo" aria-hidden="true">🍎</div>
         <div class="company-headings">
-          <h1>{{.Name}} <span class="ticker">({{.Ticker}})</span></h1>
+          <h1>{{.TickerDetails.Name}} <span class="ticker">({{.TickerDetails.Ticker}})</span></h1>
           <p class="company-tagline">
             reliable dividend history, summary, and recent news
           </p>
@@ -67,7 +61,7 @@
       </section>
 
       <!-- dividend history -->
-      {{if .Dividends }}
+      {{if .TickerDetails.Dividends }}
       <section class="card">
         <div class="card-header">
           <h2>dividend history</h2>
