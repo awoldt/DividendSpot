@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -24,15 +25,31 @@ type TickerDetails struct {
 
 	DividendsLastUpdated int64             `json:"dividends_last_updated"`
 	Dividends            []TickerDividends `json:"dividends"`
+	DividendYield        float64           `json:"dividend_yield"`
 }
 
 type TickerDividends struct {
-	Amount          float32 `json:"cash_amount"`
+	Amount          float64 `json:"cash_amount"`
 	DeclarationDate string  `json:"declaration_date"`
 	ExDividendDate  string  `json:"ex_dividend_date"`
-	Frequency       int8    `json:"frequency"`
+	Frequency       int     `json:"frequency"`
 	PayDate         string  `json:"pay_date"`
 	RecordDate      string  `json:"record_date"`
+}
+
+type DayPrice struct {
+	Open   float64 `json:"o"`
+	High   float64 `json:"h"`
+	Low    float64 `json:"l"`
+	Close  float64 `json:"c"`
+	Volume float64 `json:"v"`
+}
+
+type TickerPrice struct {
+	TodaysChangePercentage float64  `json:"todaysChangePerc"`
+	TodaysChange           float64  `json:"todaysChange"`
+	Day                    DayPrice `json:"day"`
+	PrevDay                DayPrice `json:"prevDay"`
 }
 
 type TickerDividendsResponse struct {
@@ -41,6 +58,10 @@ type TickerDividendsResponse struct {
 
 type TickerDetailsResponse struct {
 	Results TickerDetails `json:"results"`
+}
+
+type TickerPriceResponse struct {
+	Ticker TickerPrice `json:"ticker"`
 }
 
 var tickerCache = make(map[string]TickerDetails)
@@ -92,12 +113,67 @@ func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error
 
 	if res.StatusCode != 200 {
 		return fmt.Errorf("could not find dividends for ticker")
-	} else {
-		var dividends TickerDividendsResponse
-		json.NewDecoder(res.Body).Decode(&dividends)
-		cachedTicker.DividendsLastUpdated = time.Now().Unix()
-		cachedTicker.Dividends = dividends.Results
-
-		return nil
 	}
+	var dividends TickerDividendsResponse
+	json.NewDecoder(res.Body).Decode(&dividends)
+	cachedTicker.DividendsLastUpdated = time.Now().Unix()
+	cachedTicker.Dividends = dividends.Results
+
+	return nil
+}
+
+func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends, polygonApiKey string) error {
+	// div yield is (total $ in divs a year / current ticker price)
+
+	url := fmt.Sprintf("https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)
+	res, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf("error while fetching ticker price")
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+		return fmt.Errorf("error while fetching ticker price")
+	}
+
+	var tickerPrice TickerPriceResponse
+	json.NewDecoder(res.Body).Decode(&tickerPrice)
+
+	var divAmounts []float64
+	var frequency int
+	if len(dividends) == 0 {
+		// just assume 4 (quarterly)
+	} else {
+		frequency = dividends[0].Frequency
+	}
+
+	for i := 0; i < frequency; i++ {
+		if i >= len(dividends) {
+			break
+		}
+		divAmounts = append(divAmounts, dividends[i].Amount)
+	}
+
+	var divSum float64
+	for _, v := range divAmounts {
+		divSum += v
+	}
+
+	// sometimes polygon will have day price set as 0, if so take prevDay
+	currentPrice := 0.0
+	if tickerPrice.Ticker.Day.Close != 0 {
+		currentPrice = tickerPrice.Ticker.Day.Close
+	} else {
+		currentPrice = tickerPrice.Ticker.PrevDay.Close
+	}
+
+	fixed := fmt.Sprintf("%.2f", divSum/currentPrice*100)
+	fixedNum, err := strconv.ParseFloat(fixed, 64)
+
+	if err != nil {
+		return fmt.Errorf("error converting string to num")
+	}
+
+	cachedTicker.DividendYield = float64(fixedNum)
+	return nil
 }

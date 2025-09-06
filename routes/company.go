@@ -14,8 +14,7 @@ type companyPageData struct {
 	TickerDetails services.TickerDetails
 }
 
-func TickerHandler(w http.ResponseWriter, r *http.Request) {
-
+func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	polygonApiKey := os.Getenv("POLYGON_API_KEY")
 	if polygonApiKey == "" {
 		constants.ErrorResponse(w)
@@ -37,6 +36,7 @@ func TickerHandler(w http.ResponseWriter, r *http.Request) {
 
 	// get the tickers dividends
 	services.GetTickerDividends(&tickerDetails, polygonApiKey)
+	services.GetTickerDivYield(&tickerDetails, tickerDetails.Dividends, polygonApiKey)
 
 	tmpl, err := template.ParseFiles("./views/company.html", "./views/templates/head.html")
 	if err != nil {

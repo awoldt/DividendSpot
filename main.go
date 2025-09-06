@@ -23,7 +23,7 @@ func main() {
 			routes.IndexHandler(w, r)
 		// TICKER ROUTES
 		default:
-			routes.TickerHandler(w, r)
+			routes.CompanyHandler(w, r)
 		}
 	})
 
