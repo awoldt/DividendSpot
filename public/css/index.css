@@ -1,0 +1,44 @@
+/* homepage-only styles */
+
+/* hero */
+.hero { text-align: center; padding: 60px 0; margin-bottom: 80px; }
+
+.hero-content {
+  background: white; border-radius: 32px; padding: 60px 40px;
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  position: relative; overflow: hidden;
+  animation: fadeInUp 0.8s ease-out;
+}
+.hero-content::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4); border-radius: 32px 32px 0 0;
+}
+
+.hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; color: #1e293b; margin-bottom: 24px; line-height: 1.2; }
+.hero-description { font-size: 18px; color: #64748b; margin-bottom: 32px; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+.hero-features { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-bottom: 40px; }
+
+/* search */
+.search-container { position: relative; max-width: 500px; margin: 0 auto; }
+.search-box {
+  width: 100%; padding: 20px 24px; font-size: 16px; border: 2px solid rgba(59, 130, 246, 0.2);
+  border-radius: 24px; background: white; box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
+  transition: all 0.3s ease; outline: none;
+}
+.search-box:focus { border-color: #3b82f6; box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2); transform: translateY(-2px); }
+.search-box::placeholder { color: #94a3b8; }
+
+/* homepage sections */
+.popular-stocks { margin-bottom: 80px; }
+
+/* responsive homepage tweaks */
+@media (max-width: 768px) {
+  .hero-content { padding: 40px 24px; border-radius: 24px; }
+  .hero-features { gap: 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 40px 0; }
+}

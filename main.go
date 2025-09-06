@@ -21,6 +21,7 @@ func main() {
 		switch r.URL.Path {
 		case "/":
 			routes.IndexHandler(w, r)
+		// TICKER ROUTES
 		default:
 			routes.TickerHandler(w, r)
 		}
