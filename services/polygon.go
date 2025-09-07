@@ -89,20 +89,20 @@ type TickerPriceResponse struct {
 
 var TickerCache = make(map[string]*TickerDetails)
 
-func GetTickerDetails(ticker string, polygonApiKey string) (TickerDetails, error) {
+func GetTickerDetails(ticker string, polygonApiKey string) (*TickerDetails, error) {
 	// this function will send a request to get basic ticker data
 	// it will also determine if the site supports a ticker (404 means we dont)
 
 	url := fmt.Sprintf("https://api.polygon.io/v3/reference/tickers/%v?apiKey=%v", ticker, polygonApiKey)
 	res, err := http.Get(url)
 	if err != nil {
-		return TickerDetails{}, fmt.Errorf("error while fetching ticker details")
+		return &TickerDetails{}, fmt.Errorf("error while fetching ticker details")
 	}
 
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		return TickerDetails{}, fmt.Errorf("ticker doesnt exist")
+		return &TickerDetails{}, fmt.Errorf("ticker doesnt exist")
 	}
 
 	var tickerDetails TickerDetailsResponse
@@ -113,13 +113,13 @@ func GetTickerDetails(ticker string, polygonApiKey string) (TickerDetails, error
 	details.Description = constants.TickerDescriptions[ticker]
 	TickerCache[ticker] = &details // ADD THIS TICKER TO CACHE
 
-	return tickerDetails.Results, nil
+	return &details, nil
 }
 
 func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error {
 
 	// if theres dividends already stored AND its still valid.. return
-	if cachedTicker.Dividends != nil && int64(cachedTicker.LastUpdated)+constants.OneDayInSeconds < time.Now().Unix() {
+	if cachedTicker.Dividends != nil && int64(cachedTicker.LastUpdated)+constants.OneDayInSeconds > time.Now().Unix() {
 		return nil
 	}
 
@@ -134,6 +134,7 @@ func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error
 	if res.StatusCode != 200 {
 		return fmt.Errorf("could not find dividends for ticker")
 	}
+
 	var dividends TickerDividendsResponse
 	json.NewDecoder(res.Body).Decode(&dividends)
 	cachedTicker.Dividends = dividends.Results

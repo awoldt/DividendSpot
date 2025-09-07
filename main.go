@@ -2,7 +2,6 @@ package main
 
 import (
 	"dividendspot/routes"
-	"fmt"
 	"net/http"
 
 	"github.com/joho/godotenv"
@@ -18,8 +17,6 @@ func main() {
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(r.URL)
-
 		switch r.URL.Path {
 		case "/":
 			routes.IndexHandler(w, r)

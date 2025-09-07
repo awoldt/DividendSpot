@@ -54,11 +54,11 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	services.GetTickerDividends(&tickerDetails, polygonApiKey)
-	services.GetTickerDivYield(&tickerDetails, tickerDetails.Dividends, polygonApiKey)
+	services.GetTickerDividends(tickerDetails, polygonApiKey)
+	services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
 
 	tmpl.Execute(w, companyPageData{
 		Head:          constants.Head{Title: tickerDetails.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
-		TickerDetails: tickerDetails,
+		TickerDetails: *tickerDetails,
 	})
 }
