@@ -25,8 +25,9 @@ type TickerDetails struct {
 	Phone       string  `json:"phone_number"`
 	Description string  `json:"description"`
 
-	Dividends     []TickerDividends `json:"dividends"`
-	DividendYield float64           `json:"dividend_yield"`
+	Dividends      []TickerDividends `json:"dividends"`
+	DividendYield  float64           `json:"dividend_yield"`
+	RelatedTickers []RelatedTicker   `json:"related_tickers"`
 }
 
 func (t TickerDetails) GetTickerDividendFrequencyString() string {
@@ -75,6 +76,10 @@ type TickerPrice struct {
 	PrevDay                DayPrice `json:"prevDay"`
 }
 
+type RelatedTicker struct {
+	Ticker string `json:"ticker"`
+}
+
 type TickerDividendsResponse struct {
 	Results []TickerDividends `json:"results"`
 }
@@ -87,11 +92,21 @@ type TickerPriceResponse struct {
 	Ticker TickerPrice `json:"ticker"`
 }
 
+type RelatedTickersResponse struct {
+	Results []RelatedTicker `json:"results"`
+}
+
 var TickerCache = make(map[string]*TickerDetails)
 
 func GetTickerDetails(ticker string, polygonApiKey string) (*TickerDetails, error) {
 	// this function will send a request to get basic ticker data
 	// it will also determine if the site supports a ticker (404 means we dont)
+
+	// see if this ticker is stored in the global SupportedTickers map
+	_, ok := constants.SupportedTickers[ticker]
+	if !ok {
+		return &TickerDetails{}, fmt.Errorf("error this ticker is not supported")
+	}
 
 	url := fmt.Sprintf("https://api.polygon.io/v3/reference/tickers/%v?apiKey=%v", ticker, polygonApiKey)
 	res, err := http.Get(url)
@@ -195,5 +210,24 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 	}
 
 	cachedTicker.DividendYield = float64(fixedNum)
+	return nil
+}
+
+func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string) error {
+	url := fmt.Sprintf("https://api.polygon.io/v1/related-companies/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)
+	res, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf("error while fetching ticker price")
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+		return fmt.Errorf("error while fetching ticker price")
+	}
+
+	var relatedTickers RelatedTickersResponse
+	json.NewDecoder(res.Body).Decode(&relatedTickers)
+	cachedTicker.RelatedTickers = relatedTickers.Results
 	return nil
 }

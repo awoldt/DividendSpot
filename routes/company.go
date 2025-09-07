@@ -18,7 +18,7 @@ type companyPageData struct {
 func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	polygonApiKey := os.Getenv("POLYGON_API_KEY")
 	if polygonApiKey == "" {
-		constants.ErrorResponse(w)
+		constants.ErrorResponse(w, "Could not establish API key")
 		return
 	}
 
@@ -27,7 +27,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		"./views/templates/companyHero.html",
 		"./views/templates/dividendHistoryChart.html")
 	if err != nil {
-		constants.ErrorResponse(w)
+		constants.ErrorResponse(w, "Error while parsing template files")
 		return
 	}
 
@@ -50,7 +50,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	tickerDetails, err := services.GetTickerDetails(upperCaseTicker, polygonApiKey)
 
 	if err != nil {
-		constants.ErrorResponse(w)
+		constants.ErrorResponse(w, "Ticker not supported")
 		return
 	}
 

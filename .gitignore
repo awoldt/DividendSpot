@@ -3,3 +3,4 @@
 .air.*
 /tmp
 ticker_descriptions.json
+supported_tickers.json

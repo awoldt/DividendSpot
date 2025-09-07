@@ -16,7 +16,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"./views/templates/head.html",
 	)
 	if err != nil {
-		constants.ErrorResponse(w)
+		constants.ErrorResponse(w, "Error parsing template files")
 		return
 	}
 
