@@ -2,3 +2,4 @@
 *.env
 .air.*
 /tmp
+ticker_descriptions.json

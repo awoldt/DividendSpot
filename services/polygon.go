@@ -17,15 +17,38 @@ type Address struct {
 }
 
 type TickerDetails struct {
-	Name    string  `json:"name"`
-	Ticker  string  `json:"ticker"`
-	Address Address `json:"address"`
-	Website string  `json:"homepage_url"`
-	Phone   string  `json:"phone_number"`
+	LastUpdated int     `json:"last_updated"` // only update the ticker details every 24hrs
+	Name        string  `json:"name"`
+	Ticker      string  `json:"ticker"`
+	Address     Address `json:"address"`
+	Website     string  `json:"homepage_url"`
+	Phone       string  `json:"phone_number"`
+	Description string  `json:"description"`
 
-	DividendsLastUpdated int64             `json:"dividends_last_updated"`
-	Dividends            []TickerDividends `json:"dividends"`
-	DividendYield        float64           `json:"dividend_yield"`
+	Dividends     []TickerDividends `json:"dividends"`
+	DividendYield float64           `json:"dividend_yield"`
+}
+
+func (t TickerDetails) GetTickerDividendFrequencyString() string {
+	// if no dividends, return empty string
+	if len(t.Dividends) == 0 {
+		return ""
+	}
+
+	f := t.Dividends[0].Frequency
+
+	switch f {
+	case 1:
+		return "Yearly"
+	case 4:
+		return "Quarterly"
+	case 6:
+		return "Biannually"
+	case 12:
+		return "Monthly"
+	default:
+		return ""
+	}
 }
 
 type TickerDividends struct {
@@ -92,15 +115,18 @@ func GetTickerDetails(ticker string, polygonApiKey string) (TickerDetails, error
 	var tickerDetails TickerDetailsResponse
 	json.NewDecoder(res.Body).Decode(&tickerDetails)
 
-	// add to cache so subsequent requests for this ticker dont need to hit polygon
-	tickerCache[ticker] = tickerDetails.Results
+	details := tickerDetails.Results
+	details.LastUpdated = int(time.Now().Unix())
+	details.Description = constants.TickerDescriptions[ticker]
+	tickerCache[ticker] = details
+
 	return tickerDetails.Results, nil
 }
 
 func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error {
 
 	// if theres dividends already stored AND its still valid.. return
-	if cachedTicker.Dividends != nil && cachedTicker.DividendsLastUpdated+constants.OneDayInSeconds < time.Now().Unix() {
+	if cachedTicker.Dividends != nil && int64(cachedTicker.LastUpdated)+constants.OneDayInSeconds < time.Now().Unix() {
 		return nil
 	}
 
@@ -116,7 +142,6 @@ func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error
 	}
 	var dividends TickerDividendsResponse
 	json.NewDecoder(res.Body).Decode(&dividends)
-	cachedTicker.DividendsLastUpdated = time.Now().Unix()
 	cachedTicker.Dividends = dividends.Results
 
 	return nil
@@ -139,13 +164,12 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 	var tickerPrice TickerPriceResponse
 	json.NewDecoder(res.Body).Decode(&tickerPrice)
 
-	var divAmounts []float64
-	var frequency int
+	frequency := 4 // defaults to quarterly, if not then set it
 	if len(dividends) == 0 {
-		// just assume 4 (quarterly)
-	} else {
 		frequency = dividends[0].Frequency
 	}
+
+	var divAmounts []float64
 
 	for i := 0; i < frequency; i++ {
 		if i >= len(dividends) {

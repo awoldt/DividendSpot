@@ -23,9 +23,11 @@
         <div class="company-logo" aria-hidden="true">🍎</div>
         <div class="company-headings">
           <h1>{{.TickerDetails.Name}} <span class="ticker">({{.TickerDetails.Ticker}})</span></h1>
-          <p class="company-tagline">
-            reliable dividend history, summary, and recent news
-          </p>
+          {{if .TickerDetails.Description}}
+            <p class="company-tagline">
+              {{.TickerDetails.Description}}
+            </p>
+          {{end}}
           <div class="company-meta">
             <a
               class="meta-link"
@@ -48,7 +50,7 @@
         </div>
         <div class="stat-pill">
           <span class="stat-label">frequency</span>
-          <span class="stat-value">quarterly</span>
+          <span class="stat-value">{{.TickerDetails.GetTickerDividendFrequencyString}}</span>
         </div>
         <div class="stat-pill">
           <span class="stat-label">payout ratio</span>
