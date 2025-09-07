@@ -87,18 +87,11 @@ type TickerPriceResponse struct {
 	Ticker TickerPrice `json:"ticker"`
 }
 
-var tickerCache = make(map[string]TickerDetails)
+var TickerCache = make(map[string]*TickerDetails)
 
 func GetTickerDetails(ticker string, polygonApiKey string) (TickerDetails, error) {
 	// this function will send a request to get basic ticker data
 	// it will also determine if the site supports a ticker (404 means we dont)
-	// tickers that are supported will be stored in the cache so they never have to be fetched again
-
-	// see if ticker in cache first and return instantly if so
-	data, ok := tickerCache[ticker]
-	if ok {
-		return data, nil
-	}
 
 	url := fmt.Sprintf("https://api.polygon.io/v3/reference/tickers/%v?apiKey=%v", ticker, polygonApiKey)
 	res, err := http.Get(url)
@@ -118,7 +111,7 @@ func GetTickerDetails(ticker string, polygonApiKey string) (TickerDetails, error
 	details := tickerDetails.Results
 	details.LastUpdated = int(time.Now().Unix())
 	details.Description = constants.TickerDescriptions[ticker]
-	tickerCache[ticker] = details
+	TickerCache[ticker] = &details // ADD THIS TICKER TO CACHE
 
 	return tickerDetails.Results, nil
 }
@@ -135,6 +128,7 @@ func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error
 	if err != nil {
 		return fmt.Errorf("error while fetching ticker dividends")
 	}
+
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
@@ -155,6 +149,7 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 	if err != nil {
 		return fmt.Errorf("error while fetching ticker price")
 	}
+
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
@@ -165,7 +160,7 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 	json.NewDecoder(res.Body).Decode(&tickerPrice)
 
 	frequency := 4 // defaults to quarterly, if not then set it
-	if len(dividends) == 0 {
+	if len(dividends) != 0 {
 		frequency = dividends[0].Frequency
 	}
 

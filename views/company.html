@@ -19,38 +19,19 @@
     </header>
 
     <main class="container company">
-      <section class="company-hero">
-        <div class="company-logo" aria-hidden="true">🍎</div>
-        <div class="company-headings">
-          <h1>{{.TickerDetails.Name}} <span class="ticker">({{.TickerDetails.Ticker}})</span></h1>
-          {{if .TickerDetails.Description}}
-            <p class="company-tagline">
-              {{.TickerDetails.Description}}
-            </p>
-          {{end}}
-          <div class="company-meta">
-            <a
-              class="meta-link"
-              href="https://www.apple.com"
-              target="_blank"
-              rel="noopener"
-              >apple.com</a
-            >
-            <span class="meta-dot">•</span>
-            <span>one apple park way, cupertino, ca</span>
-          </div>
-        </div>
-      </section>
+      {{template "companyHero" .TickerDetails}}
 
-      <!-- quick stats -->
+      {{if .TickerDetails.Dividends}}
       <section class="stats-bar">
         <div class="stat-pill">
-          <span class="stat-label">dividend yield</span>
+          <span class="stat-label">Dividend Yield</span>
           <span class="stat-value">{{.TickerDetails.DividendYield}}%</span>
         </div>
         <div class="stat-pill">
-          <span class="stat-label">frequency</span>
-          <span class="stat-value">{{.TickerDetails.GetTickerDividendFrequencyString}}</span>
+          <span class="stat-label">Payout Frequency</span>
+          <span class="stat-value"
+            >{{.TickerDetails.GetTickerDividendFrequencyString}}</span
+          >
         </div>
         <div class="stat-pill">
           <span class="stat-label">payout ratio</span>
@@ -62,58 +43,10 @@
         </div>
       </section>
 
-      <!-- dividend history -->
-      {{if .TickerDetails.Dividends }}
-      <section class="card">
-        <div class="card-header">
-          <h2>dividend history</h2>
-          <a href="#" class="link">see more</a>
-        </div>
-        <div class="table-wrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>pay date</th>
-                <th>amount</th>
-                <th>ex-date</th>
-                <th>record date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>aug 15, 2025</td>
-                <td>$0.26</td>
-                <td>08/11/2025</td>
-                <td>08/12/2025</td>
-              </tr>
-              <tr>
-                <td>may 15, 2025</td>
-                <td>$0.25</td>
-                <td>05/09/2025</td>
-                <td>05/12/2025</td>
-              </tr>
-              <tr>
-                <td>feb 13, 2025</td>
-                <td>$0.25</td>
-                <td>02/07/2025</td>
-                <td>02/10/2025</td>
-              </tr>
-              <tr>
-                <td>nov 14, 2024</td>
-                <td>$0.25</td>
-                <td>11/08/2024</td>
-                <td>11/11/2024</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      {{template "dividendHistoryChart" .TickerDetails}}
+      
       {{else}}
-      <section class="card">
-        <div class="card-header">
-          <h2><strong>{{.Name}} does not pay dividends</strong></h2>
-        </div>
-      </section>
+      <p>This company does not pay dividends</p>
       {{end}}
 
       <!-- summary bullets -->

@@ -1,0 +1,30 @@
+{{define "dividendHistoryChart"}}
+<section class="card">
+  <div class="card-header">
+    <h2>Dividend History</h2>
+    <a href="#" class="link">See more</a>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Pay Date</th>
+          <th>Amount</th>
+          <th>Ex-Date</th>
+          <th>Record Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Dividends}}
+        <tr>
+          <td>{{.PayDate}}</td>
+          <td>${{.Amount}}</td>
+          <td>{{.ExDividendDate}}</td>
+          <td>{{.RecordDate}}</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</section>
+{{end}}

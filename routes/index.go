@@ -17,6 +17,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		constants.ErrorResponse(w)
+		return
 	}
 
 	tmpl.Execute(w, indexPageData{

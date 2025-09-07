@@ -2,7 +2,7 @@ package main
 
 import (
 	"dividendspot/routes"
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/joho/godotenv"
@@ -11,13 +11,15 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("error loading .env file")
+		panic("error loading .env file")
 	}
 
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.URL)
+
 		switch r.URL.Path {
 		case "/":
 			routes.IndexHandler(w, r)

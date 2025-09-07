@@ -1,0 +1,16 @@
+{{define "companyHero"}}
+
+<section class="company-hero">
+  <div class="company-logo" aria-hidden="true">🍎</div>
+  <div class="company-headings">
+    <h1>
+      {{.Name}}
+      <span class="ticker">({{.Ticker}})</span>
+    </h1>
+    {{if .Description}}
+    <p class="company-tagline">{{.Description}}</p>
+    {{end}}
+  </div>
+</section>
+
+{{end}}
