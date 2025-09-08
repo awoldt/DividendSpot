@@ -24,10 +24,11 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles("./views/company.html",
 		"./views/templates/head.html",
-		"./views/templates/companyHero.html",
-		"./views/templates/dividendHistoryChart.html")
+		"./views/templates/company/companyHero.html",
+		"./views/templates/company/dividendHistoryChart.html",
+		"./views/templates/company/relatedTickers.html")
 	if err != nil {
-		constants.ErrorResponse(w, "Error while parsing template files")
+		constants.ErrorResponse(w, err.Error())
 		return
 	}
 
@@ -56,6 +57,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 
 	services.GetTickerDividends(tickerDetails, polygonApiKey)
 	services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
+	services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers)
 
 	tmpl.Execute(w, companyPageData{
 		Head:          constants.Head{Title: tickerDetails.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},

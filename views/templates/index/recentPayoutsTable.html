@@ -1,0 +1,27 @@
+{{define "recentPayoutsTable"}} {{if .RecentPayouts}}
+<section class="card">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Pay Date</th>
+          <th>Amount</th>
+          <th>Ex-Date</th>
+          <th>Record Date</th>
+        </tr>
+      </thead>
+      {{range .RecentPayouts}}
+      <tbody>
+        {{.Ticker}}
+        <tr>
+          <td>{{.Dividend.PayDate}}</td>
+          <td>${{.Dividend.Amount}}</td>
+          <td>{{.Dividend.ExDividendDate}}</td>
+          <td>{{.Dividend.RecordDate}}</td>
+        </tr>
+      </tbody>
+      {{end}}
+    </table>
+  </div>
+</section>
+{{end}} {{end}}

@@ -19,9 +19,7 @@
     </header>
 
     <main class="container company">
-      {{template "companyHero" .TickerDetails}}
-
-      {{if .TickerDetails.Dividends}}
+      {{template "companyHero" .TickerDetails}} {{if .TickerDetails.Dividends}}
       <section class="stats-bar">
         <div class="stat-pill">
           <span class="stat-label">Dividend Yield</span>
@@ -43,9 +41,7 @@
         </div>
       </section>
 
-      {{template "dividendHistoryChart" .TickerDetails}}
-      
-      {{else}}
+      {{template "dividendHistoryChart" .TickerDetails}} {{else}}
       <p>This company does not pay dividends</p>
       {{end}}
 
@@ -85,45 +81,7 @@
         </ul>
       </section>
 
-      <!-- related companies reusing global grid/card -->
-      <section>
-        <div class="card-header">
-          <h2>related companies</h2>
-        </div>
-        <div class="stocks-grid">
-          <a href="/googl"
-            ><div class="stock-card">
-              <div class="stock-logo">G</div>
-              <div class="stock-name">Alphabet Inc.</div>
-              <div class="stock-symbol">GOOGL</div>
-            </div></a
-          >
-
-          <a href="/msft"
-            ><div class="stock-card">
-              <div class="stock-logo">MS</div>
-              <div class="stock-name">Microsoft Corp</div>
-              <div class="stock-symbol">MSFT</div>
-            </div></a
-          >
-
-          <a href="/nvda"
-            ><div class="stock-card">
-              <div class="stock-logo">NV</div>
-              <div class="stock-name">NVIDIA Corp</div>
-              <div class="stock-symbol">NVDA</div>
-            </div></a
-          >
-
-          <a href="/amzn"
-            ><div class="stock-card">
-              <div class="stock-logo">A</div>
-              <div class="stock-name">Amazon.com Inc.</div>
-              <div class="stock-symbol">AMZN</div>
-            </div></a
-          >
-        </div>
-      </section>
+      {{template "relatedTickers" .TickerDetails}}
     </main>
 
     <footer>

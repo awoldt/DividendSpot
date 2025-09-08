@@ -1,7 +1,12 @@
 {{define "companyHero"}}
 
 <section class="company-hero">
-  <div class="company-logo" aria-hidden="true">🍎</div>
+  <div class="company-logo">
+    <img
+      src="/public/imgs/logos/{{.Ticker}}.png"
+      alt="{{.Name}} company logo"
+    />
+  </div>
   <div class="company-headings">
     <h1>
       {{.Name}}

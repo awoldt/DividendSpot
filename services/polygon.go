@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
 	"time"
 )
@@ -78,6 +79,7 @@ type TickerPrice struct {
 
 type RelatedTicker struct {
 	Ticker string `json:"ticker"`
+	Name   string `json:"name"`
 }
 
 type TickerDividendsResponse struct {
@@ -213,7 +215,7 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 	return nil
 }
 
-func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string) error {
+func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string, supportedTickers map[string]string) error {
 	url := fmt.Sprintf("https://api.polygon.io/v1/related-companies/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)
 	res, err := http.Get(url)
 	if err != nil {
@@ -228,6 +230,26 @@ func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string
 
 	var relatedTickers RelatedTickersResponse
 	json.NewDecoder(res.Body).Decode(&relatedTickers)
-	cachedTicker.RelatedTickers = relatedTickers.Results
+
+	// make sure each related ticker is supported
+	var supportedRelatedTickers []RelatedTicker
+	for _, v := range relatedTickers.Results {
+		if s, ok := supportedTickers[v.Ticker]; ok {
+			supportedRelatedTickers = append(supportedRelatedTickers, RelatedTicker{Name: s, Ticker: v.Ticker})
+		}
+	}
+
+	// sort by company name DESC
+	slices.SortFunc(supportedRelatedTickers, func(a, b RelatedTicker) int {
+		if a.Name < b.Name {
+			return -1
+		}
+		if a.Name > b.Name {
+			return 1
+		}
+		return 0
+	})
+
+	cachedTicker.RelatedTickers = supportedRelatedTickers
 	return nil
 }
