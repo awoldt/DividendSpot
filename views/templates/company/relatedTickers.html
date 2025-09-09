@@ -8,7 +8,7 @@
     {{range .RelatedTickers}}
     <a href={{.Ticker}}
       ><div class="stock-card">
-        <div class="stock-logo">G</div>
+        <div><img src="/public/imgs/logos/{{.Ticker}}.png" alt="{{.Name}}" class="stock-logo-img"></div>
         <div class="stock-name">{{.Name}}</div>
         <div class="stock-symbol">{{.Ticker}}</div>
       </div></a

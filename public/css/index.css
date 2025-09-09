@@ -24,13 +24,6 @@
   display: inline-block;
 }
 
-.stock-logo-img {
-  max-width: 100%;
-  height: auto;
-  max-height: 80px;
-  object-fit: contain;
-  margin-bottom: 10px;
-}
 
 .stock-name {
   font-weight: 600;

@@ -234,6 +234,18 @@ func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string
 	// make sure each related ticker is supported
 	var supportedRelatedTickers []RelatedTicker
 	for _, v := range relatedTickers.Results {
+		// make this company is not already part of slice
+		alreadyAdded := false
+		for _, srt := range supportedRelatedTickers {
+			if srt.Ticker == v.Ticker {
+				alreadyAdded = true
+				break
+			}
+		}
+		if alreadyAdded {
+			continue
+		}
+
 		if s, ok := supportedTickers[v.Ticker]; ok {
 			supportedRelatedTickers = append(supportedRelatedTickers, RelatedTicker{Name: s, Ticker: v.Ticker})
 		}

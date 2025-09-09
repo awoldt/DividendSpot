@@ -9,6 +9,8 @@ body {
   min-height: 100vh;
 }
 
+
+
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
 /* header & nav (shared) */
@@ -105,4 +107,13 @@ footer {
 @media (max-width: 480px) {
   .nav-links { display: none; }
   .section-title { font-size: 28px; }
+}
+
+
+.stock-logo-img {
+  max-width: 100%;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }

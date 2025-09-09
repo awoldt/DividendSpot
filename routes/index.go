@@ -29,10 +29,13 @@ func daysAway(payDatestr string) string {
 	}
 	today := time.Now()
 	days := int(math.Abs(today.Sub(payDate).Hours() / 24))
+	if days == 0 {
+		return "Today"
+	}
 	if days == 1 {
 		return "Tomorrow"
 	}
-	return fmt.Sprintf("%v days away (%v)", days, payDatestr)
+	return fmt.Sprintf("%v days away", days)
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
