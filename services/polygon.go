@@ -2,6 +2,7 @@ package services
 
 import (
 	"dividendspot/constants"
+	"dividendspot/models"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,119 +11,31 @@ import (
 	"time"
 )
 
-type Address struct {
-	Address    string `json:"address1"`
-	City       string `json:"city"`
-	PostalCode string `json:"postal_code"`
-	State      string `json:"state"`
-}
+var TickerCache = make(map[string]*models.TickerDetails)
 
-type TickerDetails struct {
-	LastUpdated int     `json:"last_updated"` // only update the ticker details every 24hrs
-	Name        string  `json:"name"`
-	Ticker      string  `json:"ticker"`
-	Address     Address `json:"address"`
-	Website     string  `json:"homepage_url"`
-	Phone       string  `json:"phone_number"`
-	Description string  `json:"description"`
-
-	Dividends      []TickerDividends `json:"dividends"`
-	DividendYield  float64           `json:"dividend_yield"`
-	RelatedTickers []RelatedTicker   `json:"related_tickers"`
-}
-
-func (t TickerDetails) GetTickerDividendFrequencyString() string {
-	// if no dividends, return empty string
-	if len(t.Dividends) == 0 {
-		return ""
-	}
-
-	f := t.Dividends[0].Frequency
-
-	switch f {
-	case 1:
-		return "Yearly"
-	case 4:
-		return "Quarterly"
-	case 6:
-		return "Biannually"
-	case 12:
-		return "Monthly"
-	default:
-		return ""
-	}
-}
-
-type TickerDividends struct {
-	Amount          float64 `json:"cash_amount"`
-	DeclarationDate string  `json:"declaration_date"`
-	ExDividendDate  string  `json:"ex_dividend_date"`
-	Frequency       int     `json:"frequency"`
-	PayDate         string  `json:"pay_date"`
-	RecordDate      string  `json:"record_date"`
-}
-
-type DayPrice struct {
-	Open   float64 `json:"o"`
-	High   float64 `json:"h"`
-	Low    float64 `json:"l"`
-	Close  float64 `json:"c"`
-	Volume float64 `json:"v"`
-}
-
-type TickerPrice struct {
-	TodaysChangePercentage float64  `json:"todaysChangePerc"`
-	TodaysChange           float64  `json:"todaysChange"`
-	Day                    DayPrice `json:"day"`
-	PrevDay                DayPrice `json:"prevDay"`
-}
-
-type RelatedTicker struct {
-	Ticker string `json:"ticker"`
-	Name   string `json:"name"`
-}
-
-type TickerDividendsResponse struct {
-	Results []TickerDividends `json:"results"`
-}
-
-type TickerDetailsResponse struct {
-	Results TickerDetails `json:"results"`
-}
-
-type TickerPriceResponse struct {
-	Ticker TickerPrice `json:"ticker"`
-}
-
-type RelatedTickersResponse struct {
-	Results []RelatedTicker `json:"results"`
-}
-
-var TickerCache = make(map[string]*TickerDetails)
-
-func GetTickerDetails(ticker string, polygonApiKey string) (*TickerDetails, error) {
+func GetTickerDetails(ticker string, polygonApiKey string) (*models.TickerDetails, error) {
 	// this function will send a request to get basic ticker data
 	// it will also determine if the site supports a ticker (404 means we dont)
 
 	// see if this ticker is stored in the global SupportedTickers map
 	_, ok := constants.SupportedTickers[ticker]
 	if !ok {
-		return &TickerDetails{}, fmt.Errorf("error this ticker is not supported")
+		return &models.TickerDetails{}, fmt.Errorf("error this ticker is not supported")
 	}
 
 	url := fmt.Sprintf("https://api.polygon.io/v3/reference/tickers/%v?apiKey=%v", ticker, polygonApiKey)
 	res, err := http.Get(url)
 	if err != nil {
-		return &TickerDetails{}, fmt.Errorf("error while fetching ticker details")
+		return &models.TickerDetails{}, fmt.Errorf("error while fetching ticker details")
 	}
 
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		return &TickerDetails{}, fmt.Errorf("ticker doesnt exist")
+		return &models.TickerDetails{}, fmt.Errorf("ticker doesnt exist")
 	}
 
-	var tickerDetails TickerDetailsResponse
+	var tickerDetails models.TickerDetailsResponse
 	json.NewDecoder(res.Body).Decode(&tickerDetails)
 
 	details := tickerDetails.Results
@@ -133,7 +46,7 @@ func GetTickerDetails(ticker string, polygonApiKey string) (*TickerDetails, erro
 	return &details, nil
 }
 
-func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error {
+func GetTickerDividends(cachedTicker *models.TickerDetails, polygonApiKey string) error {
 
 	// if theres dividends already stored AND its still valid.. return
 	if cachedTicker.Dividends != nil && int64(cachedTicker.LastUpdated)+constants.OneDayInSeconds > time.Now().Unix() {
@@ -152,14 +65,14 @@ func GetTickerDividends(cachedTicker *TickerDetails, polygonApiKey string) error
 		return fmt.Errorf("could not find dividends for ticker")
 	}
 
-	var dividends TickerDividendsResponse
+	var dividends models.TickerDividendsResponse
 	json.NewDecoder(res.Body).Decode(&dividends)
 	cachedTicker.Dividends = dividends.Results
 
 	return nil
 }
 
-func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends, polygonApiKey string) error {
+func GetTickerDivYield(cachedTicker *models.TickerDetails, dividends []models.TickerDividends, polygonApiKey string) error {
 	// div yield is (total $ in divs a year / current ticker price)
 
 	url := fmt.Sprintf("https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)
@@ -174,7 +87,7 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 		return fmt.Errorf("error while fetching ticker price")
 	}
 
-	var tickerPrice TickerPriceResponse
+	var tickerPrice models.TickerPriceResponse
 	json.NewDecoder(res.Body).Decode(&tickerPrice)
 
 	frequency := 4 // defaults to quarterly, if not then set it
@@ -215,7 +128,7 @@ func GetTickerDivYield(cachedTicker *TickerDetails, dividends []TickerDividends,
 	return nil
 }
 
-func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string, supportedTickers map[string]string) error {
+func GetTickerRelatedCompanies(cachedTicker *models.TickerDetails, polygonApiKey string, supportedTickers map[string]string) error {
 	url := fmt.Sprintf("https://api.polygon.io/v1/related-companies/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)
 	res, err := http.Get(url)
 	if err != nil {
@@ -228,11 +141,11 @@ func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string
 		return fmt.Errorf("error while fetching ticker price")
 	}
 
-	var relatedTickers RelatedTickersResponse
+	var relatedTickers models.RelatedTickersResponse
 	json.NewDecoder(res.Body).Decode(&relatedTickers)
 
 	// make sure each related ticker is supported
-	var supportedRelatedTickers []RelatedTicker
+	var supportedRelatedTickers []models.RelatedTicker
 	for _, v := range relatedTickers.Results {
 		// make this company is not already part of slice
 		alreadyAdded := false
@@ -247,12 +160,12 @@ func GetTickerRelatedCompanies(cachedTicker *TickerDetails, polygonApiKey string
 		}
 
 		if s, ok := supportedTickers[v.Ticker]; ok {
-			supportedRelatedTickers = append(supportedRelatedTickers, RelatedTicker{Name: s, Ticker: v.Ticker})
+			supportedRelatedTickers = append(supportedRelatedTickers, models.RelatedTicker{Name: s, Ticker: v.Ticker})
 		}
 	}
 
 	// sort by company name DESC
-	slices.SortFunc(supportedRelatedTickers, func(a, b RelatedTicker) int {
+	slices.SortFunc(supportedRelatedTickers, func(a, b models.RelatedTicker) int {
 		if a.Name < b.Name {
 			return -1
 		}

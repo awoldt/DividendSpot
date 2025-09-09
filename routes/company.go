@@ -2,6 +2,7 @@ package routes
 
 import (
 	"dividendspot/constants"
+	"dividendspot/models"
 	"dividendspot/services"
 	"fmt"
 	"html/template"
@@ -13,7 +14,7 @@ import (
 
 type companyPageData struct {
 	Head          constants.Head
-	TickerDetails services.TickerDetails
+	TickerDetails models.TickerDetails
 }
 
 func cleanDate(date string) string {

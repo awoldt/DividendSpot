@@ -2,6 +2,7 @@ package routes
 
 import (
 	"dividendspot/constants"
+	"dividendspot/models"
 	"dividendspot/services"
 	"fmt"
 	"html/template"
@@ -18,8 +19,8 @@ type indexPageData struct {
 
 // we only want to showcase a single payout on the homepage for each ticker
 type singlePayout struct {
-	Ticker   string                   `json:"ticker"`
-	Dividend services.TickerDividends `json:"dividend"`
+	Ticker   string                 `json:"ticker"`
+	Dividend models.TickerDividends `json:"dividend"`
 }
 
 func daysAway(payDatestr string) string {
