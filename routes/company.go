@@ -8,11 +8,21 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 type companyPageData struct {
 	Head          constants.Head
 	TickerDetails services.TickerDetails
+}
+
+func cleanDate(date string) string {
+	t, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return ""
+	}
+
+	return t.Format("January 2, 2006")
 }
 
 func CompanyHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +32,11 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl, err := template.ParseFiles("./views/company.html",
+	tmpl := template.New("company.html").Funcs(template.FuncMap{
+		"cleanDate": cleanDate,
+	})
+
+	tmpl, err := tmpl.ParseFiles("./views/company.html",
 		"./views/templates/head.html",
 		"./views/templates/company/companyHero.html",
 		"./views/templates/company/dividendHistoryChart.html",
@@ -36,16 +50,13 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	upperCaseTicker := strings.ToUpper(ticker)
 
 	// see if ticker in cache first and return instantly if so
-	data, ok := services.TickerCache[upperCaseTicker]
-	if ok {
+	if data, ok := services.TickerCache[upperCaseTicker]; ok {
 		fmt.Println("\ncompany in cahce!")
 		tmpl.Execute(w, companyPageData{
 			Head:          constants.Head{Title: data.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
 			TickerDetails: *data,
 		})
 		return
-	} else {
-		fmt.Println("\ncompany NOT in cahce!")
 	}
 
 	tickerDetails, err := services.GetTickerDetails(upperCaseTicker, polygonApiKey)

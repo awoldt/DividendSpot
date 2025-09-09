@@ -21,23 +21,15 @@
     <main class="container company">
       {{template "companyHero" .TickerDetails}} {{if .TickerDetails.Dividends}}
       <section class="stats-bar">
-        <div class="stat-pill">
+        <div class="stat-pill big-pill">
           <span class="stat-label">Dividend Yield</span>
           <span class="stat-value">{{.TickerDetails.DividendYield}}%</span>
         </div>
-        <div class="stat-pill">
+        <div class="stat-pill big-pill">
           <span class="stat-label">Payout Frequency</span>
           <span class="stat-value"
             >{{.TickerDetails.GetTickerDividendFrequencyString}}</span
           >
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">payout ratio</span>
-          <span class="stat-value">15.6%</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">next ex-date</span>
-          <span class="stat-value">09/10/2025</span>
         </div>
       </section>
 

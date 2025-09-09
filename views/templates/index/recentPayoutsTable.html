@@ -4,23 +4,20 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Pay Date</th>
+          <th>Ticker</th>
           <th>Amount</th>
-          <th>Ex-Date</th>
-          <th>Record Date</th>
+          <th>Payable</th>
         </tr>
       </thead>
-      {{range .RecentPayouts}}
       <tbody>
-        {{.Ticker}}
+        {{range .RecentPayouts}}
         <tr>
-          <td>{{.Dividend.PayDate}}</td>
+          <td><img src="/public/imgs/logos/{{.Ticker}}.png" style="width: 50px;"/>{{.Ticker}}</td>
           <td>${{.Dividend.Amount}}</td>
-          <td>{{.Dividend.ExDividendDate}}</td>
-          <td>{{.Dividend.RecordDate}}</td>
+          <td>{{daysAway .Dividend.PayDate}}</td>
         </tr>
+        {{end}}
       </tbody>
-      {{end}}
     </table>
   </div>
 </section>

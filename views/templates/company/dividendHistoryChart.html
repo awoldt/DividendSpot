@@ -17,7 +17,7 @@
       <tbody>
         {{range .Dividends}}
         <tr>
-          <td>{{.PayDate}}</td>
+          <td>{{cleanDate .PayDate}}</td>
           <td>${{.Amount}}</td>
           <td>{{.ExDividendDate}}</td>
           <td>{{.RecordDate}}</td>
