@@ -1,5 +1,10 @@
 package models
 
+import (
+	"fmt"
+	"os"
+)
+
 type TickerDetailsResponse struct {
 	Results TickerDetails `json:"results"`
 }
@@ -45,4 +50,15 @@ func (t TickerDetails) GetTickerDividendFrequencyString() string {
 	default:
 		return ""
 	}
+}
+
+func (t TickerDetails) HasCompanyLogo() bool {
+	// this will read from the public folder and find out if this ticker has a img
+	// if not dont render the img tag on the client
+
+	if _, err := os.Stat(fmt.Sprintf("./public/imgs/logos/%v.png", t.Ticker)); err != nil {
+		return false
+	}
+
+	return true
 }

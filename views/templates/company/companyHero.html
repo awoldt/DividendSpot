@@ -1,12 +1,15 @@
 {{define "companyHero"}}
 
 <section class="company-hero">
+  {{if .HasCompanyLogo}}
   <div class="company-logo">
     <img
       src="/public/imgs/logos/{{.Ticker}}.png"
       alt="{{.Name}} company logo"
     />
   </div>
+  {{end}}
+
   <div class="company-headings">
     <h1>
       {{.Name}}
