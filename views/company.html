@@ -33,11 +33,7 @@
         </div>
       </section>
 
-      {{template "dividendHistoryChart" .TickerDetails}} {{else}}
-      <p>This company does not pay dividends</p>
-      {{end}}
-
-      <!-- summary bullets -->
+      {{template "dividendHistoryChart" .TickerDetails}}
       <section class="card">
         <div class="card-header">
           <h2>dividends summary</h2>
@@ -50,7 +46,6 @@
         </ul>
       </section>
 
-      <!-- company news -->
       <section class="card">
         <div class="card-header">
           <h2>company news</h2>
@@ -73,7 +68,9 @@
         </ul>
       </section>
 
-      {{template "relatedTickers" .TickerDetails}}
+      {{else}}
+      <p>This company does not pay dividends</p>
+      {{end}} {{template "relatedTickers" .TickerDetails}}
     </main>
 
     <footer>
