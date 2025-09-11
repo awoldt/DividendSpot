@@ -46,7 +46,7 @@ func GetTickerDetails(ticker string, polygonApiKey string) (*models.TickerDetail
 	return &details, nil
 }
 
-func GetTickerDividends(cachedTicker *models.TickerDetails, polygonApiKey string) error {
+func GetTickerDividend(cachedTicker *models.TickerDetails, polygonApiKey string) error {
 
 	// if theres dividends already stored AND its still valid.. return
 	if cachedTicker.Dividends != nil && int64(cachedTicker.LastUpdated)+constants.OneDayInSeconds > time.Now().Unix() {
@@ -65,14 +65,14 @@ func GetTickerDividends(cachedTicker *models.TickerDetails, polygonApiKey string
 		return fmt.Errorf("could not find dividends for ticker")
 	}
 
-	var dividends models.TickerDividendsResponse
+	var dividends models.TickerDividendResponse
 	json.NewDecoder(res.Body).Decode(&dividends)
 	cachedTicker.Dividends = dividends.Results
 
 	return nil
 }
 
-func GetTickerDivYield(cachedTicker *models.TickerDetails, dividends []models.TickerDividends, polygonApiKey string) error {
+func GetTickerDivYield(cachedTicker *models.TickerDetails, dividends []models.TickerDividend, polygonApiKey string) error {
 	// div yield is (total $ in divs a year / current ticker price)
 
 	url := fmt.Sprintf("https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)

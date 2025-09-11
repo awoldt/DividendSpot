@@ -34,7 +34,8 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl := template.New("company.html").Funcs(template.FuncMap{
-		"cleanDate": cleanDate,
+		"cleanDate":          cleanDate,
+		"DaysAwayFromPayout": models.TickerDividend.DaysAwayFromPayout,
 	})
 
 	tmpl, err := tmpl.ParseFiles("./views/company.html",
@@ -67,7 +68,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	services.GetTickerDividends(tickerDetails, polygonApiKey)
+	services.GetTickerDividend(tickerDetails, polygonApiKey)
 	services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
 	services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers)
 

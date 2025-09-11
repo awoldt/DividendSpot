@@ -19,8 +19,8 @@ type indexPageData struct {
 
 // we only want to showcase a single payout on the homepage for each ticker
 type singlePayout struct {
-	Ticker   string                 `json:"ticker"`
-	Dividend models.TickerDividends `json:"dividend"`
+	Ticker   string                `json:"ticker"`
+	Dividend models.TickerDividend `json:"dividend"`
 }
 
 func daysAway(payDatestr string) string {

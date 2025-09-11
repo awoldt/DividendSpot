@@ -20,9 +20,9 @@ type TickerDetails struct {
 	Phone       string  `json:"phone_number"`
 	Description string  `json:"description"`
 
-	Dividends      []TickerDividends `json:"dividends"`
-	DividendYield  float64           `json:"dividend_yield"`
-	RelatedTickers []RelatedTicker   `json:"related_tickers"`
+	Dividends      []TickerDividend `json:"dividends"`
+	DividendYield  float64          `json:"dividend_yield"`
+	RelatedTickers []RelatedTicker  `json:"related_tickers"`
 }
 
 func (t TickerDetails) GetTickerDividendFrequencyString() string {

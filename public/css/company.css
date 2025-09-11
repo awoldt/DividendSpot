@@ -245,3 +245,27 @@ a:focus {
   outline: 3px solid rgba(59, 130, 246, 0.18);
   outline-offset: 3px;
 }
+
+.dividend-alert {
+  background-color: #fff8e1; /* soft yellow */
+  border: 1px solid #fdd835; /* brighter yellow border */
+  border-left: 5px solid #fbc02d; /* accent bar */
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  font-family: system-ui, sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.dividend-alert strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  color: #795548; /* deep brownish for contrast */
+}
+
+.dividend-alert p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #5d4037;
+}
