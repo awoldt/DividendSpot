@@ -46,14 +46,10 @@
         </ul>
       </section>
 
-
-      {{template "news" .TickerDetails.News}}
-
-
-
       {{else}}
       <p>This company does not pay dividends</p>
-      {{end}} {{template "relatedTickers" .TickerDetails}}
+      {{end}} {{template "news" .TickerDetails.News}} {{template
+      "relatedTickers" .TickerDetails}}
     </main>
 
     <footer>

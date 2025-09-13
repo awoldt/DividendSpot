@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -213,10 +214,26 @@ func GetTickerNews(cachedTicker *models.TickerDetails, polygonApiKey string) err
 				break
 			}
 		}
-
 		if skip {
 			continue
 		}
+
+		// the mentioned tickers have to be supported
+		// only allow up to 6
+		var validTickers []string
+		for i := 0; i < len(v.TickersMentionedInArticle); i++ {
+			if len(validTickers) == 6 {
+				break
+			}
+			ticker := strings.ToUpper(v.TickersMentionedInArticle[i])
+			_, ok := constants.SupportedTickers[ticker]
+
+			if ok {
+				validTickers = append(validTickers, ticker)
+			}
+		}
+
+		v.TickersMentionedInArticle = validTickers
 
 		returnData = append(returnData, v)
 	}
