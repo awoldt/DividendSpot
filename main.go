@@ -21,17 +21,33 @@ func main() {
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case "/sitemap.xml":
+		switch r.Method {
+		case http.MethodGet:
 			{
-				w.Write([]byte(generateSitemap()))
+				switch r.URL.Path {
+				case "/sitemap.xml":
+					{
+						w.Write([]byte(generateSitemap()))
+					}
+				case "/":
+					routes.IndexHandler(w, r)
+				// TICKER ROUTES
+				default:
+					routes.CompanyHandler(w, r)
+				}
 			}
-		case "/":
-			routes.IndexHandler(w, r)
-		// TICKER ROUTES
-		default:
-			routes.CompanyHandler(w, r)
+
+		case http.MethodPost:
+			{
+				switch r.URL.Path {
+				case "/search":
+					{
+						routes.SearchHandler(w, r)
+					}
+				}
+			}
 		}
+
 	})
 
 	http.ListenAndServe(":8080", nil)
