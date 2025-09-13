@@ -73,7 +73,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers)
 
 	tmpl.Execute(w, companyPageData{
-		Head:          constants.Head{Title: tickerDetails.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
+		Head:          constants.Head{Title: tickerDetails.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}, JsonL: tickerDetails.GenerateJsonL()},
 		TickerDetails: *tickerDetails,
 	})
 }

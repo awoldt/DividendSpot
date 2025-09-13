@@ -2,7 +2,9 @@ package models
 
 import (
 	"fmt"
+	"html/template"
 	"os"
+	"strings"
 )
 
 type TickerDetailsResponse struct {
@@ -61,4 +63,45 @@ func (t TickerDetails) HasCompanyLogo() bool {
 	}
 
 	return true
+}
+
+func (t TickerDetails) GenerateJsonL() template.JS {
+	// stupid ass template.JS casue a regular string will for some fucking
+	// reason return the \"\" in the template i dont get it
+
+	var sb strings.Builder
+	sb.WriteString("{")
+
+	sb.WriteString("\"@context\": \"https://schema.org\",")
+	sb.WriteString("\"@type\": \"Corporation\",")
+
+	name := fmt.Sprintf("\"name\": \"%v\",", t.Name)
+	sb.WriteString(name)
+
+	if t.Description != "" {
+		description := fmt.Sprintf("\"description\": \"%v\",", t.Description)
+		sb.WriteString(description)
+	}
+
+	if t.Website != "" {
+		website := fmt.Sprintf("\"url\": \"%v\",", t.Website)
+		sb.WriteString(website)
+	}
+
+	if t.HasCompanyLogo() {
+		logo := fmt.Sprintf("\"logo\": \"https://dividendspot.com/imgs/company-logo/%v.png\",", t.Ticker)
+		sb.WriteString(logo)
+	}
+
+	if t.Phone != "" {
+		phone := fmt.Sprintf("\"telephone\": \"%v\",", t.Phone)
+		sb.WriteString(phone)
+	}
+
+	ticker := fmt.Sprintf("\"tickerSymbol\": \"%v\"", t.Ticker)
+	sb.WriteString(ticker)
+
+	sb.WriteString("}")
+
+	return template.JS(sb.String())
 }

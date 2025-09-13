@@ -2,6 +2,7 @@ package constants
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 	"os"
 )
@@ -14,6 +15,16 @@ type TickerDescription struct {
 type SupportedTicker struct {
 	Ticker string `json:"ticker"`
 	Name   string `json:"name"`
+}
+
+type Styles struct {
+	Link string
+}
+
+type Head struct {
+	Title  string
+	Styles []Styles
+	JsonL  template.JS
 }
 
 var TickerDescriptions = make(map[string]string)
@@ -50,15 +61,6 @@ func init() {
 	for _, v := range supported {
 		SupportedTickers[v.Ticker] = v.Name
 	}
-}
-
-type Styles struct {
-	Link string
-}
-
-type Head struct {
-	Title  string
-	Styles []Styles
 }
 
 var OneDayInSeconds int64 = 86400
