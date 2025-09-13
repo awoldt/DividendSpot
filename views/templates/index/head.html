@@ -4,30 +4,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>{{.Title}}</title>
-  <meta name="description" content="{{.Description}}" />
+  <title>{{.Head.Title}}</title>
+  <meta name="description" content="{{.Head.Description}}" />
 
   <meta
     property="og:title"
-    content="{{.Title}}"
+    content="{{.Head.Title}}"
   />
   <meta
     property="og:description"
-    content="{{.Description}}"
+    content="{{.Head.Description}}"
   />
-  {{if .HasCompanyLogo}}
-  <meta
-    property="og:image"
-    content="https://dividendspot.com/imgs/company-logo/{{.Ticker}}.png"
-  />
-  {{end}}
 
   <meta property="og:url" content="https://dividendspot.com/ko" />
   <meta property="og:type" content="website" />
 
   <link rel="stylesheet" href="/public/css/global.css" />
-  {{if .Styles}} {{range .Styles}}
+  {{if .Head.Styles}} {{range .Head.Styles}}
   <link rel="stylesheet" href="{{.Link}}" />
+  {{end}} {{end}}
+
+   {{if .Head.Scripts}} {{range .Head.Scripts}}
+    <script src="{{.Src}}" defer></script>
   {{end}} {{end}}
 
   <script
@@ -48,10 +46,6 @@
     sizes="180x180"
     href="/public/apple-touch-icon.png"
   />
-
-  <script type="application/ld+json">
-    {{.JsonL}}
-  </script>
 </head>
 
 {{end}}

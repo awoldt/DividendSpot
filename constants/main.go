@@ -21,12 +21,16 @@ type Styles struct {
 	Link string
 }
 
+type Scripts struct {
+	Src string
+}
+
 type Head struct {
-	Title          string
-	Description    string
-	HasCompanyLogo bool
-	Styles         []Styles
-	JsonL          template.JS
+	Title       string
+	Description string
+	Styles      []Styles
+	Scripts     []Scripts
+	JsonL       template.JS
 }
 
 var TickerDescriptions = make(map[string]string)

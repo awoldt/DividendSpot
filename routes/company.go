@@ -39,7 +39,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	tmpl, err := tmpl.ParseFiles("./views/company.html",
-		"./views/templates/head.html",
+		"./views/templates/company/head.html",
 		"./views/templates/company/companyHero.html",
 		"./views/templates/company/dividendHistoryChart.html",
 		"./views/templates/company/relatedTickers.html")
@@ -74,11 +74,10 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, companyPageData{
 		Head: constants.Head{
-			Title:          tickerDetails.Name,
-			Styles:         []constants.Styles{{Link: "/public/css/company.css"}},
-			JsonL:          tickerDetails.GenerateJsonL(),
-			Description:    fmt.Sprintf("Explore %v's (%v) complete dividend history including payout dates, dividend yield, growth trends, and the latest news. Stay informed about one of the most consistent dividend stocks in the market.", tickerDetails.Name, tickerDetails.Ticker),
-			HasCompanyLogo: tickerDetails.HasCompanyLogo(),
+			Title:       tickerDetails.Name,
+			Styles:      []constants.Styles{{Link: "/public/css/company.css"}},
+			JsonL:       tickerDetails.GenerateJsonL(),
+			Description: fmt.Sprintf("Explore %v's (%v) complete dividend history including payout dates, dividend yield, growth trends, and the latest news. Stay informed about one of the most consistent dividend stocks in the market.", tickerDetails.Name, tickerDetails.Ticker),
 		},
 		TickerDetails: *tickerDetails,
 	})

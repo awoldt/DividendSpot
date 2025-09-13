@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head" .Head}}
+  {{template "head" .}}
 
   <body>
     <header>
@@ -40,7 +40,9 @@
               type="text"
               class="search-box"
               placeholder="Search for stocks, ETFs, or funds..."
+              id="search_input"
             />
+             <div id="search_results" class="search-results"></div>
           </div>
         </div>
       </section>

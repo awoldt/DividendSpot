@@ -46,7 +46,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := tmpl.ParseFiles(
 		"./views/index.html",
-		"./views/templates/head.html",
+		"./views/templates/index/head.html",
 		"./views/templates/index/recentPayoutsTable.html",
 	)
 	if err != nil {
@@ -100,8 +100,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, indexPageData{
 		Head: constants.Head{
-			Title:  "DividendSpot – Public Companies, ETFs & Funds Dividends",
-			Styles: []constants.Styles{{Link: "/public/css/index.css"}},
+			Title:   "DividendSpot – Public Companies, ETFs & Funds Dividends",
+			Styles:  []constants.Styles{{Link: "/public/css/index.css"}},
+			Scripts: []constants.Scripts{{Src: "/public/js/search.js"}},
 		},
 		RecentPayouts: payouts,
 	})
