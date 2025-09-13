@@ -46,27 +46,10 @@
         </ul>
       </section>
 
-      <section class="card">
-        <div class="card-header">
-          <h2>company news</h2>
-        </div>
-        <ul class="news-list">
-          <li>
-            <a href="#" class="link"
-              >apple posts q2 results; ops margin expands</a
-            >
-            <span class="news-tag">marketwatch</span>
-          </li>
-          <li>
-            <a href="#" class="link">services segment hits record revenue</a>
-            <span class="news-tag">bloomberg</span>
-          </li>
-          <li>
-            <a href="#" class="link">what the fed move means for mega-caps</a>
-            <span class="news-tag">ft</span>
-          </li>
-        </ul>
-      </section>
+
+      {{template "news" .TickerDetails.News}}
+
+
 
       {{else}}
       <p>This company does not pay dividends</p>

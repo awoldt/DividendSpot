@@ -18,7 +18,10 @@ type companyPageData struct {
 }
 
 func cleanDate(date string) string {
-	t, err := time.Parse("2006-01-02", date)
+	// some dates have a "T" timezone in the string
+	// split by that and take the first element in the slice
+	str := strings.Split(date, "T")
+	t, err := time.Parse("2006-01-02", str[0])
 	if err != nil {
 		return ""
 	}
@@ -42,7 +45,8 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		"./views/templates/company/head.html",
 		"./views/templates/company/companyHero.html",
 		"./views/templates/company/dividendHistoryChart.html",
-		"./views/templates/company/relatedTickers.html")
+		"./views/templates/company/relatedTickers.html",
+		"./views/templates/company/news.html")
 	if err != nil {
 		constants.ErrorResponse(w, err.Error())
 		return
@@ -71,6 +75,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	services.GetTickerDividend(tickerDetails, polygonApiKey)
 	services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
 	services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers)
+	services.GetTickerNews(tickerDetails, polygonApiKey)
 
 	tmpl.Execute(w, companyPageData{
 		Head: constants.Head{

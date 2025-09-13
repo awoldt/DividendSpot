@@ -178,3 +178,49 @@ func GetTickerRelatedCompanies(cachedTicker *models.TickerDetails, polygonApiKey
 	cachedTicker.RelatedTickers = supportedRelatedTickers
 	return nil
 }
+
+func GetTickerNews(cachedTicker *models.TickerDetails, polygonApiKey string) error {
+
+	url := fmt.Sprintf("https://api.polygon.io/v2/reference/news?ticker=%v&order=desc&limit=500&sort=published_utc&apiKey=%v", cachedTicker.Ticker, polygonApiKey)
+	res, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf("error while fetching ticker news")
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+		return fmt.Errorf("error while fetching ticker news")
+	}
+
+	// we only want a max of 5 articles
+	// each article must have a unique publisher
+	var returnData []models.NewsResults
+	var tickerNews models.TickerNewsResponse
+	json.NewDecoder(res.Body).Decode(&tickerNews)
+
+	for _, v := range tickerNews.Results {
+		if len(returnData) == 5 {
+			break
+		}
+
+		// make sure this publisher isnt alredy stored
+		publisher := v.Publisher.Name
+		skip := false
+		for i := 0; i < len(returnData); i++ {
+			if returnData[i].Publisher.Name == publisher {
+				skip = true
+				break
+			}
+		}
+
+		if skip {
+			continue
+		}
+
+		returnData = append(returnData, v)
+	}
+
+	cachedTicker.News = returnData
+	return nil
+}

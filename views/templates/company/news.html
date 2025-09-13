@@ -1,0 +1,23 @@
+{{define "news"}} 
+{{if .}}
+<section class="card">
+  <div class="card-header">
+    <h2>Company News</h2>
+  </div>
+
+  <div class="news-grid">
+    {{range .}}
+    <a href="{{.Url}}" class="news-card" target="_blank" rel="noopener">
+      <div class="news-title">{{.Title}}</div>
+      <div class="news-meta">
+        <span>{{.Publisher.Name}}</span>
+        <span>• {{.Author}}</span>
+        <span>• {{cleanDate .PublishedOnUTC}}</span>
+      </div>
+      <p class="news-description">{{.Description}}</p>
+    </a>
+    {{end}}
+  </div>
+</section>
+{{end}} 
+{{end}}
