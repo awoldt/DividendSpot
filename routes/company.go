@@ -73,7 +73,13 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers)
 
 	tmpl.Execute(w, companyPageData{
-		Head:          constants.Head{Title: tickerDetails.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}, JsonL: tickerDetails.GenerateJsonL()},
+		Head: constants.Head{
+			Title:          tickerDetails.Name,
+			Styles:         []constants.Styles{{Link: "/public/css/company.css"}},
+			JsonL:          tickerDetails.GenerateJsonL(),
+			Description:    fmt.Sprintf("Explore %v's (%v) complete dividend history including payout dates, dividend yield, growth trends, and the latest news. Stay informed about one of the most consistent dividend stocks in the market.", tickerDetails.Name, tickerDetails.Ticker),
+			HasCompanyLogo: tickerDetails.HasCompanyLogo(),
+		},
 		TickerDetails: *tickerDetails,
 	})
 }
