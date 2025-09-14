@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -76,10 +77,21 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	services.GetTickerDividend(tickerDetails, polygonApiKey)
-	services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
-	services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers)
-	services.GetTickerNews(tickerDetails, polygonApiKey)
+	var wg sync.WaitGroup
+	// we can call all the methods below concurrently for much improved performance
+	wg.Go(func() {
+		services.GetTickerDividend(tickerDetails, polygonApiKey)
+	})
+
+	wg.Go(func() {
+		services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
+	})
+
+	wg.Go(func() { services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers) })
+
+	wg.Go(func() { services.GetTickerNews(tickerDetails, polygonApiKey) })
+
+	wg.Wait()
 
 	tmpl.Execute(w, companyPageData{
 		Head: constants.Head{
