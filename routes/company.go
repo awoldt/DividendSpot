@@ -13,8 +13,9 @@ import (
 )
 
 type companyPageData struct {
-	Head          constants.Head
-	TickerDetails models.TickerDetails
+	Head             constants.Head
+	TickerDetails    models.TickerDetails
+	DividendsSummary []string
 }
 
 func cleanDate(date string) string {
@@ -46,7 +47,8 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		"./views/templates/company/companyHero.html",
 		"./views/templates/company/dividendHistoryChart.html",
 		"./views/templates/company/relatedTickers.html",
-		"./views/templates/company/news.html")
+		"./views/templates/company/news.html",
+		"./views/templates/company/dividendsSummary.html")
 	if err != nil {
 		constants.ErrorResponse(w, err.Error())
 		return

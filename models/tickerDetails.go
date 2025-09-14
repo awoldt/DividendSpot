@@ -3,8 +3,12 @@ package models
 import (
 	"fmt"
 	"html/template"
+	"math"
 	"os"
+	"slices"
+	"strconv"
 	"strings"
+	"time"
 )
 
 type TickerDetailsResponse struct {
@@ -31,6 +35,70 @@ type TickerDetails struct {
 	DividendYield  float64          `json:"dividend_yield"`
 	RelatedTickers []RelatedTicker  `json:"related_tickers"`
 	News           []NewsResults    `json:"news"`
+}
+
+func (d TickerDetails) GenerateTickerSummary() []string {
+	// generate as many insights about the dividends as possible
+
+	var summaries []string
+
+	if len(d.Dividends) > 0 {
+		// make sure the newest dividend is at the top
+		slices.SortFunc(d.Dividends, func(a, b TickerDividend) int {
+			t1, err1 := time.Parse("2006-01-02", a.PayDate)
+			t2, err2 := time.Parse("2006-01-02", b.PayDate)
+
+			if err1 == nil && err2 == nil {
+				if t1.Before(t2) {
+					return -1
+				}
+				if t2.Before(t1) {
+					return 1
+				}
+				return 0
+			}
+
+			return 0
+		})
+
+		var mostRecentPayday time.Time
+		maxPayoutAmount := 0.0
+		total := 0.0
+		today := time.Now()
+
+		for _, v := range d.Dividends {
+			total += v.Amount
+			if v.Amount > maxPayoutAmount {
+				maxPayoutAmount = v.Amount
+			}
+
+			t, err := time.Parse("2006-01-02", v.PayDate)
+			if err == nil {
+				if t.Before(today) {
+					mostRecentPayday = t
+				}
+			}
+		}
+
+		avg := total / float64(len(d.Dividends))
+
+		recentPayDayYear := strings.Split(d.Dividends[0].PayDate, "-")[0]
+		oldestPayDayYear := strings.Split(d.Dividends[len(d.Dividends)-1].PayDate, "-")[0]
+
+		num1, err1 := strconv.Atoi(recentPayDayYear)
+		num2, err2 := strconv.Atoi(oldestPayDayYear)
+
+		if err1 == nil && err2 == nil {
+			summaries = append(summaries, fmt.Sprintf("%v has issued %v dividend payments over the past %v years", d.Name, len(d.Dividends), math.Abs(float64(num1)-float64(num2))))
+		}
+
+		summaries = append(summaries, fmt.Sprintf("The most recent dividend was paid %v days ago, on %v", int(today.Sub(mostRecentPayday).Hours()/24), mostRecentPayday.Format("January 2, 2006")))
+
+		summaries = append(summaries, fmt.Sprintf("The highest dividend payed out to investors during this period was $%v per share", maxPayoutAmount))
+		summaries = append(summaries, fmt.Sprintf("The average dividend paid during this period was $%.2f per share.", avg))
+	}
+
+	return summaries
 }
 
 func (t TickerDetails) GetTickerDividendFrequencyString() string {

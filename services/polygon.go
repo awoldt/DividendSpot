@@ -225,16 +225,19 @@ func GetTickerNews(cachedTicker *models.TickerDetails, polygonApiKey string) err
 			if len(validTickers) == 6 {
 				break
 			}
-			ticker := strings.ToUpper(v.TickersMentionedInArticle[i])
-			_, ok := constants.SupportedTickers[ticker]
 
-			if ok {
+			ticker := strings.ToUpper(v.TickersMentionedInArticle[i])
+			// cannot be the same ticker being viewed on company page
+			if ticker == cachedTicker.Ticker {
+				continue
+			}
+
+			if _, ok := constants.SupportedTickers[ticker]; ok {
 				validTickers = append(validTickers, ticker)
 			}
 		}
 
 		v.TickersMentionedInArticle = validTickers
-
 		returnData = append(returnData, v)
 	}
 
