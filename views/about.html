@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About | Dividendspot</title>
-  <link rel="stylesheet" href="/public/css/global.css" />
-  <link rel="stylesheet" href="/public/css/about.css" />
-</head>
+{{template "head" .}}
 <body>
    <header>
       <div class="container">
@@ -61,15 +55,6 @@
     </section>
   </main>
 
- <footer>
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="/about">About</a>
-        <a href="/privacy">Privacy Policy</a>
-      </div>
-    </div>
-  </div>
-</footer>
+ {{template "footer"}}
 </body>
 </html>

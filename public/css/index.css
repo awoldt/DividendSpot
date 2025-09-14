@@ -81,13 +81,6 @@
   margin-right: auto;
 }
 
-.hero-features {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 40px;
-}
 
 /* search */
 .search-container {
@@ -125,9 +118,6 @@
   .hero-content {
     padding: 40px 24px;
     border-radius: 24px;
-  }
-  .hero-features {
-    gap: 12px;
   }
 }
 

@@ -33,19 +33,18 @@ func main() {
 
 				case "/about":
 					{
-						http.ServeFile(w, r, "./views/about.html")
+						routes.AboutHandler(w, r)
 					}
 
 				case "/privacy":
 					{
 
-						http.ServeFile(w, r, "./views/privacy.html")
+						routes.PirvacyHandler(w, r)
 					}
 
 				case "/":
 					{
 						routes.IndexHandler(w, r)
-
 					}
 
 				// TICKER ROUTES
