@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"math"
 	"os"
-	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -43,24 +42,7 @@ func (d TickerDetails) GenerateTickerSummary() []string {
 	var summaries []string
 
 	if len(d.Dividends) > 0 {
-		// make sure the newest dividend is at the top
-		slices.SortFunc(d.Dividends, func(a, b TickerDividend) int {
-			t1, err1 := time.Parse("2006-01-02", a.PayDate)
-			t2, err2 := time.Parse("2006-01-02", b.PayDate)
-
-			if err1 == nil && err2 == nil {
-				if t1.Before(t2) {
-					return -1
-				}
-				if t2.Before(t1) {
-					return 1
-				}
-				return 0
-			}
-
-			return 0
-		})
-
+		storedMostRecentPayday := false
 		var mostRecentPayday time.Time
 		maxPayoutAmount := 0.0
 		total := 0.0
@@ -72,12 +54,16 @@ func (d TickerDetails) GenerateTickerSummary() []string {
 				maxPayoutAmount = v.Amount
 			}
 
-			t, err := time.Parse("2006-01-02", v.PayDate)
-			if err == nil {
-				if t.Before(today) {
-					mostRecentPayday = t
+			if !storedMostRecentPayday {
+				t, err := time.Parse("2006-01-02", v.PayDate)
+				if err == nil {
+					if t.Before(today) {
+						mostRecentPayday = t
+						storedMostRecentPayday = true
+					}
 				}
 			}
+
 		}
 
 		avg := total / float64(len(d.Dividends))

@@ -73,7 +73,7 @@ func GetTickerDividend(cachedTicker *models.TickerDetails, polygonApiKey string)
 	return nil
 }
 
-func GetTickerDivYield(cachedTicker *models.TickerDetails, dividends []models.TickerDividend, polygonApiKey string) error {
+func GetTickerDivYield(cachedTicker *models.TickerDetails, polygonApiKey string) error {
 	// div yield is (total $ in divs a year / current ticker price)
 
 	url := fmt.Sprintf("https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/%v?apiKey=%v", cachedTicker.Ticker, polygonApiKey)
@@ -92,17 +92,17 @@ func GetTickerDivYield(cachedTicker *models.TickerDetails, dividends []models.Ti
 	json.NewDecoder(res.Body).Decode(&tickerPrice)
 
 	frequency := 4 // defaults to quarterly, if not then set it
-	if len(dividends) != 0 {
-		frequency = dividends[0].Frequency
+	if len(cachedTicker.Dividends) != 0 {
+		frequency = cachedTicker.Dividends[0].Frequency
 	}
 
 	var divAmounts []float64
 
 	for i := 0; i < frequency; i++ {
-		if i >= len(dividends) {
+		if i >= len(cachedTicker.Dividends) {
 			break
 		}
-		divAmounts = append(divAmounts, dividends[i].Amount)
+		divAmounts = append(divAmounts, cachedTicker.Dividends[i].Amount)
 	}
 
 	var divSum float64

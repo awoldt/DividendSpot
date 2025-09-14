@@ -77,14 +77,13 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var wg sync.WaitGroup
+	services.GetTickerDividend(tickerDetails, polygonApiKey)
+
 	// we can call all the methods below concurrently for much improved performance
-	wg.Go(func() {
-		services.GetTickerDividend(tickerDetails, polygonApiKey)
-	})
+	var wg sync.WaitGroup
 
 	wg.Go(func() {
-		services.GetTickerDivYield(tickerDetails, tickerDetails.Dividends, polygonApiKey)
+		services.GetTickerDivYield(tickerDetails, polygonApiKey)
 	})
 
 	wg.Go(func() { services.GetTickerRelatedCompanies(tickerDetails, polygonApiKey, constants.SupportedTickers) })

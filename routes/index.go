@@ -4,9 +4,7 @@ import (
 	"dividendspot/constants"
 	"dividendspot/models"
 	"dividendspot/services"
-	"fmt"
 	"html/template"
-	"math"
 	"net/http"
 	"slices"
 	"time"
@@ -23,28 +21,9 @@ type singlePayout struct {
 	Dividend models.TickerDividend `json:"dividend"`
 }
 
-func daysAway(payDatestr string) string {
-	payDate, err := time.Parse("2006-01-02", payDatestr)
-	if err != nil {
-		return ""
-	}
-	today := time.Now()
-	days := int(math.Abs(today.Sub(payDate).Hours() / 24))
-	if days == 0 {
-		return "Today"
-	}
-	if days == 1 {
-		return "Tomorrow"
-	}
-	return fmt.Sprintf("%v days away", days)
-}
-
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.New("index.html").Funcs(template.FuncMap{
-		"daysAway": daysAway,
-	})
 
-	tmpl, err := tmpl.ParseFiles(
+	tmpl, err := template.ParseFiles(
 		"./views/index.html",
 		"./views/templates/index/head.html",
 		"./views/templates/index/recentPayoutsTable.html",

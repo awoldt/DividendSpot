@@ -14,7 +14,7 @@
         <tr>
           <td><img src="/public/imgs/logos/{{.Ticker}}.png" style="width: 50px;"/>{{.Ticker}}</td>
           <td>${{.Dividend.Amount}}</td>
-          <td>{{daysAway .Dividend.PayDate}}</td>
+          <td>{{.Dividend.DaysAwayFromPayout}} days</td>
         </tr>
         {{end}}
       </tbody>
