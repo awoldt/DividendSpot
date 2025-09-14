@@ -1,60 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-{{template "head" .}}
-<body>
-   <header>
-      <div class="container">
-        <nav>
-          <a href="/" class="logo">
-            <div class="logo-icon">📊</div>
-            DividendsSpot
-          </a>
-          <ul class="nav-links">
-            <li><a href="/about">About</a></li>
-            <li><a href="/privacy">Privacy</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+  {{template "head" .}}
+  <body>
+     {{template "nav"}}
 
-  <main class="container about-page">
-    <section class="about-hero">
-      <h1>About DividendsSpot</h1>
-      <p>Your trusted source for clear, accurate, and up-to-date dividend data.</p>
-    </section>
-
-    <section class="about-content">
-      <div class="about-card">
-        <h2>Why We Exist</h2>
+    <main class="container about-page">
+      <section class="about-hero">
+        <h1>About DividendsSpot</h1>
         <p>
-          Dividend investing is powerful — but most financial sites bury simple information
-          under cluttered charts, ads, and endless menus. DividendsSpot was built to fix that.
+          Your trusted source for clear, accurate, and up-to-date dividend data.
         </p>
-      </div>
+      </section>
 
-      <div class="about-card-grid">
+      <section class="about-content">
         <div class="about-card">
-          <h3>📈 Focused on Dividends</h3>
-          <p>We don’t try to cover everything. Our mission is clear: provide the most reliable dividend data possible.</p>
+          <p>
+            Dividend investing has long been one of the most reliable strategies
+            for building wealth, but finding clear, accurate, and up-to-date
+            information isn’t always easy. Too often, investors are forced to
+            dig through cluttered financial sites filled with distracting ads,
+            paywalls, endless menus, and bloated charts that make even the
+            simplest data hard to access.
+          </p>
+          <p>
+            We built DividendSpot to change that. Our mission is to provide
+            dividend investors with a simple, modern, and distraction-free
+            resource where they can quickly find the information that matters
+            most—payout dates, dividend yields, growth trends, and company
+            histories—without unnecessary noise. By focusing exclusively on
+            dividends, we cut out the clutter and deliver the clean, reliable
+            data you need to make informed decisions.
+          </p>
+          <p>
+            Whether you’re a seasoned investor managing a portfolio or someone
+            just starting out, DividendSpot is designed to help you save time,
+            reduce frustration, and stay confident in your dividend strategy.
+          </p>
         </div>
-        <div class="about-card">
-          <h3>⚡ Fast & Reliable</h3>
-          <p>Powered by Go, the site is lightweight, responsive, and fast — no bloated scripts slowing you down.</p>
-        </div>
-        <div class="about-card">
-          <h3>📱 Mobile Friendly</h3>
-          <p>Designed to be beautiful and readable on every device, whether you’re on desktop or checking dividends on the go.</p>
-        </div>
-        <div class="about-card">
-          <h3>✨ Clean UI</h3>
-          <p>No distractions. Just the data you care about, presented in a simple, elegant interface unlike Yahoo Finance and other cluttered sites.</p>
-        </div>
-      </div>
 
-    
-    </section>
-  </main>
+        <div class="about-card-grid">
+          <div class="about-card">
+            <h3>📈 Focused on Dividends</h3>
+            <p>
+              We don’t try to cover everything. Our mission is clear: provide
+              the most reliable dividend data possible.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>⚡ Fast & Reliable</h3>
+            <p>
+              Powered by Go, the site is lightweight, responsive, and fast — no
+              bloated scripts slowing you down.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>📱 Mobile Friendly</h3>
+            <p>
+              Designed to be beautiful and readable on every device, whether
+              you’re on desktop or checking dividends on the go.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>✨ Clean UI</h3>
+            <p>
+              No distractions. Just the data you care about, presented in a
+              simple, elegant interface unlike Yahoo Finance and other cluttered
+              sites.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
 
- {{template "footer"}}
-</body>
+    {{template "footer"}}
+  </body>
 </html>

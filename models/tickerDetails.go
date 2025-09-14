@@ -36,6 +36,10 @@ type TickerDetails struct {
 	News           []NewsResults    `json:"news"`
 }
 
+func (t TickerDetails) LowerTicker() string {
+	return strings.ToLower(t.Ticker)
+}
+
 func (d TickerDetails) GenerateTickerSummary() []string {
 	// generate as many insights about the dividends as possible
 

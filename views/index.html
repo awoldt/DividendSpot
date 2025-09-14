@@ -3,7 +3,7 @@
   {{template "head" .}}
 
   <body>
-   {{template "nav"}}
+    {{template "nav"}}
 
     <main class="container">
       <section class="hero">
@@ -15,8 +15,6 @@
             top-performing dividend stocks.
           </p>
 
-    
-
           <div class="search-container">
             <input
               type="text"
@@ -24,7 +22,7 @@
               placeholder="Search for stocks, ETFs, or funds..."
               id="search_input"
             />
-             <div id="search_results" class="search-results"></div>
+            <div id="search_results" class="search-results"></div>
           </div>
         </div>
       </section>
@@ -183,12 +181,48 @@
             <div class="stock-name">Exxon Mobil</div>
             <div class="stock-symbol">XOM</div>
           </div>
+
+          <div class="stock-card">
+            <a href="/jnj" class="stock-link">
+              <img
+                src="/public/imgs/logos/JNJ.png"
+                alt="Johnson & Johnson"
+                class="stock-logo-img"
+              />
+            </a>
+            <div class="stock-name">Johnson &amp; Johnson</div>
+            <div class="stock-symbol">JNJ</div>
+          </div>
+
+          <div class="stock-card">
+            <a href="/pg" class="stock-link">
+              <img
+                src="/public/imgs/logos/PG.png"
+                alt="Procter & Gamble"
+                class="stock-logo-img"
+              />
+            </a>
+            <div class="stock-name">Procter &amp; Gamble</div>
+            <div class="stock-symbol">PG</div>
+          </div>
+
+          <div class="stock-card">
+            <a href="/pep" class="stock-link">
+              <img
+                src="/public/imgs/logos/PEP.png"
+                alt="PepsiCo Inc."
+                class="stock-logo-img"
+              />
+            </a>
+            <div class="stock-name">PepsiCo Inc.</div>
+            <div class="stock-symbol">PEP</div>
+          </div>
         </div>
       </section>
 
       {{template "recentPayoutsTable" .}}
     </main>
 
-   {{template "footer"}}
+    {{template "footer"}}
   </body>
 </html>
