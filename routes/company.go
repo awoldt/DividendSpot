@@ -48,7 +48,9 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 		"./views/templates/company/dividendHistoryChart.html",
 		"./views/templates/company/relatedTickers.html",
 		"./views/templates/company/news.html",
-		"./views/templates/company/dividendsSummary.html")
+		"./views/templates/company/dividendsSummary.html",
+		"./views/templates/nav.html",
+		"./views/templates/footer.html")
 	if err != nil {
 		constants.ErrorResponse(w, err.Error())
 		return
@@ -81,7 +83,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, companyPageData{
 		Head: constants.Head{
-			Title:       tickerDetails.Name,
+			Title:       fmt.Sprintf("%v (%v) Dividend Yield & Payment History", tickerDetails.Name, tickerDetails.Ticker),
 			Styles:      []constants.Styles{{Link: "/public/css/company.css"}},
 			JsonL:       tickerDetails.GenerateJsonL(),
 			Description: fmt.Sprintf("Explore %v's (%v) complete dividend history including payout dates, dividend yield, growth trends, and the latest news. Stay informed about one of the most consistent dividend stocks in the market.", tickerDetails.Name, tickerDetails.Ticker),

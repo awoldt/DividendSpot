@@ -48,6 +48,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"./views/index.html",
 		"./views/templates/index/head.html",
 		"./views/templates/index/recentPayoutsTable.html",
+		"./views/templates/nav.html",
+		"./views/templates/footer.html",
 	)
 	if err != nil {
 		constants.ErrorResponse(w, err.Error())

@@ -1,26 +1,19 @@
 {{define "dividendHistoryChart"}}
-
 <section class="card">
   <div class="card-header">
     <h2>Dividend History</h2>
-    <a href="#" class="link">See more</a>
   </div>
 
-  {{ if gt (len .Dividends) 0 }} {{ $first := index .Dividends 0 }} {{if gt
-  $first.DaysAwayFromPayout 0}}
+  {{ if gt (len .Dividends) 0 }} {{ $first := index .Dividends 0 }} {{if gt $first.DaysAwayFromPayout 0}}
   <div class="dividend-alert">
     <strong>🎉 Upcoming Dividend</strong>
     {{if eq $first.DaysAwayFromPayout 0 }}
     <p>
-      Investors can expect a dividend payout of {{ $first.Amount | printf
-      "$%.2f" }} per share, scheduled to be distributed tomorrow on {{cleanDate
-      $first.PayDate}}
+      Investors can expect a dividend payout of {{ $first.Amount | printf "$%.2f" }} per share, scheduled to be distributed tomorrow on {{cleanDate $first.PayDate}}
     </p>
     {{else}}
     <p>
-      Investors can expect a dividend payout of {{ $first.Amount | printf
-      "$%.2f" }} per share, scheduled to be distributed in {{
-      $first.DaysAwayFromPayout }} days on {{cleanDate $first.PayDate}}
+      Investors can expect a dividend payout of {{ $first.Amount | printf "$%.2f" }} per share, scheduled to be distributed in {{ $first.DaysAwayFromPayout }} days on {{cleanDate $first.PayDate}}
     </p>
     {{end}}
   </div>
@@ -37,10 +30,11 @@
         </tr>
       </thead>
       <tbody>
-        {{range .Dividends}}
-        <tr>
-          <td>{{cleanDate .PayDate}}</td>
-          <td>${{.Amount}}</td>
+        {{/* render all rows but hide after first 5 for progressive enhancement/seo */}}
+        {{range $i, $d := .Dividends}}
+        <tr {{if ge $i 5}}class="hidden-div" style="display:none"{{end}}>
+          <td>{{cleanDate $d.PayDate}}</td>
+          <td>{{printf "$%.2f" $d.Amount}}</td>
           <td>{{.ExDividendDate}}</td>
           <td>{{.RecordDate}}</td>
         </tr>
@@ -48,5 +42,11 @@
       </tbody>
     </table>
   </div>
+
+  <div style="margin-top:10px">
+    <button id="showmore" aria-expanded="false" aria-controls="dividend-history-table">Show more</button>
+  </div>
+
+  <script src="/public/js/dividend-showmore.js" defer></script>
 </section>
 {{end}}

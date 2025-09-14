@@ -28,12 +28,31 @@ func main() {
 				case "/sitemap.xml":
 					{
 						w.Write([]byte(generateSitemap()))
+
 					}
+
+				case "/about":
+					{
+						http.ServeFile(w, r, "./views/about.html")
+					}
+
+				case "/privacy":
+					{
+
+						http.ServeFile(w, r, "./views/privacy.html")
+					}
+
 				case "/":
-					routes.IndexHandler(w, r)
+					{
+						routes.IndexHandler(w, r)
+
+					}
+
 				// TICKER ROUTES
 				default:
-					routes.CompanyHandler(w, r)
+					{
+						routes.CompanyHandler(w, r)
+					}
 				}
 			}
 
@@ -73,6 +92,8 @@ func generateSitemap() string {
 
 	var sb strings.Builder
 	sb.WriteString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">")
+	sb.WriteString("<url><loc>https://dividendspot.com</loc></url>")
+	sb.WriteString("<url><loc>https://dividendspot.com/about</loc></url>")
 
 	for _, v := range tickers {
 		str := fmt.Sprintf("<url><loc>https://dividendspot.com/%v</loc></url>", strings.ToLower(v))
