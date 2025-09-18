@@ -60,14 +60,15 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	ticker := r.URL.Path[1:] // ex: /googl -> googl
 	upperCaseTicker := strings.ToUpper(ticker)
 
-	// see if ticker in cache first and return instantly if so
+	// see if ticker in cache first AND not expired
 	if data, ok := services.TickerCache[upperCaseTicker]; ok {
-		fmt.Println("\ncompany in cahce!")
-		tmpl.Execute(w, companyPageData{
-			Head:          constants.Head{Title: data.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
-			TickerDetails: *data,
-		})
-		return
+		if int64(data.LastUpdated)+constants.OneDayInSeconds > time.Now().Unix() {
+			tmpl.Execute(w, companyPageData{
+				Head:          constants.Head{Title: data.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
+				TickerDetails: *data,
+			})
+			return
+		}
 	}
 
 	tickerDetails, err := services.GetTickerDetails(upperCaseTicker, polygonApiKey)

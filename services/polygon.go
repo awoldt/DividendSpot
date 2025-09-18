@@ -49,11 +49,6 @@ func GetTickerDetails(ticker string, polygonApiKey string) (*models.TickerDetail
 
 func GetTickerDividend(cachedTicker *models.TickerDetails, polygonApiKey string) error {
 
-	// if theres dividends already stored AND its still valid.. return
-	if cachedTicker.Dividends != nil && int64(cachedTicker.LastUpdated)+constants.OneDayInSeconds > time.Now().Unix() {
-		return nil
-	}
-
 	url := fmt.Sprintf("https://api.polygon.io/v3/reference/dividends?ticker=%v&order=desc&limit=1000&sort=pay_date&apiKey=%v", cachedTicker.Ticker, polygonApiKey)
 	res, err := http.Get(url)
 	if err != nil {
