@@ -1,15 +1,14 @@
-const searchInput = document.getElementById("search_input");
-const searchResults = document.getElementById("search_results");
+const searchInput = document.getElementById("nav_search_input");
+const searchResults = document.getElementById("nav_search_results");
 
 function debounce(fn, delay) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn(...args);
-    }, delay);
+    timer = setTimeout(() => fn(...args), delay);
   };
 }
+
 async function doSearch(query) {
   if (!query.trim()) {
     searchResults.innerHTML = "";
@@ -28,7 +27,6 @@ async function doSearch(query) {
           <strong>${k}</strong> ${v}
         </div>
       </a>
-      
     `;
   }
 }

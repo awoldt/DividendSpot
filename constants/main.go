@@ -29,7 +29,6 @@ type Head struct {
 	Title       string
 	Description string
 	Styles      []Styles
-	Scripts     []Scripts
 	JsonL       template.JS
 }
 

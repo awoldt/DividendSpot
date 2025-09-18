@@ -28,7 +28,12 @@ func main() {
 				case "/sitemap.xml":
 					{
 						w.Write([]byte(generateSitemap()))
+					}
 
+				case "/robots.txt":
+					{
+						w.Header().Set("content-type", "text/plain")
+						w.Write([]byte("User-agent: *\nDisallow:"))
 					}
 
 				case "/about":

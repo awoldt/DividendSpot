@@ -1,8 +1,19 @@
 {{define "nav"}}
 <header>
-  <div class="container">
+  <div class="container nav-container">
     <nav>
-      <a href="/" class="logo"> DividendsSpot </a>
+      <a href="/" class="logo">DividendsSpot</a>
+
+      <div class="nav-search">
+        <input
+          type="text"
+          class="nav-search-box"
+          placeholder="Search for stocks, ETFs, or funds..."
+          id="nav_search_input"
+        />
+        <div id="nav_search_results" class="nav-search-results"></div>
+      </div>
+
       <ul class="nav-links">
         <li><a href="/about">About</a></li>
         <li><a href="/privacy">Privacy</a></li>
@@ -10,4 +21,6 @@
     </nav>
   </div>
 </header>
+
+<script src="/public/js/search.js"></script>
 {{end}}

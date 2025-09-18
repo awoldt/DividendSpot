@@ -81,9 +81,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.Execute(w, indexPageData{
 		Head: constants.Head{
-			Title:   "DividendSpot – Public Companies, ETFs & Funds Dividends",
-			Styles:  []constants.Styles{{Link: "/public/css/index.css"}},
-			Scripts: []constants.Scripts{{Src: "/public/js/search.js"}},
+			Title:  "DividendSpot – Public Companies, ETFs & Funds Dividends",
+			Styles: []constants.Styles{{Link: "/public/css/index.css"}},
 		},
 		RecentPayouts: payouts,
 	})

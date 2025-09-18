@@ -29,11 +29,7 @@
   {{if .Head.Styles}} {{range .Head.Styles}}
   <link rel="stylesheet" href="{{.Link}}" />
   {{end}} {{end}}
-
-   {{if .Head.Scripts}} {{range .Head.Scripts}}
-    <script src="{{.Src}}" defer></script>
-  {{end}} {{end}}
-
+  
   <script
     defer
     src="https://cloud.umami.is/script.js"
