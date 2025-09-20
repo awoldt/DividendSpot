@@ -7,14 +7,8 @@
   <title>{{.Head.Title}}</title>
   <meta name="description" content="{{.Head.Description}}" />
 
-  <meta
-    property="og:title"
-    content="{{.Head.Title}}"
-  />
-  <meta
-    property="og:description"
-    content="{{.Head.Description}}"
-  />
+  <meta property="og:title" content="{{.Head.Title}}" />
+  <meta property="og:description" content="{{.Head.Description}}" />
   {{if .TickerDetails.HasCompanyLogo}}
   <meta
     property="og:image"
@@ -22,14 +16,22 @@
   />
   {{end}}
 
-  <meta property="og:url" content="https://dividendspot.com/{{.TickerDetails.LowerTicker}}" />
+  <meta
+    property="og:url"
+    content="https://dividendspot.com/{{.TickerDetails.LowerTicker}}"
+  />
   <meta property="og:type" content="website" />
+
+  <link
+    rel="canonical"
+    href="https://dividendspot.com/{{.TickerDetails.LowerTicker}}"
+  />
 
   <link rel="stylesheet" href="/public/css/global.css" />
   {{if .Head.Styles}} {{range .Head.Styles}}
   <link rel="stylesheet" href="{{.Link}}" />
   {{end}} {{end}}
-  
+
   <script
     defer
     src="https://cloud.umami.is/script.js"
