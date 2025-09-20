@@ -1,0 +1,38 @@
+.privacy {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.privacy h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.privacy .updated {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.privacy section {
+  margin-bottom: 32px;
+}
+
+.privacy h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.privacy p {
+  font-size: 16px;
+  color: #334155;
+  line-height: 1.7;
+}

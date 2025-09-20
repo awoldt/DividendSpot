@@ -1,0 +1,19 @@
+{{define "relatedTickers"}} {{if .RelatedTickers}}
+
+<section>
+  <div class="card-header">
+    <h2>Related Companies</h2>
+  </div>
+  <div class="stocks-grid">
+    {{range .RelatedTickers}}
+    <a href={{.Ticker}}
+      ><div class="stock-card">
+        <div><img src="/public/imgs/logos/{{.Ticker}}.png" alt="{{.Name}}" class="stock-logo-img"></div>
+        <div class="stock-name">{{.Name}}</div>
+        <div class="stock-symbol">{{.Ticker}}</div>
+      </div></a
+    >
+    {{end}}
+  </div>
+</section>
+{{end}} {{end}}

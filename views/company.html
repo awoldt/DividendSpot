@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{template "head" .}}
+
+  <body>
+   {{template "nav"}}
+
+    <main class="container company">
+      {{template "companyHero" .TickerDetails}} {{if .TickerDetails.Dividends}}
+      <section class="stats-bar">
+        <div class="stat-pill big-pill">
+          <span class="stat-label">Dividend Yield</span>
+          <span class="stat-value">{{.TickerDetails.DividendYield}}%</span>
+        </div>
+        <div class="stat-pill big-pill">
+          <span class="stat-label">Payout Frequency</span>
+          <span class="stat-value"
+            >{{.TickerDetails.GetTickerDividendFrequencyString}}</span
+          >
+        </div>
+      </section>
+
+      {{template "dividendHistoryChart" .TickerDetails}} {{template
+      "dividendsSummary" .TickerDetails}} {{else}}
+      <div class="no-dividends-banner">
+        <strong>🚫 {{.TickerDetails.Name}} does not pay dividends</strong>
+      </div>
+      {{end}} {{template "news" .TickerDetails.News}} {{template
+      "relatedTickers" .TickerDetails}}
+    </main>
+
+   {{template "footer"}}
+  </body>
+</html>

@@ -1,22 +1,27 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-ENV ASPNETCORE_URLS=http://*:8080
+FROM golang:1.25.0-alpine3.22 AS builder
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /src
-COPY ["dividendspot.csproj", "."]
-RUN dotnet restore "./dividendspot.csproj"
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "dividendspot.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "dividendspot.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN go build -o main .
 
-FROM base AS final
+FROM alpine:3.22
+
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENV DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP3SUPPORT=false
-ENTRYPOINT ["dotnet", "dividendspot.dll"]
+
+# go binary
+COPY --from=builder /app/main .
+# env variables
+COPY --from=builder /app/.env .
+# images, scripts, css, etc...
+COPY --from=builder /app/public ./public
+# contains very important json files that site needs to work  
+COPY --from=builder /app/misc ./misc 
+# html pages
+COPY --from=builder /app/views ./views 
+
+CMD ["./main"]

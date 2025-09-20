@@ -1,0 +1,21 @@
+{{define "nav"}}
+<header>
+  <div class="container nav-container">
+    <nav>
+      <a href="/" class="logo">DividendsSpot</a>
+
+      <div class="nav-search">
+        <input
+          type="text"
+          class="nav-search-box"
+          placeholder="Search for stocks, ETFs, or funds..."
+          id="nav_search_input"
+        />
+        <div id="nav_search_results" class="nav-search-results"></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script src="/public/js/search.js"></script>
+{{end}}

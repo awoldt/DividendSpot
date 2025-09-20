@@ -1,0 +1,31 @@
+{{define "news"}} {{if .}}
+<section class="card">
+  <div class="card-header">
+    <h2>Company News</h2>
+  </div>
+
+  <div class="news-grid">
+    {{range .}}
+    <div class="news-card">
+      <a href="{{.Url}}" class="news-title" target="_blank" rel="noopener">
+        {{.Title}}
+      </a>
+      <div class="news-meta">
+        <span>{{.Publisher.Name}}</span>
+        <span>• {{.Author}}</span>
+        <span>• {{cleanDate .PublishedOnUTC}}</span>
+      </div>
+      <p class="news-description">{{.Description}}</p>
+
+      {{if .TickersMentionedInArticle}}
+      <div class="news-tickers">
+        {{range .TickersMentionedInArticle}}
+        <a href="/{{.}}" class="ticker-pill">{{.}}</a>
+        {{end}}
+      </div>
+      {{end}}
+    </div>
+    {{end}}
+  </div>
+</section>
+{{end}} {{end}}

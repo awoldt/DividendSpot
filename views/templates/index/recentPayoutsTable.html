@@ -1,0 +1,37 @@
+{{define "recentPayoutsTable"}} {{if .RecentPayouts}}
+<section class="card">
+  <div class="section-header">
+    <h2 class="section-title">Upcoming Payouts</h2>
+    <p class="section-description">
+      Here’s a look at payouts coming in the next 30 days.
+    </p>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Ticker</th>
+          <th>Amount</th>
+          <th>Payable</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .RecentPayouts}}
+        <tr>
+          <td>
+            <a href="/{{.Ticker}}">
+              <img
+                src="/public/imgs/logos/{{.Ticker}}.png"
+                style="width: 50px"
+              />{{.Ticker}}
+            </a>
+          </td>
+          <td>${{.Dividend.Amount}}</td>
+          <td>{{.Dividend.DaysAwayFromPayout}} days</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+</section>
+{{end}} {{end}}
