@@ -20,7 +20,7 @@
         </div>
       </section>
 
-      {{template "dividendHistoryChart" .TickerDetails}} {{template
+      {{template "dividendHistoryTable" .TickerDetails}} {{template
       "dividendsSummary" .TickerDetails}} {{else}}
       <div class="no-dividends-banner">
         <strong>🚫 {{.TickerDetails.Name}} does not pay dividends</strong>

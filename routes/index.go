@@ -57,9 +57,10 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		today := time.Now()
+		monthFromToday := time.Now().Add((time.Hour * 24) * 30)
 
-		// only include payouts that are in the future
-		if today.After(payDate) {
+		// only include payouts that are within the next 30 days
+		if today.After(payDate) || payDate.After(monthFromToday) {
 			continue
 		}
 
