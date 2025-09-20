@@ -74,3 +74,8 @@ func ErrorResponse(w http.ResponseWriter, msg string) {
 	w.WriteHeader(500)
 	w.Write([]byte(msg))
 }
+
+func NotFoundResponse(w http.ResponseWriter, msg string) {
+	w.WriteHeader(404)
+	w.Write([]byte(msg))
+}

@@ -113,6 +113,12 @@ func GetTickerDivYield(cachedTicker *models.TickerDetails, polygonApiKey string)
 		currentPrice = tickerPrice.Ticker.PrevDay.Close
 	}
 
+	cachedTicker.CurrentPrice = models.CurrentPrice{
+		Price:         currentPrice,
+		Change:        tickerPrice.Ticker.TodaysChange,
+		ChangePercent: tickerPrice.Ticker.TodaysChangePercentage,
+	}
+
 	fixed := fmt.Sprintf("%.2f", divSum/currentPrice*100)
 	fixedNum, err := strconv.ParseFloat(fixed, 64)
 
