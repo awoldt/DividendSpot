@@ -21,6 +21,16 @@ type Address struct {
 	State      string `json:"state"`
 }
 
+type CurrentPrice struct {
+	// this struct is mainly for tracking a simple current market price and change for current trading day
+	// for a ticker
+	// shows in company hero alongside logo and description
+
+	Price         float64
+	Change        float64
+	ChangePercent float64
+}
+
 type TickerDetails struct {
 	LastUpdated int     `json:"last_updated"` // only update the ticker details every 24hrs
 	Name        string  `json:"name"`
@@ -30,6 +40,7 @@ type TickerDetails struct {
 	Phone       string  `json:"phone_number"`
 	Description string  `json:"description"`
 
+	CurrentPrice   CurrentPrice
 	Dividends      []TickerDividend `json:"dividends"`
 	DividendYield  float64          `json:"dividend_yield"`
 	RelatedTickers []RelatedTicker  `json:"related_tickers"`

@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"slices"
+	"strings"
 	"time"
 )
 
@@ -19,6 +20,10 @@ type indexPageData struct {
 type singlePayout struct {
 	Ticker   string                `json:"ticker"`
 	Dividend models.TickerDividend `json:"dividend"`
+}
+
+func (p singlePayout) TickerLower() string {
+	return strings.ToLower(p.Ticker)
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {

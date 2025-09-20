@@ -74,7 +74,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	tickerDetails, err := services.GetTickerDetails(upperCaseTicker, polygonApiKey)
 
 	if err != nil {
-		constants.ErrorResponse(w, "Ticker not supported")
+		constants.NotFoundResponse(w, "Ticker not supported")
 		return
 	}
 
