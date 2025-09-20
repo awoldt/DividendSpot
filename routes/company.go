@@ -65,7 +65,12 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	if data, ok := services.TickerCache[upperCaseTicker]; ok {
 		if int64(data.LastUpdated)+constants.OneDayInSeconds > time.Now().Unix() {
 			tmpl.Execute(w, companyPageData{
-				Head:          constants.Head{Title: data.Name, Styles: []constants.Styles{{Link: "/public/css/company.css"}}},
+				Head: constants.Head{
+					Title:       fmt.Sprintf("%v (%v) Dividend Yield & Payment History", data.Name, data.Ticker),
+					Styles:      []constants.Styles{{Link: "/public/css/company.css"}},
+					JsonL:       data.GenerateJsonL(),
+					Description: fmt.Sprintf("Explore %v's (%v) complete dividend history including payout dates, dividend yield, growth trends, current market price, and the latest news. Stay informed about one of the most consistent dividend stocks in the market.", data.Name, data.Ticker),
+				},
 				TickerDetails: *data,
 			})
 			return
