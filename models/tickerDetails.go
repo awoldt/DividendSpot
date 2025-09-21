@@ -95,7 +95,7 @@ func (d TickerDetails) GenerateTickerSummary() []string {
 
 		summaries = append(summaries, fmt.Sprintf("The most recent dividend was paid %v days ago, on %v", int(today.Sub(mostRecentPayday).Hours()/24), mostRecentPayday.Format("January 2, 2006")))
 
-		summaries = append(summaries, fmt.Sprintf("The highest dividend payed out to investors during this period was $%v per share", maxPayoutAmount))
+		summaries = append(summaries, fmt.Sprintf("The highest dividend payed out to investors during this period was $%.2f per share", maxPayoutAmount))
 		summaries = append(summaries, fmt.Sprintf("The average dividend paid during this period was $%.2f per share.", avg))
 	}
 

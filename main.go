@@ -36,6 +36,12 @@ func main() {
 						w.Write([]byte("User-agent: *\nDisallow:"))
 					}
 
+				case "/ads.txt":
+					{
+						w.Header().Set("content-type", "text/plain")
+						w.Write([]byte("google.com, pub-4106301283765460, DIRECT, f08c47fec0942fa0"))
+					}
+
 				case "/about":
 					{
 						routes.AboutHandler(w, r)

@@ -201,13 +201,13 @@ func GetTickerNews(cachedTicker *models.TickerDetails, polygonApiKey string) err
 	var tickerNews models.TickerNewsResponse
 	json.NewDecoder(res.Body).Decode(&tickerNews)
 
-	for _, v := range tickerNews.Results {
+	for _, newsData := range tickerNews.Results {
 		if len(returnData) == 5 {
 			break
 		}
 
 		// make sure this publisher isnt alredy stored
-		publisher := v.Publisher.Name
+		publisher := newsData.Publisher.Name
 		skip := false
 		for i := 0; i < len(returnData); i++ {
 			if returnData[i].Publisher.Name == publisher {
@@ -222,12 +222,12 @@ func GetTickerNews(cachedTicker *models.TickerDetails, polygonApiKey string) err
 		// the mentioned tickers have to be supported
 		// only allow up to 6
 		var validTickers []string
-		for i := 0; i < len(v.TickersMentionedInArticle); i++ {
+		for i := 0; i < len(newsData.TickersMentionedInArticle); i++ {
 			if len(validTickers) == 6 {
 				break
 			}
 
-			ticker := strings.ToUpper(v.TickersMentionedInArticle[i])
+			ticker := strings.ToUpper(newsData.TickersMentionedInArticle[i])
 			// cannot be the same ticker being viewed on company page
 			if ticker == cachedTicker.Ticker {
 				continue
@@ -238,8 +238,14 @@ func GetTickerNews(cachedTicker *models.TickerDetails, polygonApiKey string) err
 			}
 		}
 
-		v.TickersMentionedInArticle = validTickers
-		returnData = append(returnData, v)
+		newsData.TickersMentionedInArticle = validTickers
+
+		// make sure the description is max 350 charaters
+		if len(newsData.Description) > 350 {
+			newsData.Description = newsData.Description[0:348] + "..."
+		}
+
+		returnData = append(returnData, newsData)
 	}
 
 	cachedTicker.News = returnData
