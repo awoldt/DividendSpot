@@ -6,23 +6,30 @@
     <span class="price">${{printf "%.2f" .CurrentPrice.Price}}</span>
     {{if gt .CurrentPrice.Change 0.0}}
     <span class="change up">
-      +{{printf "%.2f" .CurrentPrice.Change}} ({{printf "%.2f" .CurrentPrice.ChangePercent}}%)
+      +{{printf "%.2f" .CurrentPrice.Change}} ({{printf "%.2f"
+      .CurrentPrice.ChangePercent}}%)
     </span>
     {{else if lt .CurrentPrice.Change 0.0}}
     <span class="change down">
-      {{printf "%.2f" .CurrentPrice.Change}} ({{printf "%.2f" .CurrentPrice.ChangePercent}}%)
+      {{printf "%.2f" .CurrentPrice.Change}} ({{printf "%.2f"
+      .CurrentPrice.ChangePercent}}%)
     </span>
     {{else}}
     <span class="change flat">
-      {{printf "%.2f" .CurrentPrice.Change}} ({{printf "%.2f" .CurrentPrice.ChangePercent}}%)
+      {{printf "%.2f" .CurrentPrice.Change}} ({{printf "%.2f"
+      .CurrentPrice.ChangePercent}}%)
     </span>
     {{end}}
-  </div>
-  {{end}}
 
-  {{if .HasCompanyLogo}}
+    <div class="last-updated">Last updated {{.CurrentPrice.UpdatedAt}}</div>
+  </div>
+
+  {{end}} {{if .HasCompanyLogo}}
   <div class="company-logo">
-    <img src="/public/imgs/logos/{{.Ticker}}.png" alt="{{.Name}} company logo"/>
+    <img
+      src="/public/imgs/logos/{{.Ticker}}.png"
+      alt="{{.Name}} company logo"
+    />
   </div>
   {{end}}
 
@@ -33,6 +40,5 @@
     {{end}}
   </div>
 </section>
-
 
 {{end}}

@@ -17,4 +17,5 @@ type TickerPrice struct {
 	TodaysChange           float64  `json:"todaysChange"`
 	Day                    DayPrice `json:"day"`
 	PrevDay                DayPrice `json:"prevDay"`
+	UpdatedAt              int64    `json:"updated"` // nanosecond timestamp
 }

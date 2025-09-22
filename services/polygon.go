@@ -117,6 +117,7 @@ func GetTickerDivYield(cachedTicker *models.TickerDetails, polygonApiKey string)
 		Price:         currentPrice,
 		Change:        tickerPrice.Ticker.TodaysChange,
 		ChangePercent: tickerPrice.Ticker.TodaysChangePercentage,
+		UpdatedAt:     time.Unix(0, tickerPrice.Ticker.UpdatedAt).Format("2006-01-02 15:04:05"),
 	}
 
 	fixed := fmt.Sprintf("%.2f", divSum/currentPrice*100)

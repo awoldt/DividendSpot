@@ -29,6 +29,7 @@ type CurrentPrice struct {
 	Price         float64
 	Change        float64
 	ChangePercent float64
+	UpdatedAt     string
 }
 
 type TickerDetails struct {
