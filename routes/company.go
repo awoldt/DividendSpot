@@ -41,6 +41,7 @@ func CompanyHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.New("company.html").Funcs(template.FuncMap{
 		"cleanDate":          cleanDate,
 		"DaysAwayFromPayout": models.TickerDividend.DaysAwayFromPayout,
+		"lowerTicker":        strings.ToLower,
 	})
 
 	tmpl, err := tmpl.ParseFiles("./views/company.html",

@@ -3,11 +3,12 @@
   {{template "head" .}}
 
   <body>
-   {{template "nav"}}
+    {{template "nav"}}
 
     <main class="container company">
       {{template "companyHero" .TickerDetails}} {{if .TickerDetails.Dividends}}
       <section class="stats-bar">
+        {{if ne .TickerDetails.DividendYield 0.0}}
         <div class="stat-pill big-pill">
           <span class="stat-label">Dividend Yield</span>
           <span class="stat-value">{{.TickerDetails.DividendYield}}%</span>
@@ -18,6 +19,14 @@
             >{{.TickerDetails.GetTickerDividendFrequencyString}}</span
           >
         </div>
+        {{else}}
+        <div class="stat-pill big-pill full-width">
+          <span class="stat-label">Payout Frequency</span>
+          <span class="stat-value"
+            >{{.TickerDetails.GetTickerDividendFrequencyString}}</span
+          >
+        </div>
+        {{end}}
       </section>
 
       {{template "dividendHistoryTable" .TickerDetails}} {{template
@@ -29,6 +38,6 @@
       "relatedTickers" .TickerDetails}}
     </main>
 
-   {{template "footer"}}
+    {{template "footer"}}
   </body>
 </html>

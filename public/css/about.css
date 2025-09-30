@@ -69,3 +69,27 @@
   .about-hero p { font-size: 16px; }
   .about-card { padding: 24px; }
 }
+
+.about-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.about-footer a {
+  color: #94a3b8; /* greyed out */
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.about-footer a:hover {
+  color: #64748b; /* slightly darker on hover */
+  text-decoration: underline;
+}
+
+.about-footer img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;
+  opacity: 0.6; /* greyed icon */
+}

@@ -20,7 +20,7 @@
       {{if .TickersMentionedInArticle}}
       <div class="news-tickers">
         {{range .TickersMentionedInArticle}}
-        <a href="/{{.}}" class="ticker-pill">{{.}}</a>
+        <a href="/{{lowerTicker .}}" class="ticker-pill">{{.}}</a>
         {{end}}
       </div>
       {{end}}

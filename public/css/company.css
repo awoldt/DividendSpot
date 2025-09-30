@@ -423,3 +423,7 @@ a:focus {
   width: 100% !important;
   height: 260px !important; /* consistent height */
 }
+
+.stat-pill.full-width {
+  grid-column: 1 / -1;
+}

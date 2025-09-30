@@ -6,9 +6,15 @@
   </div>
   <div class="stocks-grid">
     {{range .RelatedTickers}}
-    <a href={{.LowerTicker}}
+    <a href="{{.LowerTicker}}" style="text-decoration: none"
       ><div class="stock-card">
-        <div><img src="/public/imgs/logos/{{.Ticker}}.png" alt="{{.Name}}" class="stock-logo-img"></div>
+        <div>
+          <img
+            src="/public/imgs/logos/{{.Ticker}}.png"
+            alt="{{.Name}}"
+            class="stock-logo-img"
+          />
+        </div>
         <div class="stock-name">{{.Name}}</div>
         <div class="stock-symbol">{{.Ticker}}</div>
       </div></a

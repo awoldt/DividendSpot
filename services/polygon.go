@@ -113,21 +113,25 @@ func GetTickerDivYield(cachedTicker *models.TickerDetails, polygonApiKey string)
 		currentPrice = tickerPrice.Ticker.PrevDay.Close
 	}
 
+	// if polygon doesnt have a value other than 0... just dont do this part
+	if currentPrice != 0.0 {
+		fixed := fmt.Sprintf("%.2f", divSum/currentPrice*100)
+		fixedNum, err := strconv.ParseFloat(fixed, 64)
+
+		if err != nil {
+			return fmt.Errorf("error converting string to num")
+		}
+
+		cachedTicker.DividendYield = float64(fixedNum)
+	}
+
 	cachedTicker.CurrentPrice = models.CurrentPrice{
 		Price:         currentPrice,
 		Change:        tickerPrice.Ticker.TodaysChange,
 		ChangePercent: tickerPrice.Ticker.TodaysChangePercentage,
-		UpdatedAt:     time.Unix(0, tickerPrice.Ticker.UpdatedAt).Format("2006-01-02 15:04:05"),
+		UpdatedAt:     time.Unix(0, tickerPrice.Ticker.UpdatedAt).Format("2006-01-02"),
 	}
 
-	fixed := fmt.Sprintf("%.2f", divSum/currentPrice*100)
-	fixedNum, err := strconv.ParseFloat(fixed, 64)
-
-	if err != nil {
-		return fmt.Errorf("error converting string to num")
-	}
-
-	cachedTicker.DividendYield = float64(fixedNum)
 	return nil
 }
 
