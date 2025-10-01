@@ -68,8 +68,6 @@ func init() {
 	}
 }
 
-var OneDayInSeconds int64 = 86400
-
 func ErrorResponse(w http.ResponseWriter, msg string) {
 	w.WriteHeader(500)
 	w.Write([]byte(msg))

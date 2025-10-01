@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
 )
 
@@ -17,69 +18,31 @@ func main() {
 		panic("error loading .env file")
 	}
 
+	router := chi.NewRouter()
+
 	fs := http.FileServer(http.Dir("public"))
-	http.Handle("/public/", http.StripPrefix("/public/", fs))
+	router.Handle("/public/*", http.StripPrefix("/public/", fs))
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
-			{
-				switch r.URL.Path {
-				case "/sitemap.xml":
-					{
-						w.Write([]byte(generateSitemap()))
-					}
-
-				case "/robots.txt":
-					{
-						w.Header().Set("content-type", "text/plain")
-						w.Write([]byte("User-agent: *\nDisallow:"))
-					}
-
-				case "/ads.txt":
-					{
-						w.Header().Set("content-type", "text/plain")
-						w.Write([]byte("google.com, pub-4106301283765460, DIRECT, f08c47fec0942fa0"))
-					}
-
-				case "/about":
-					{
-						routes.AboutHandler(w, r)
-					}
-
-				case "/privacy":
-					{
-
-						routes.PirvacyHandler(w, r)
-					}
-
-				case "/":
-					{
-						routes.IndexHandler(w, r)
-					}
-
-				// TICKER ROUTES
-				default:
-					{
-						routes.CompanyHandler(w, r)
-					}
-				}
-			}
-
-		case http.MethodPost:
-			{
-				switch r.URL.Path {
-				case "/search":
-					{
-						routes.SearchHandler(w, r)
-					}
-				}
-			}
-		}
-
+	router.Get("/sitemap.xml", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(generateSitemap()))
+	})
+	router.Get("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte("User-agent: *\nDisallow:"))
+	})
+	router.Get("/ads.txt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.Write([]byte("google.com, pub-4106301283765460, DIRECT, f08c47fec0942fa0"))
 	})
 
-	http.ListenAndServe(":8080", nil)
+	router.Get("/", routes.IndexHandler)
+	router.Get("/about", routes.AboutHandler)
+	router.Get("/privacy", routes.PirvacyHandler)
+
+	router.Post("/search", routes.SearchHandler)
+	router.Get("/{ticker}", routes.CompanyHandler)
+
+	http.ListenAndServe(":8080", router)
 }
 
 func generateSitemap() string {
