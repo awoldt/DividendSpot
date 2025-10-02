@@ -2,6 +2,7 @@
 *.exe
 *.env
 .air.*
+*_templ.go
 /tmp
 ticker_descriptions.json
 supported_tickers.json

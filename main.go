@@ -1,10 +1,11 @@
 package main
 
 import (
-	"dividendspot/constants"
 	"dividendspot/routes"
+	"dividendspot/services"
 	"fmt"
 	"net/http"
+	"os"
 	"slices"
 	"strings"
 
@@ -36,8 +37,28 @@ func main() {
 	})
 
 	router.Get("/", routes.IndexHandler)
-	router.Get("/about", routes.AboutHandler)
-	router.Get("/privacy", routes.PirvacyHandler)
+	router.Get("/about", func(w http.ResponseWriter, r *http.Request) {
+		page, err := os.ReadFile("about.html")
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte("There was an error while serving about page"))
+			return
+		}
+
+		w.Header().Add("content-type", "text/html")
+		w.Write(page)
+	})
+	router.Get("/privacy", func(w http.ResponseWriter, r *http.Request) {
+		page, err := os.ReadFile("privacy.html")
+		if err != nil {
+			w.WriteHeader(500)
+			w.Write([]byte("There was an error while serving privacy page"))
+			return
+		}
+
+		w.Header().Add("content-type", "text/html")
+		w.Write(page)
+	})
 
 	router.Post("/search", routes.SearchHandler)
 	router.Get("/{ticker}", routes.CompanyHandler)
@@ -49,7 +70,7 @@ func generateSitemap() string {
 	// read the supported ticker
 
 	var tickers []string
-	for k := range constants.SupportedTickers {
+	for k := range services.SupportedTickers {
 		tickers = append(tickers, strings.ToLower(k))
 	}
 

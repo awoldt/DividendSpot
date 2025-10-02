@@ -1,6 +1,7 @@
 package models
 
 import (
+	polygonresponses "dividendspot/models/polygon_responses"
 	"fmt"
 	"html/template"
 	"math"
@@ -10,42 +11,84 @@ import (
 	"time"
 )
 
-type TickerDetailsResponse struct {
-	Results TickerDetails `json:"results"`
-}
-
-type Address struct {
-	Address    string `json:"address1"`
-	City       string `json:"city"`
-	PostalCode string `json:"postal_code"`
-	State      string `json:"state"`
-}
-
-type CurrentPrice struct {
-	// this struct is mainly for tracking a simple current market price and change for current trading day
-	// for a ticker
-	// shows in company hero alongside logo and description
-
-	Price         float64
-	Change        float64
-	ChangePercent float64
-	UpdatedAt     string
-}
-
 type TickerDetails struct {
-	LastUpdated int     `json:"last_updated"` // only update the ticker details every 24hrs
-	Name        string  `json:"name"`
-	Ticker      string  `json:"ticker"`
-	Address     Address `json:"address"`
-	Website     string  `json:"homepage_url"`
-	Phone       string  `json:"phone_number"`
-	Description string  `json:"description"`
+	Name           string
+	Ticker         string
+	Address        string
+	Website        string
+	Phone          string
+	Description    string
+	CurrentPrice   polygonresponses.TickerPrice
+	Dividends      []polygonresponses.TickerDividend
+	DividendYield  float64
+	RelatedTickers []polygonresponses.RelatedTicker
+	News           []polygonresponses.NewsResults
 
-	CurrentPrice   CurrentPrice
-	Dividends      []TickerDividend `json:"dividends"`
-	DividendYield  float64          `json:"dividend_yield"`
-	RelatedTickers []RelatedTicker  `json:"related_tickers"`
-	News           []NewsResults    `json:"news"`
+	ExpiredTimestamps ExpiredTimestamps
+}
+
+type ExpiredTimestamps struct {
+	// a struct that tracks the epoch seconds in which each part of
+	// the page should update
+
+	// they are at different expire times bc some parts of the page dont need to
+	// update as frequently, while other parts do
+
+	DividendsExpiresAt int64
+	PriceExpiresAt     int64
+	NewsExpiresAt      int64
+}
+
+func (t TickerDetails) GenerateJsonL() template.JS {
+	// stupid ass template.JS casue a regular string will for some fucking
+	// reason return the \"\" in the template i dont get it
+
+	var sb strings.Builder
+	sb.WriteString("{")
+
+	sb.WriteString("\"@context\": \"https://schema.org\",")
+	sb.WriteString("\"@type\": \"Corporation\",")
+
+	name := fmt.Sprintf("\"name\": \"%v\",", t.Name)
+	sb.WriteString(name)
+
+	if t.Description != "" {
+		description := fmt.Sprintf("\"description\": \"%v\",", t.Description)
+		sb.WriteString(description)
+	}
+
+	if t.Website != "" {
+		website := fmt.Sprintf("\"url\": \"%v\",", t.Website)
+		sb.WriteString(website)
+	}
+
+	if t.HasCompanyLogo() {
+		logo := fmt.Sprintf("\"logo\": \"https://dividendspot.com/imgs/company-logo/%v.png\",", t.Ticker)
+		sb.WriteString(logo)
+	}
+
+	if t.Phone != "" {
+		phone := fmt.Sprintf("\"telephone\": \"%v\",", t.Phone)
+		sb.WriteString(phone)
+	}
+
+	ticker := fmt.Sprintf("\"tickerSymbol\": \"%v\"", t.Ticker)
+	sb.WriteString(ticker)
+
+	sb.WriteString("}")
+
+	return template.JS(sb.String())
+}
+
+func (t TickerDetails) HasCompanyLogo() bool {
+	// this will read from the public folder and find out if this ticker has a img
+	// if not dont render the img tag on the client
+
+	if _, err := os.Stat(fmt.Sprintf("./public/imgs/logos/%v.png", t.Ticker)); err != nil {
+		return false
+	}
+
+	return true
 }
 
 func (t TickerDetails) LowerTicker() string {
@@ -123,56 +166,4 @@ func (t TickerDetails) GetTickerDividendFrequencyString() string {
 	default:
 		return ""
 	}
-}
-
-func (t TickerDetails) HasCompanyLogo() bool {
-	// this will read from the public folder and find out if this ticker has a img
-	// if not dont render the img tag on the client
-
-	if _, err := os.Stat(fmt.Sprintf("./public/imgs/logos/%v.png", t.Ticker)); err != nil {
-		return false
-	}
-
-	return true
-}
-
-func (t TickerDetails) GenerateJsonL() template.JS {
-	// stupid ass template.JS casue a regular string will for some fucking
-	// reason return the \"\" in the template i dont get it
-
-	var sb strings.Builder
-	sb.WriteString("{")
-
-	sb.WriteString("\"@context\": \"https://schema.org\",")
-	sb.WriteString("\"@type\": \"Corporation\",")
-
-	name := fmt.Sprintf("\"name\": \"%v\",", t.Name)
-	sb.WriteString(name)
-
-	if t.Description != "" {
-		description := fmt.Sprintf("\"description\": \"%v\",", t.Description)
-		sb.WriteString(description)
-	}
-
-	if t.Website != "" {
-		website := fmt.Sprintf("\"url\": \"%v\",", t.Website)
-		sb.WriteString(website)
-	}
-
-	if t.HasCompanyLogo() {
-		logo := fmt.Sprintf("\"logo\": \"https://dividendspot.com/imgs/company-logo/%v.png\",", t.Ticker)
-		sb.WriteString(logo)
-	}
-
-	if t.Phone != "" {
-		phone := fmt.Sprintf("\"telephone\": \"%v\",", t.Phone)
-		sb.WriteString(phone)
-	}
-
-	ticker := fmt.Sprintf("\"tickerSymbol\": \"%v\"", t.Ticker)
-	sb.WriteString(ticker)
-
-	sb.WriteString("}")
-
-	return template.JS(sb.String())
 }

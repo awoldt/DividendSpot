@@ -1,0 +1,19 @@
+package views
+
+import "dividendspot/models"
+
+templ Layout(head models.HeadTag) {
+  <!DOCTYPE html>
+  <html lang="en">
+   @Head(head)
+    <body>
+      @Nav()
+
+      <main class="container">
+       { children... }
+      </main>
+
+    @Footer()
+    </body>
+  </html>
+}

@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"dividendspot/constants"
+	"dividendspot/services"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -18,7 +18,7 @@ func handleSearch(query url.Values) map[string]string {
 	}
 
 	// loop through all supported tickers and any matching ticker/name key add to results
-	for companyTicker, companyName := range constants.SupportedTickers {
+	for companyTicker, companyName := range services.SupportedTickers {
 		if len(results) == 7 {
 			break
 		}

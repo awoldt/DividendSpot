@@ -1,0 +1,32 @@
+package views
+
+import "dividendspot/models"
+
+templ Head(data models.HeadTag) {
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<title>{ data.Title }</title>
+		<link rel="stylesheet" href="/public/css/global.css"/>
+		<script defer src="https://cloud.umami.is/script.js" data-website-id="6c725d77-ef0a-4eb6-a302-9659249e8278"></script>
+		<link
+			rel="icon"
+			type="image/png"
+			href="/public/favicon-96x96.png"
+			sizes="96x96"
+		/>
+		<link rel="icon" type="image/svg+xml" href="/public/favicon.svg"/>
+		<link rel="shortcut icon" href="/public/favicon.ico"/>
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="/public/apple-touch-icon.png"
+		/>
+
+		if len(data.Styles) > 0 {
+			for _, item := range data.Styles {
+				<link rel="stylesheet" href={item.Link}/>
+			}
+		}
+	</head>
+}

@@ -1,0 +1,51 @@
+package views
+
+import (
+	"dividendspot/models"
+  "dividendspot/views/ticker"
+)
+
+templ TickerPage(tickerData *models.TickerDetails) {
+  @Layout(models.HeadTag{
+    Title:  "Ticker PAGE",
+    Styles: []models.Styles{{Link: "/public/css/ticker.css"}},
+  }) {
+
+    @ticker.TickerHero(tickerData)
+
+    if len(tickerData.Dividends) > 0 {
+      <section class="stats-bar">
+        if tickerData.DividendYield != 0.0 {
+          <div class="stat-pill big-pill">
+            <span class="stat-label">Dividend Yield</span>
+            <span class="stat-value">{ tickerData.DividendYield }%</span>
+          </div>
+          <div class="stat-pill big-pill">
+            <span class="stat-label">Payout Frequency</span>
+            <span class="stat-value">
+              { tickerData.GetTickerDividendFrequencyString() }
+            </span>
+          </div>
+        } else {
+          <div class="stat-pill big-pill full-width">
+            <span class="stat-label">Payout Frequency</span>
+            <span class="stat-value">
+              { tickerData.GetTickerDividendFrequencyString() }
+            </span>
+          </div>
+        }
+      </section>
+
+      @ticker.DividendHistoryTable(tickerData)
+      @ticker.DividendsSummary(tickerData)
+
+    } else {
+      <div class="no-dividends-banner">
+        <strong>🚫 { tickerData.Name } does not pay dividends</strong>
+      </div>
+    }
+
+    @ticker.TickerNews(tickerData.News)
+    @ticker.RelatedTickers(tickerData)
+  }
+}

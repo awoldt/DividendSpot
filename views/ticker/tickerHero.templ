@@ -1,0 +1,51 @@
+package ticker
+
+import (
+	"dividendspot/models"
+	"fmt"
+)
+
+templ TickerHero(data *models.TickerDetails) {
+	<section class="company-hero">
+		if data.CurrentPrice.CurrentPrice > 0.0 {
+			<div class="price-change">
+				<span class="price">
+					${ fmt.Sprintf("%.2f", data.CurrentPrice.CurrentPrice) }
+				</span>
+				if data.CurrentPrice.TodaysChange > 0.0 {
+					<span class="change up">
+						+{ fmt.Sprintf("%.2f", data.CurrentPrice.TodaysChange) }
+						({ fmt.Sprintf("%.2f", data.CurrentPrice.TodaysChangePercentage) }%)
+					</span>
+				} else if data.CurrentPrice.TodaysChange < 0.0 {
+					<span class="change down">
+						{ fmt.Sprintf("%.2f", data.CurrentPrice.TodaysChange) }
+						({ fmt.Sprintf("%.2f", data.CurrentPrice.TodaysChangePercentage) }%)
+					</span>
+				} else {
+					<span class="change flat">
+						{ fmt.Sprintf("%.2f", data.CurrentPrice.TodaysChange) }
+						({ fmt.Sprintf("%.2f", data.CurrentPrice.TodaysChangePercentage) }%)
+					</span>
+				}
+			</div>
+		}
+		if data.HasCompanyLogo() {
+			<div class="company-logo">
+				<img
+					src={ fmt.Sprintf("/public/imgs/logos/%s.png", data.Ticker) }
+					alt={ fmt.Sprintf("%s company logo", data.Name) }
+				/>
+			</div>
+		}
+		<div class="company-headings">
+			<h1>
+				{ data.Name }
+				<span class="ticker">({ data.Ticker })</span>
+			</h1>
+			if data.Description != "" {
+				<p class="company-tagline">{ data.Description }</p>
+			}
+		</div>
+	</section>
+}

@@ -1,47 +1,18 @@
 package routes
 
 import (
-	"dividendspot/constants"
 	"dividendspot/models"
 	"dividendspot/services"
-	"html/template"
+	"dividendspot/views"
 	"net/http"
 	"slices"
-	"strings"
 	"time"
 )
 
-type indexPageData struct {
-	Head          constants.Head
-	RecentPayouts []singlePayout
-}
-
-// we only want to showcase a single payout on the homepage for each ticker
-type singlePayout struct {
-	Ticker   string                `json:"ticker"`
-	Dividend models.TickerDividend `json:"dividend"`
-}
-
-func (p singlePayout) TickerLower() string {
-	return strings.ToLower(p.Ticker)
-}
-
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
-	tmpl, err := template.ParseFiles(
-		"./views/index.html",
-		"./views/templates/index/head.html",
-		"./views/templates/index/recentPayoutsTable.html",
-		"./views/templates/nav.html",
-		"./views/templates/footer.html",
-	)
-	if err != nil {
-		constants.ErrorResponse(w, err.Error())
-		return
-	}
-
 	// check the cache for tickers with dividends stored already
-	var payouts []singlePayout
+	var payouts []models.SinglePayout
 
 	for k, v := range services.TickerCache {
 		if len(payouts) == 50 {
@@ -64,11 +35,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		payouts = append(payouts, singlePayout{Ticker: k, Dividend: v.Dividends[0]})
+		payouts = append(payouts, models.SinglePayout{Ticker: k, Dividend: v.Dividends[0]})
 	}
 
 	// sort each payout by most recent date
-	slices.SortFunc(payouts, func(sp1, sp2 singlePayout) int {
+	slices.SortFunc(payouts, func(sp1, sp2 models.SinglePayout) int {
 		t1, err1 := time.Parse("2006-01-02", sp1.Dividend.PayDate)
 		t2, err2 := time.Parse("2006-01-02", sp2.Dividend.PayDate)
 
@@ -85,11 +56,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	})
 
-	tmpl.Execute(w, indexPageData{
-		Head: constants.Head{
-			Title:  "DividendSpot – Public Companies, ETFs & Funds Dividends",
-			Styles: []constants.Styles{{Link: "/public/css/index.css"}},
-		},
-		RecentPayouts: payouts,
-	})
+	err := views.IndexView(payouts).Render(r.Context(), w)
+	if err != nil {
+		w.Write([]byte("Error while rendering index view"))
+		return
+	}
 }

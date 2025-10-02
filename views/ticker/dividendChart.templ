@@ -1,0 +1,63 @@
+package ticker
+
+import (
+	"dividendspot/models"
+)
+
+templ DividendChart(ticker *models.TickerDetails) {
+	if len(ticker.Dividends) > 0 {
+		<div>
+			<canvas id="myChart"></canvas>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>
+			const ctx = document.getElementById("myChart");
+
+			// we serialize data from Go to JSON here
+			const dividends = { toJSON(ticker.Dividends) };
+
+			const labels = [];
+			const data = [];
+			for (let i = dividends.length - 1; i >= 0; i--) {
+				labels.push("");
+				data.push(dividends[i].cash_amount); // field must match your model's JSON tags
+			}
+
+			new Chart(ctx, {
+				type: "bar",
+				data: {
+					labels,
+					datasets: [
+						{
+							data,
+							backgroundColor: "rgba(59, 130, 246, 0.6)",
+							borderWidth: 0
+						},
+					],
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					scales: {
+						x: {
+							grid: { display: false },
+							ticks: { display: false }
+						},
+						y: {
+							grid: { display: false },
+							ticks: {
+								callback: function(value) {
+									return "$" + value;
+								}
+							}
+						}
+					},
+					plugins: {
+						legend: { display: false }
+					}
+				},
+			});
+		</script>
+	}
+}

@@ -1,0 +1,30 @@
+package ticker
+
+import "dividendspot/models"
+
+templ RelatedTickers(ticker *models.TickerDetails) {
+	if len(ticker.RelatedTickers) > 0 {
+		<section>
+			<div class="card-header">
+				<h2>Related Companies</h2>
+			</div>
+			<div class="stocks-grid">
+				for _, rt := range ticker.RelatedTickers {
+					<a href={ "/" + rt.LowerTicker() } style="text-decoration: none">
+						<div class="stock-card">
+							<div>
+								<img
+									src={ "/public/imgs/logos/" + rt.Ticker + ".png" }
+									alt={ rt.Name }
+									class="stock-logo-img"
+								/>
+							</div>
+							<div class="stock-name">{ rt.Name }</div>
+							<div class="stock-symbol">{ rt.Ticker }</div>
+						</div>
+					</a>
+				}
+			</div>
+		</section>
+	}
+}

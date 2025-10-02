@@ -1,0 +1,20 @@
+package ticker
+
+import "dividendspot/models"
+
+templ DividendsSummary(ticker *models.TickerDetails) {
+	{{summaries := ticker.GenerateTickerSummary()}}
+
+	if len(summaries) > 0 {
+		<section class="card">
+			<div class="card-header">
+				<h2>Dividends Summary</h2>
+			</div>
+			<ul class="bullets">
+				for _, s := range summaries {
+					<li>{ s }</li>
+				}
+			</ul>
+		</section>
+	}
+}

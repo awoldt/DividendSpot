@@ -1,0 +1,73 @@
+package ticker
+
+import (
+	"dividendspot/models"
+	"dividendspot/utils"
+	"fmt"
+)
+
+templ DividendHistoryTable(ticker *models.TickerDetails) {
+	<section class="card">
+		<div class="card-header">
+			<h2>Dividend History</h2>
+		</div>
+		if len(ticker.Dividends) > 0 {
+		{{	first := ticker.Dividends[0] }}
+    {{daysAwayFromPayout := first.DaysAwayFromPayout()}}
+      
+			if daysAwayFromPayout > 0 {
+				<div class="dividend-alert">
+					<strong>🎉 Upcoming Dividend</strong>
+					if daysAwayFromPayout == 0 {
+						<p>
+							Investors can expect a dividend payout of { fmt.Sprintf("$%.2f", first.Amount) }
+							per share, scheduled to be distributed tomorrow on { utils.CleanDate(first.PayDate) }
+						</p>
+					} else {
+						<p>
+							Investors can expect a dividend payout of { fmt.Sprintf("$%.2f", first.Amount) }
+							per share, scheduled to be distributed in { daysAwayFromPayout } days 
+							on { utils.CleanDate(first.PayDate) }
+						</p>
+					}
+				</div>
+			}
+		}
+		<div class="table-wrap">
+			<table class="table" id="dividend-history-table">
+				<thead>
+					<tr>
+						<th>Pay Date</th>
+						<th>Amount</th>
+						<th>Ex-Date</th>
+						<th>Record Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					for i, d := range ticker.Dividends {
+						<tr if i >= 5 {
+	class="hidden-div"
+	style="display: none"
+}>
+							<td>{ utils.CleanDate(d.PayDate) }</td>
+							<td>{ fmt.Sprintf("$%.2f", d.Amount) }</td>
+							<td>{ d.ExDividendDate }</td>
+							<td>{ d.RecordDate }</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+		<div style="margin-top: 10px">
+			<button
+				id="showmore"
+				aria-expanded="false"
+				aria-controls="dividend-history-table"
+			>
+				Show more
+			</button>
+		</div>
+		@DividendChart(ticker)
+		<script src="/public/js/dividend-showmore.js" defer></script>
+	</section>
+}

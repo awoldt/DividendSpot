@@ -1,0 +1,40 @@
+package ticker
+
+import (
+	"dividendspot/utils"
+	"dividendspot/models/polygon_responses"
+)
+
+templ TickerNews(news []polygonresponses.NewsResults) {
+	if len(news) > 0 {
+		<section class="card">
+			<div class="card-header">
+				<h2>Company News</h2>
+			</div>
+			<div class="news-grid">
+				for _, n := range news {
+					<div class="news-card">
+						<a href={ n.Url } class="news-title" target="_blank" rel="noopener">
+							{ n.Title }
+						</a>
+						<div class="news-meta">
+							<span>{ n.Publisher.Name }</span>
+							<span>• { n.Author }</span>
+							<span>• { utils.CleanDate(n.PublishedOnUTC) }</span>
+						</div>
+						<p class="news-description">{ n.Description }</p>
+						if len(n.TickersMentionedInArticle) > 0 {
+							<div class="news-tickers">
+								for _, t := range n.TickersMentionedInArticle {
+									<a href={ "/" + utils.LowerTicker(t) } class="ticker-pill">
+										{ t }
+									</a>
+								}
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</section>
+	}
+}
