@@ -3,7 +3,6 @@ package models
 import (
 	polygonresponses "dividendspot/models/polygon_responses"
 	"fmt"
-	"html/template"
 	"math"
 	"os"
 	"strconv"
@@ -39,11 +38,9 @@ type ExpiredTimestamps struct {
 	NewsExpiresAt      int64
 }
 
-func (t TickerDetails) GenerateJsonL() template.JS {
-	// stupid ass template.JS casue a regular string will for some fucking
-	// reason return the \"\" in the template i dont get it
-
+func (t TickerDetails) GenerateJsonL() string {
 	var sb strings.Builder
+	sb.WriteString("<script type=\"application/ld+json\">")
 	sb.WriteString("{")
 
 	sb.WriteString("\"@context\": \"https://schema.org\",")
@@ -76,8 +73,9 @@ func (t TickerDetails) GenerateJsonL() template.JS {
 	sb.WriteString(ticker)
 
 	sb.WriteString("}")
+	sb.WriteString("</script>")
 
-	return template.JS(sb.String())
+	return sb.String()
 }
 
 func (t TickerDetails) HasCompanyLogo() bool {

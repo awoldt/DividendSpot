@@ -3,11 +3,17 @@ package views
 import (
 	"dividendspot/models"
   "dividendspot/views/ticker"
+	"fmt"
+	"strings"
 )
 
 templ TickerPage(tickerData *models.TickerDetails) {
   @Layout(models.HeadTag{
-    Title:  "Ticker PAGE",
+    Title:  fmt.Sprintf("%v (%v) Dividend Yield &amp; Payment History", tickerData.Name, tickerData.Ticker),
+    Description: fmt.Sprintf("Explore %v's complete dividend history including payout dates, dividend yield, growth trends, current market price, and the latest news. Stay informed about one of the most consistent dividend stocks in the market.", tickerData.Name),
+    CanonicalLink: fmt.Sprintf("https://dividendspot.com/%v", strings.ToLower(tickerData.Ticker)),
+    OpengraphImage: fmt.Sprintf("https://dividendspot.com/public/imgs/logos/%v.png", tickerData.Ticker),
+    JSONL: tickerData.GenerateJsonL(),
     Styles: []models.Styles{{Link: "/public/css/ticker.css"}},
   }) {
 

@@ -1,63 +1,58 @@
 package ticker
 
-import (
-	"dividendspot/models"
-)
+import "dividendspot/models"
 
 templ DividendChart(ticker *models.TickerDetails) {
 	if len(ticker.Dividends) > 0 {
+		@templ.JSONScript("divData", ticker.Dividends)
+		
 		<div>
 			<canvas id="myChart"></canvas>
 		</div>
-
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<script>
-			const ctx = document.getElementById("myChart");
+  const ctx = document.getElementById("myChart");
+	const dividendData = JSON.parse(document.getElementById('divData').textContent);
 
-			// we serialize data from Go to JSON here
-			const dividends = { toJSON(ticker.Dividends) };
+	const dividends = dividendData
+ 
 
 			const labels = [];
 			const data = [];
 			for (let i = dividends.length - 1; i >= 0; i--) {
-				labels.push("");
-				data.push(dividends[i].cash_amount); // field must match your model's JSON tags
+				labels.push(dividends[i].pay_date);  
+				data.push(dividends[i].cash_amount);  
 			}
 
-			new Chart(ctx, {
-				type: "bar",
-				data: {
-					labels,
-					datasets: [
-						{
-							data,
-							backgroundColor: "rgba(59, 130, 246, 0.6)",
-							borderWidth: 0
-						},
-					],
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					scales: {
-						x: {
-							grid: { display: false },
-							ticks: { display: false }
-						},
-						y: {
-							grid: { display: false },
-							ticks: {
-								callback: function(value) {
-									return "$" + value;
-								}
-							}
-						}
-					},
-					plugins: {
-						legend: { display: false }
-					}
-				},
-			});
-		</script>
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          data,
+          backgroundColor: "rgba(59, 130, 246, 0.6)",
+          borderWidth: 0
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { grid: { display: false }, ticks: { display: false } },
+        y: {
+          grid: { display: false },
+          ticks: {
+            callback: function(value) {
+              return "$" + value;
+            }
+          }
+        }
+      },
+      plugins: { legend: { display: false } }
+    },
+  });
+</script>
 	}
 }
