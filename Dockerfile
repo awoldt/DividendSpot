@@ -5,6 +5,10 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
+# installs the "templ" command
+RUN go install github.com/a-h/templ/cmd/templ@latest 
+CMD ["templ", "generate"]
+
 COPY . .
 
 RUN go build -o main .
@@ -21,7 +25,10 @@ COPY --from=builder /app/.env .
 COPY --from=builder /app/public ./public
 # contains very important json files that site needs to work  
 COPY --from=builder /app/misc ./misc 
-# html pages
+# template pages
 COPY --from=builder /app/views ./views 
+# static html pages
+COPY --from=builder /app/about.html . 
+COPY --from=builder /app/privacy.html . 
 
 CMD ["./main"]
